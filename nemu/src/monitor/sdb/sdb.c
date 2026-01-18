@@ -15,6 +15,8 @@
 
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <memory/paddr.h>
+#include <memory/host.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
@@ -54,6 +56,45 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args){
+  int steps = 1;
+  if(args != NULL) sscanf(args,"%d",&steps);
+  if(steps <= 0)steps = 1;
+  cpu_exec(steps);
+  return 0;
+}
+static int cmd_info(char *args){
+  char _command;
+  sscanf(args,"%c",&_command);
+  if(_command == 'r'){
+    isa_reg_display();
+  }else if(_command == 'w'){
+
+  }
+  return 0;
+}
+//第一个版本的cmd_x,允许第二个参数是一个位置而不是一个待计算的seq
+static word_t pmem_read(paddr_t addr, int len) {
+  word_t ret = host_read(guest_to_host(addr), len);
+  return ret;
+}
+
+static int cmd_x(char *args){
+  if(args == NULL)return 0;
+  int steps = 0;
+  int addr = 0;
+  int n = sscanf(args,"%d %x", &steps, &addr);
+  if(n == 2){
+    for(int i = 0; i < steps;i++){
+      printf("%x : %x\n",addr + (i * 4),pmem_read(addr + (i *4), 4));
+
+    }
+  }else if(n == 1){
+    printf("Parameter invalid\n");
+  }
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -62,12 +103,17 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Program by steps as the form of \"si [x]\", the default x is 1", cmd_si},
+  { "info", "Print the state of the program. Eg: info r will print the REGS, and info w will print the info of watchpoints.", cmd_info },
+  { "x", "Use the command in form of \"x N EXPR\", Eg:x 4 1+1. Calculate the expr, use the ans as the beginner position of mm, then print the following 4 * N Bytes. ", cmd_x},
+  
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
+
+
 
 static int cmd_help(char *args) {
   /* extract the first argument */

@@ -22,10 +22,16 @@
 static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
+//大小128M的内存条,pg_align和页表有关,指示按照4kB对齐,初始化全0
 #endif
 
+//guest address:从0x8000 0000到0x8800 0000, 在si调试时候看到的pc
+//host address :真实内存
+
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+//nemu的地址转化成为c语言能直接用的指针, paddr是0x8000 0100的时候, 偏移量是100, 对应pmem[100]
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
+//haddr-pmem计算当前指针到开头的距离, 加上MBASE对应到nemu地址
 
 static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
