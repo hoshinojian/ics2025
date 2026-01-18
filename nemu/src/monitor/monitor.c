@@ -25,6 +25,9 @@ void init_sdb();
 void init_disasm();
 
 static void welcome() {
+
+  printf("\n\n\nThe function Welcome() begins to function\n\n\n)");
+
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
   IFDEF(CONFIG_TRACE, Log("If trace is enabled, a log file will be generated "
         "to record the trace. This may lead to a large log file. "
@@ -32,8 +35,12 @@ static void welcome() {
   Log("Build time: %s, %s", __TIME__, __DATE__);
   printf("Welcome to %s-NEMU!\n", ANSI_FMT(str(__GUEST_ISA__), ANSI_FG_YELLOW ANSI_BG_RED));
   printf("For help, type \"help\"\n");
-  Log("Exercise: Please remove me in the source code and compile NEMU again.");
-  assert(0);
+
+  printf("\n\n\nThe function Welcome() ends.\n\n\n)");
+
+
+  // Log("Exercise: Please remove me in the source code and compile NEMU again.");
+  //assert(0);
 }
 
 #ifndef CONFIG_TARGET_AM
@@ -69,6 +76,7 @@ static long load_img() {
 }
 
 static int parse_args(int argc, char *argv[]) {
+  //printf("\n\n\nParsing the args");
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
@@ -95,6 +103,7 @@ static int parse_args(int argc, char *argv[]) {
         exit(0);
     }
   }
+  //printf("Args Parsed.\n\n\n");
   return 0;
 }
 
