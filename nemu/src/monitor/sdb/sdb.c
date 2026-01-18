@@ -95,6 +95,12 @@ static int cmd_x(char *args){
   return 0;
 }
 
+static int cmd_p(char *args){
+  if(args == NULL)return 0;
+  bool success = true;
+  return expr(args,&success);
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -106,7 +112,7 @@ static struct {
   { "si", "Program by steps as the form of \"si [x]\", the default x is 1", cmd_si},
   { "info", "Print the state of the program. Eg: info r will print the REGS, and info w will print the info of watchpoints.", cmd_info },
   { "x", "Use the command in form of \"x N EXPR\", Eg:x 4 1+1. Calculate the expr, use the ans as the beginner position of mm, then print the following 4 * N Bytes. ", cmd_x},
-  
+  { " p", "Caculator", cmd_p},
   /* TODO: Add more commands */
 
 };
