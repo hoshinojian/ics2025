@@ -306,10 +306,11 @@ word_t expr(char *e, bool *success)
         return 0;
       }
     }
-    while(opstktop){
+
+  }
+      while(opstktop){
       calc();
     }
-  }
   Log("The answer of the input seq is %d", numspop());
   return 0;
 }
