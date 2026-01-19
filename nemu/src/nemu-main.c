@@ -65,7 +65,7 @@ void TESTCALC()
     i++;
   }
   fclose(FP);
-  printf("%d", WA);
+  printf("%d ERROR.\n", WA);
   free(points);
 }
 
