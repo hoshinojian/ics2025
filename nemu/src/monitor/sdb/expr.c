@@ -251,7 +251,8 @@ static char pri[10][10] = {
 // 输入的是两个enum下来的数值
 static char priority(int stacktopop, int seqop)
 {
-  if(opstktop == 0)return '<';
+  if (opstktop == 0)
+    return '<';
   int p = op_to_idx(stacktopop);
   int q = op_to_idx(seqop);
   return pri[p][q];
@@ -282,7 +283,13 @@ word_t expr(char *e, bool *success)
     // 这个token的type是符号
     else // 在pa1_2的时候,这里只有十进制和运算符
     {
-      char rel = priority(optop(), tokens[i].type);
+      int top_val;
+if (opstktop == 0) {
+    top_val = 0; 
+} else {
+    top_val = optop();
+}
+      char rel = priority(top_val, tokens[i].type);
       if (rel == '<')
       { // seq的优先级比栈顶的更高, 比如+ *
         oppush(tokens[i].type);
@@ -293,8 +300,7 @@ word_t expr(char *e, bool *success)
         {
           calc();
         }
-                oppush(tokens[i].type);
-
+        oppush(tokens[i].type);
       }
       else if (rel == '~')
       { // 左括号碰见右括号
@@ -306,11 +312,11 @@ word_t expr(char *e, bool *success)
         return 0;
       }
     }
-
   }
-      while(opstktop){
-      calc();
-    }
+  while (opstktop)
+  {
+    calc();
+  }
   Log("The answer of the input seq is %d", numspop());
   return 0;
 }
