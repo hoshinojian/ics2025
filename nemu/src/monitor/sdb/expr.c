@@ -284,11 +284,14 @@ word_t expr(char *e, bool *success)
     else // 在pa1_2的时候,这里只有十进制和运算符
     {
       int top_val;
-if (opstktop == 0) {
-    top_val = 0; 
-} else {
-    top_val = optop();
-}
+      if (opstktop == 0)
+      {
+        top_val = 0;
+      }
+      else
+      {
+        top_val = optop();
+      }
       char rel = priority(top_val, tokens[i].type);
       if (rel == '<')
       { // seq的优先级比栈顶的更高, 比如+ *
@@ -299,8 +302,13 @@ if (opstktop == 0) {
         while (priority(optop(), tokens[i].type) == '>')
         {
           calc();
+          if(opstktop == 0)break;
         }
-        oppush(tokens[i].type);
+        if(tokens[i].type == TK_RIGHT){
+          oppop();
+          continue;
+        }
+        else oppush(tokens[i].type);
       }
       else if (rel == '~')
       { // 左括号碰见右括号
@@ -317,6 +325,6 @@ if (opstktop == 0) {
   {
     calc();
   }
-  Log("The answer of the input seq is %d", numspop());
-  return 0;
+  Log("The answer of the input seq is %d", numstk[0]);
+  return numspop();
 }
