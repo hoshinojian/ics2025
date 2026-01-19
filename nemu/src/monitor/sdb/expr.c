@@ -95,7 +95,7 @@ typedef struct token
   char str[32];
 } Token;
 
-#define tokensSize 10000
+#define tokensSize 65535
 static Token tokens[tokensSize] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
