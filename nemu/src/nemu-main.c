@@ -60,7 +60,7 @@ void TESTCALC()
   {
     if (points[i].res != cmd_p(points[i].expr)){
       WA++;
-      fprintf(FP, "%u %u %s\n",points[i].res, cmd_p(points[i].expr), points[i].expr);
+      fprintf(FP, "input的答案%u expr的答案%u %s\n",points[i].res, cmd_p(points[i].expr), points[i].expr);
     }
     i++;
   }
