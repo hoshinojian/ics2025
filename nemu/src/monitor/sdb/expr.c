@@ -325,6 +325,6 @@ word_t expr(char *e, bool *success)
   {
     calc();
   }
-  Log("The answer of the input seq is %d", numstk[0]);
+  //Log("The answer of the input seq is %d", numstk[0]);
   return numspop();
 }
