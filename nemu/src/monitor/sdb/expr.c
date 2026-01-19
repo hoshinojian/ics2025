@@ -306,5 +306,8 @@ word_t expr(char *e, bool *success)
       oppush(tokens[i].type); // Õâ¸öÊ±ºòstk¿Õ
     }
   }
+
+        
+  Log("The answer of the input seq is %d\n", numstk[0]);
   return numstk[0];
 }
