@@ -28,6 +28,7 @@ typedef struct
 
 void TESTCALC()
 {
+  Log("TEST START.\n");
   FILE *fp = fopen("./tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   // fp里面每一行, 前面一个是结果后面一个是式子
@@ -65,7 +66,8 @@ void TESTCALC()
     i++;
   }
   fclose(FP);
-  printf("%d ERROR.\n", WA);
+    Log("TEST ENDS WITH %d ERRORS.\n", WA);
+
   free(points);
 }
 
