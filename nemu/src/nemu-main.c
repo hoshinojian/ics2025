@@ -28,7 +28,7 @@ typedef struct
 
 void TESTCALC()
 {
-  FILE *fp = fopen("./../tools/gen-expr/build/input", "r");
+  FILE *fp = fopen("./tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   // fp里面每一行, 前面一个是结果后面一个是式子
   // 后面的一个喂给cmd_p.结果和前面一个做对比
@@ -61,6 +61,7 @@ void TESTCALC()
     i++;
   }
   printf("%d", WA);
+  free(points);
 }
 
 int main(int argc, char *argv[])
