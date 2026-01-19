@@ -257,61 +257,7 @@ static char priority(int stacktopop, int seqop)
   return pri[p][q];
 }
 
-word_t expr(char *e, bool *success) {
-    if (!make_token(e)) {
-        *success = false;
-        return 0;
-    }
-
-    numstktop = 0;
-    opstktop = 0;
-    *success = true;
-
-    for (int i = 0; i < nr_token; i++) {
-        if (tokens[i].type == TK_DEC) {
-            numspush(atoi(tokens[i].str));
-        } else {
-            bool processed = false;
-            while (opstktop > 0 && !processed) {
-                char rel = priority(optop(), tokens[i].type);
-                if (rel == '<') {
-                    oppush(tokens[i].type);
-                    processed = true; // 入栈后，当前 token 处理完毕
-                } else if (rel == '>') {
-                    calc(); // 栈顶优先级高，先计算，当前 token 继续等待比较
-                } else if (rel == '~') {
-                    oppop(); // 弹出左括号
-                    processed = true; // 左右括号抵消，处理完毕
-                } else {
-                    *success = false;
-                    return 0;
-                }
-            }
-            if (!processed) {
-                oppush(tokens[i].type); // 栈空时，直接入栈
-            }
-        }
-    }
-
-    // --- 新增：处理栈中剩余的运算符 ---
-    while (opstktop > 0) {
-        if (optop() == TK_LEFT) { // 如果剩下了左括号，说明语法错误
-            *success = false;
-            return 0;
-        }
-        calc();
-    }
-
-    if (numstktop != 1) { // 理想状态下，数值栈最后应该只剩一个结果
-        *success = false;
-        return 0;
-    }
-
-    return numspop();
-}
-
-
-word_t expr1(char *e, bool *success)
+word_t expr(char *e, bool *success)
 {
   if (!make_token(e))
   {
