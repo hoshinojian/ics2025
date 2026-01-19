@@ -47,8 +47,7 @@ void TESTCALC()
   int i = 0;
   while (i < linescount)
   {
-    int ret = (fscanf(fp, "%u %[^\n]", &points[i].res, points[i].expr));
-    assert(ret == 2);
+    assert(fscanf(fp, "%u %[^\n]", &points[i].res, points[i].expr) == 2);
   }
   fclose(fp);
 
