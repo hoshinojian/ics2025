@@ -248,10 +248,10 @@ static char pri[10][10] = {
     /* ( (4) */ {'<', '<', '<', '<', '<', '~', '0', '0', '0', '0'},
     /* ) (5) */ {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
 };
-
 // 输入的是两个enum下来的数值
 static char priority(int stacktopop, int seqop)
 {
+  if(opstktop == 0)return '<';
   int p = op_to_idx(stacktopop);
   int q = op_to_idx(seqop);
   return pri[p][q];
@@ -280,30 +280,34 @@ word_t expr(char *e, bool *success)
       numspush(num);
     }
     // 这个token的type是符号
-    else
+    else // 在pa1_2的时候,这里只有十进制和运算符
     {
-      while (opstktop > 0)
-      { // 只要stk不空, 就一直比较
-        char rel = priority(optop(), tokens[i].type);
-        if (rel == '<')
-        { // seq的优先级比栈顶的更高, 比如+ *
-          oppush(tokens[i].type);
-        }
-        else if (rel == '>')
-        { // 可以计算
+      char rel = priority(optop(), tokens[i].type);
+      if (rel == '<')
+      { // seq的优先级比栈顶的更高, 比如+ *
+        oppush(tokens[i].type);
+      }
+      else if (rel == '>')
+      { // 一次性计算所有的
+        while (priority(optop(), tokens[i].type) == '>')
+        {
           calc();
         }
-        else if (rel == '~')
-        { // 左括号碰见右括号
-          oppop();
-        }
-        else if (rel == '0')
-        { // 非法
-          *success = false;
-          return 0;
-        }
+                oppush(tokens[i].type);
+
       }
-      oppush(tokens[i].type); // 这个时候stk空
+      else if (rel == '~')
+      { // 左括号碰见右括号
+        oppop();
+      }
+      else if (rel == '0')
+      { // 非法
+        *success = false;
+        return 0;
+      }
+    }
+    while(opstktop){
+      calc();
     }
   }
   Log("The answer of the input seq is %d", numspop());
