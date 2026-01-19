@@ -53,12 +53,18 @@ void TESTCALC()
 
   i = 0;
   int WA = 0;
+
+  FILE* FP = fopen("./output", "w");
+
   while (i < linescount)
   {
-    if (points[i].res != cmd_p(points[i].expr))
+    if (points[i].res != cmd_p(points[i].expr)){
       WA++;
+      fprintf(FP, "%u %u %s\n",points[i].res, cmd_p(points[i].expr), points[i].expr);
+    }
     i++;
   }
+  fclose(FP);
   printf("%d", WA);
   free(points);
 }
