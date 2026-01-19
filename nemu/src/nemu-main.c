@@ -45,9 +45,9 @@ void TESTCALC()
 
   TestPoint *points = (TestPoint *)malloc(sizeof(TestPoint) * linescount);
   int i = 0;
-  while (i < linescount)
+  while (i < linescount && fscanf(fp, "%u %[^\n]", &points[i].res, points[i].expr) == 2)
   {
-    assert(fscanf(fp, "%u %[^\n]", &points[i].res, points[i].expr) == 2);
+    i++;
   }
   fclose(fp);
 
