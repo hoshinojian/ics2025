@@ -64,7 +64,7 @@ static void gen_rand_op(){
 
 static void gen_num(){
   int num = rand() % 1000;
-  int ret = sprintf(&buf[current], "%d", num);
+  int ret = sprintf(&buf[current], "%dU", num);//转换成Unsigned, 但是这样生成所有数字后面都有个U,需要解决
   current += ret;
 }
 
@@ -91,6 +91,14 @@ static void gen_rand_expr() {
   }
 }
 
+//一个新的函数,当扫到u的时候就跳过
+static void print_expr(char* c){
+  for(int i = 0;i < strlen(c); i++){
+    if(c[i] != 'U')putchar(c[i]);
+  }
+  putchar('\n');
+}
+
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
@@ -113,20 +121,32 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);//把code_buf塞到fp里面去
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    //编译阶段除以0会警告,改成error, 从而避免把这些东西写到expr里面去
+    //-Werror=div-by-zero
+    int ret = system("gcc -Werror=div-by-zero /tmp/.code.c -o /tmp/.expr");
     if (ret != 0) continue;
 
     //popopen建立一个管道,拿到执行之后打印出来的内容
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
 
-    int result;
-    ret = fscanf(fp, "%d", &result);
+    //int result;
+    uint32_t result;
+    //如果因为除以0崩溃掉, 那么fscanf会返回-1
+    //The fscanf() function returns the number of fields that it successfully converted and assigned. The return value does not include fields that the fscanf() function read but did not assign.
+    //The return value is EOF if an input failure occurs before any conversion, or the number of input items assigned if successful.
+    ret = fscanf(fp, "%u", &result);//fp写入的时候写成unsigned
     pclose(fp);
+    if(ret != 1)continue;
 
-    printf("%u %s\n", result, buf);
+    //printf("%u %s\n", result, buf);
+    printf("%u ",result);
+    print_expr(buf);
   }
   return 0;
 }
 
-
+//解决除以0错误
+//在生成时候解决不太可能, 因为可能出现1 / (5 - 5). 生成时候不能知道后面这玩意是0
+//整数除以0因为SIGFPE终止, 可以试着捕捉这个信号
+//通过什么方式试着在输出的时候把有warning的停掉
