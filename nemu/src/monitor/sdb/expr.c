@@ -178,7 +178,7 @@ static int numspop() { return numstk[--numstktop]; }
 
 static void oppush(int n) { opstk[opstktop++] = n; }
 static int oppop() { return opstk[--opstktop]; }
-static int optop() {return opstk[opstktop-1];}
+static int optop() { return opstk[opstktop - 1]; }
 
 static void calc()
 {
@@ -214,37 +214,44 @@ static void calc()
   numspush(ans);
 }
 
-static int op_to_idx(int token_type) {
-    switch (token_type) {
-        case TK_ADD: return 0; // 对应矩阵第 0 行/列
-        case TK_MIN: return 1; // 对应矩阵第 1 行/列
-        case TK_MUL: return 2; // 对应矩阵第 2 行/列
-        case TK_DIV: return 3; // 对应矩阵第 3 行/列
-        case TK_LEFT: return 4; // 对应 (
-        case TK_RIGHT: return 5; // 对应 )
-        default: 
-            // 遇到数字或者错误的符号，返回一个非法下标
-            // 你的矩阵是 10x10，所以返回 9 是安全的（前提是你矩阵填满了0）
-            return 9; 
-    }
+static int op_to_idx(int token_type)
+{
+  switch (token_type)
+  {
+  case TK_ADD:
+    return 0; // 对应矩阵第 0 行/列
+  case TK_MIN:
+    return 1; // 对应矩阵第 1 行/列
+  case TK_MUL:
+    return 2; // 对应矩阵第 2 行/列
+  case TK_DIV:
+    return 3; // 对应矩阵第 3 行/列
+  case TK_LEFT:
+    return 4; // 对应 (
+  case TK_RIGHT:
+    return 5; // 对应 )
+  default:
+    // 遇到数字或者错误的符号，返回一个非法下标
+    // 你的矩阵是 10x10，所以返回 9 是安全的（前提是你矩阵填满了0）
+    return 9;
+  }
 }
 
-
-
 static char pri[10][10] = {
-    //左侧意味着栈顶,右侧意味seq. 1意味着栈顶先运算, 0意味入栈
-  //如果是0意味着非法, 如果是~意味着左括号出站. //右括号不可能在栈顶
+    // 左侧意味着栈顶,右侧意味seq. 1意味着栈顶先运算, 0意味入栈
+    // 如果是0意味着非法, 如果是~意味着左括号出站. //右括号不可能在栈顶
     //              +    -    * /    (    )    ...填充0...
-    /* + (0) */ { '>', '>', '<', '<', '<', '>', '0', '0', '0', '0' },
-    /* - (1) */ { '>', '>', '<', '<', '<', '>', '0', '0', '0', '0' },
-    /* * (2) */ { '>', '>', '>', '>', '<', '>', '0', '0', '0', '0' },
-    /* / (3) */ { '>', '>', '>', '>', '<', '>', '0', '0', '0', '0' },
-    /* ( (4) */ { '<', '<', '<', '<', '<', '~', '0', '0', '0', '0' },
-    /* ) (5) */ { '0', '0', '0', '0', '0', '0', '0', '0', '0', '0' }, 
+    /* + (0) */ {'>', '>', '<', '<', '<', '>', '0', '0', '0', '0'},
+    /* - (1) */ {'>', '>', '<', '<', '<', '>', '0', '0', '0', '0'},
+    /* * (2) */ {'>', '>', '>', '>', '<', '>', '0', '0', '0', '0'},
+    /* / (3) */ {'>', '>', '>', '>', '<', '>', '0', '0', '0', '0'},
+    /* ( (4) */ {'<', '<', '<', '<', '<', '~', '0', '0', '0', '0'},
+    /* ) (5) */ {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
 };
 
-//输入的是两个enum下来的数值
-static char priority(int stacktopop, int seqop){
+// 输入的是两个enum下来的数值
+static char priority(int stacktopop, int seqop)
+{
   int p = op_to_idx(stacktopop);
   int q = op_to_idx(seqop);
   return pri[p][q];
@@ -259,11 +266,10 @@ word_t expr(char *e, bool *success)
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
+  // TODO();
   numstktop = 0;
   opstktop = 0;
   *success = true;
-
 
   for (int i = 0; i < nr_token; i++)
   {
@@ -276,23 +282,29 @@ word_t expr(char *e, bool *success)
     // 这个token的type是符号
     else
     {
-      while(opstktop > 0){ // 只要stk不空, 就一直比较
+      while (opstktop > 0)
+      { // 只要stk不空, 就一直比较
         char rel = priority(optop(), tokens[i].type);
-        if(rel == '<'){//seq的优先级比栈顶的更高, 比如+ *
+        if (rel == '<')
+        { // seq的优先级比栈顶的更高, 比如+ *
           oppush(tokens[i].type);
-        }else if(rel == '>'){//可以计算
+        }
+        else if (rel == '>')
+        { // 可以计算
           calc();
-        }else if(rel == '~'){//左括号碰见右括号
+        }
+        else if (rel == '~')
+        { // 左括号碰见右括号
           oppop();
-        }else if(rel == '0'){//非法
+        }
+        else if (rel == '0')
+        { // 非法
           *success = false;
           return 0;
         }
       }
-      oppush(tokens[i].type);//这个时候stk空
+      oppush(tokens[i].type); // 这个时候stk空
     }
-
   }
-
   return numstk[0];
 }

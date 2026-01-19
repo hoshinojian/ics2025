@@ -98,7 +98,10 @@ static int cmd_x(char *args){
 static int cmd_p(char *args){
   if(args == NULL)return 0;
   bool success = true;
-  return expr(args,&success);
+  int ans = expr(args,&success);
+  if(success)printf("%d\n",ans);
+  else printf("wa\n");
+  return 0;
 }
 
 static struct {
