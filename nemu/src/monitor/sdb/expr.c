@@ -168,10 +168,10 @@ static bool make_token(char *e)
   return true;
 }
 
-int numstk[32];
+int numstk[65535];
 int numstktop = 0;
 
-int opstk[32];
+int opstk[65535];
 int opstktop = 0;
 
 static void numspush(int n) { numstk[numstktop++] = n; }
