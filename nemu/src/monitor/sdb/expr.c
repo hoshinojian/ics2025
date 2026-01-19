@@ -168,14 +168,14 @@ static bool make_token(char *e)
   return true;
 }
 
-int numstk[65535];
+u_int32_t numstk[65535];
 int numstktop = 0;
 
 int opstk[65535];
 int opstktop = 0;
 
 static void numspush(int n) { numstk[numstktop++] = n; }
-static int numspop() { return numstk[--numstktop]; }
+static u_int32_t numspop() { return numstk[--numstktop]; }
 
 static void oppush(int n) { opstk[opstktop++] = n; }
 static int oppop() { return opstk[--opstktop]; }
@@ -183,10 +183,10 @@ static int optop() { return opstk[opstktop - 1]; }
 
 static void calc()
 {
-  int b = numspop();
-  int a = numspop();
+  u_int32_t b = numspop();
+  u_int32_t a = numspop();
   int op = oppop();
-  int ans = 0;
+  u_int32_t ans = 0;
   switch (op)
   {
   case TK_ADD:
@@ -277,7 +277,7 @@ word_t expr(char *e, bool *success)
     // 如果这个token的type是数字
     if (tokens[i].type == TK_DEC)
     {
-      int num = atoi(tokens[i].str);
+      u_int32_t num = atoi(tokens[i].str);
       numspush(num);
     }
     // 这个token的type是符号
