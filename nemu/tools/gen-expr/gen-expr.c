@@ -22,6 +22,7 @@
 
 // this should be enough
 static char buf[65536] = {};
+//static char buf[35000] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
@@ -31,8 +32,63 @@ static char *code_format =
 "  return 0; "
 "}";
 
+//往buf里面塞一个随机数学表达式
+
+static int choose(int n){
+  return rand() % n;
+}
+
+static int current = 0;//static每一轮调用完之后要归零
+
+static void gen(char c){
+  buf[current] = c;
+  current++;
+}
+
+static void gen_rand_op(){
+  switch(choose(4)){
+    case 0:
+      gen('+');
+      break;
+    case 1:
+      gen('-');
+      break;
+    case 2:
+      gen('*');
+      break;
+    case 3:
+      gen('/');
+      break;
+  }
+}
+
+static void gen_num(){
+  int num = rand() % 1000;
+  int ret = sprintf(&buf[current], "%d", num);
+  current += ret;
+}
+
 static void gen_rand_expr() {
-  buf[0] = '\0';
+  if(current > 60000){//防止溢出, 需要措施
+  //if(current > 30000){
+    gen_num();
+    return;
+    }
+  switch(choose(3)){
+    case 0: //生成一个数字
+      gen_num();
+      break;
+    case 1://gen('('); gen_rand_expr(); gen(')'); break;
+      gen('(');
+      gen_rand_expr();
+      gen(')');
+      break;
+    case 2://gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+      gen_rand_expr();
+      gen_rand_op();
+      gen_rand_expr();
+      break;
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -44,18 +100,23 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    current = 0;
     gen_rand_expr();
+    buf[current] = '\0';//最后一个有可能是右括号,不是数字的情况下不会自动加上\0, 下一轮的时候会留下脏数据
 
+    //把buf里面的内容和code_format的内容塞到code_buf里面去
+    //sprintf按照指定的格式,把数据打印到一个缓冲区里面去
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
     assert(fp != NULL);
-    fputs(code_buf, fp);
+    fputs(code_buf, fp);//把code_buf塞到fp里面去
     fclose(fp);
 
     int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
     if (ret != 0) continue;
 
+    //popopen建立一个管道,拿到执行之后打印出来的内容
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
 
@@ -67,3 +128,5 @@ int main(int argc, char *argv[]) {
   }
   return 0;
 }
+
+
