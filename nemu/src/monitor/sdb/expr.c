@@ -26,11 +26,23 @@ enum
   TK_NOTYPE = 0,
 
   TK_DEC,
+  TK_HEC,
+
+  TK_REG, //$()
+
+  TK_QUOTE,
 
   TK_EQ,
+  TK_NEQ,
+  TK_AND,
+
+  // TK_STAR //解引用
+
   TK_ADD,
   TK_MIN,
+  TK_STAR, // 同时用于乘法和解引用
   TK_MUL,
+  TK_DER,
   TK_DIV,
 
   TK_LEFT,
@@ -50,16 +62,21 @@ static struct rule
      * Pay attention to the precedence level of different rules.
      */
 
-    {" +", TK_NOTYPE},  // spaces
-    {"\\+", TK_ADD},    // plus
-    {"\\-", TK_MIN},    // plus
-    {"\\*", TK_MUL},    // plus
-    {"\\/", TK_DIV},    // plus
-    {"[0-9]+", TK_DEC}, // plus
+    {"\\$(0|ra|sp|gp|tp|t[0-6]|a[0-7]|s([0-9]|1[0-1])|pc|fp|zero)", TK_REG},
+    {" +", TK_NOTYPE}, // spaces
+    {"\\+", TK_ADD},   // plus
+    {"\\-", TK_MIN},   // plus
+    {"\\*", TK_STAR},  // plus
+    {"\\/", TK_DIV},   // plus
+
+    {"0[xX][0-9a-fA-F]+", TK_HEC}, // 16进制应该在十进制前面
+    {"[0-9]+", TK_DEC},            // plus
 
     {"\\(", TK_LEFT},
     {"\\)", TK_RIGHT},
 
+    {"&&", TK_AND},
+    {"!=", TK_NEQ},
     {"==", TK_EQ}, // equal
 };
 
@@ -118,8 +135,8 @@ static bool make_token(char *e)
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        //Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            //i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        // i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -133,19 +150,48 @@ static bool make_token(char *e)
         case TK_NOTYPE:
           break;
 
+        case TK_STAR: // 如果前面一个是数字, 那么就应该是乘法. 如果前面一个是运算符, 那么就应该是解引用
+          // 假定当前是第一个元素, 那么一定是解引用
+          if (nr_token == 0)
+          {
+            tokens[nr_token].type = TK_DER;
+            nr_token++;
+            break;
+          }
+          else
+          {
+            //假定前面是十进制数字或者十六进制数字, 或者一个寄存器的取值, 或者右括号, 那么才是乘法
+            if (tokens[nr_token - 1].type == TK_HEC || tokens[nr_token - 1].type == TK_DEC || tokens[nr_token - 1].type == TK_REG ||tokens[nr_token - 1].type == TK_RIGHT )
+            {
+              tokens[nr_token].type = TK_MUL;
+              nr_token++;
+              break;
+            }
+            else
+            {
+              tokens[nr_token].type = TK_DER;
+              nr_token++;
+              break;
+            }
+          }
+
+        case TK_EQ:
+        case TK_NEQ:
+        case TK_AND:
+
         case TK_ADD:
         case TK_MIN:
-        case TK_MUL:
         case TK_DIV:
-        case TK_EQ:
         case TK_LEFT:
         case TK_RIGHT:
           tokens[nr_token].type = rules[i].token_type;
           nr_token++;
           break;
 
+        case TK_REG:
+        case TK_HEC:
         case TK_DEC:
-          tokens[nr_token].type = TK_DEC;
+          tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
           tokens[nr_token].str[substr_len] = '\0';
           nr_token++;
@@ -153,7 +199,6 @@ static bool make_token(char *e)
         default:
           TODO();
         }
-
         break;
       }
     }
@@ -236,7 +281,7 @@ static int op_to_idx(int token_type)
     return 9;
   }
 }
-//如果有\0作为开始结束就方便多了,但是在上面的函数里面没有定义,所以只能用更多心思处理
+// 如果有\0作为开始结束就方便多了,但是在上面的函数里面没有定义,所以只能用更多心思处理
 static char pri[10][10] = {
     // 左侧意味着栈顶,右侧意味seq. 1意味着栈顶先运算, 0意味入栈
     // 如果是0意味着非法, 如果是~意味着左括号出站. //右括号不可能在栈顶
@@ -302,13 +347,16 @@ word_t expr(char *e, bool *success)
         while (priority(optop(), tokens[i].type) == '>')
         {
           calc();
-          if(opstktop == 0)break;
+          if (opstktop == 0)
+            break;
         }
-        if(tokens[i].type == TK_RIGHT){
+        if (tokens[i].type == TK_RIGHT)
+        {
           oppop();
           continue;
         }
-        else oppush(tokens[i].type);
+        else
+          oppush(tokens[i].type);
       }
       else if (rel == '~')
       { // 左括号碰见右括号
@@ -325,6 +373,6 @@ word_t expr(char *e, bool *success)
   {
     calc();
   }
-  //Log("The answer of the input seq is %d", numstk[0]);
+  // Log("The answer of the input seq is %d", numstk[0]);
   return numspop();
 }
