@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
   /* Start engine. */
   engine_start();
 
-  TESTCALC();
+  //TESTCALC();   //PA1_2 test
 
   return is_exit_status_bad();
 }
