@@ -15,6 +15,8 @@
 
 #include <isa.h>
 #include <stdio.h>
+#include <memory/paddr.h>
+#include <memory/host.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -30,8 +32,6 @@ enum
 
   TK_REG, //$()
 
-  TK_QUOTE,
-
   TK_EQ,
   TK_NEQ,
   TK_AND,
@@ -42,7 +42,7 @@ enum
   TK_MIN,
   TK_STAR, // 同时用于乘法和解引用
   TK_MUL,
-  TK_DER,
+  TK_DER, // 解引用
   TK_DIV,
 
   TK_LEFT,
@@ -160,8 +160,8 @@ static bool make_token(char *e)
           }
           else
           {
-            //假定前面是十进制数字或者十六进制数字, 或者一个寄存器的取值, 或者右括号, 那么才是乘法
-            if (tokens[nr_token - 1].type == TK_HEC || tokens[nr_token - 1].type == TK_DEC || tokens[nr_token - 1].type == TK_REG ||tokens[nr_token - 1].type == TK_RIGHT )
+            // 假定前面是十进制数字或者十六进制数字, 或者一个寄存器的取值, 或者右括号, 那么才是乘法
+            if (tokens[nr_token - 1].type == TK_HEC || tokens[nr_token - 1].type == TK_DEC || tokens[nr_token - 1].type == TK_REG || tokens[nr_token - 1].type == TK_RIGHT)
             {
               tokens[nr_token].type = TK_MUL;
               nr_token++;
@@ -219,14 +219,54 @@ int numstktop = 0;
 int opstk[65535];
 int opstktop = 0;
 
-static void numspush(int n) { numstk[numstktop++] = n; }
+static void numspush(uint32_t n) { numstk[numstktop++] = n; }
 static u_int32_t numspop() { return numstk[--numstktop]; }
 
 static void oppush(int n) { opstk[opstktop++] = n; }
 static int oppop() { return opstk[--opstktop]; }
 static int optop() { return opstk[opstktop - 1]; }
 
-static void calc()
+static word_t pmem_read(paddr_t addr, int len)
+{
+  word_t ret = host_read(guest_to_host(addr), len);
+  return ret;
+}
+
+static void calc_logical() // todo
+{
+  u_int32_t b = numspop();
+  u_int32_t a = numspop();
+  int op = oppop();
+  uint32_t ans = 0;
+  switch (op)
+  {
+  case TK_EQ:
+    ans = (b == a);
+    break;
+  case TK_NEQ:
+    ans = (b != a);
+    break;
+  case TK_AND:
+    ans = (b && a);
+    break;
+  }
+  numspush(ans);
+}
+
+static void calc_unary()
+{ // 一元运算符, 解决der
+  int op = oppop();
+  u_int32_t num = 0;
+  if (op == TK_DER)
+  { // 这个时候完成解引用. 这个时候用来计算的一定是一个地址.
+    num = pmem_read(numspop(), 4);
+  }
+  numspush(num);
+}
+
+word_t isa_reg_str2val(const char *s, bool *success);
+
+static void calc_arithmetic() // 只负责解决+ - * /
 {
   u_int32_t b = numspop();
   u_int32_t a = numspop();
@@ -265,36 +305,63 @@ static int op_to_idx(int token_type)
   switch (token_type)
   {
   case TK_ADD:
-    return 0; // 对应矩阵第 0 行/列
+    return 0; // 对应矩阵第 0 行/列 (+)
   case TK_MIN:
-    return 1; // 对应矩阵第 1 行/列
+    return 1; // 对应矩阵第 1 行/列 (-)
   case TK_MUL:
-    return 2; // 对应矩阵第 2 行/列
+    return 2; // 对应矩阵第 2 行/列 (* 乘法)
   case TK_DIV:
-    return 3; // 对应矩阵第 3 行/列
+    return 3; // 对应矩阵第 3 行/列 (/)
   case TK_LEFT:
     return 4; // 对应 (
   case TK_RIGHT:
     return 5; // 对应 )
+  case TK_REG:
+    return 6; // 对应 $ (单目运算)
+  case TK_DER:
+    return 7; // 对应 * (解引用)
+  case TK_EQ:
+    return 8; // 对应 ==
+  case TK_NEQ:
+    return 9; // 对应 !=
+  case TK_AND:
+    return 10; // 对应 &&
   default:
-    // 遇到数字或者错误的符号，返回一个非法下标
-    return 9;
+    // 遇到数字(TK_DEC/TK_HEC)或者非法符号
+    // 返回 11，对应矩阵最后那一行全 0 的位置
+    return 11;
   }
 }
-// 如果有\0作为开始结束就方便多了,但是在上面的函数里面没有定义,所以只能用更多心思处理
-static char pri[10][10] = {
+
+// 如果有\0作为开始结束就方便多了,但是在上面的函数里面没有定义,只能用更多心思处理
+static char pri[11][11] = {
     // 左侧意味着栈顶,右侧意味seq. 1意味着栈顶先运算, 0意味入栈
-    // 如果是0意味着非法, 如果是~意味着左括号出站. //右括号不可能在栈顶
-    //              +    -    * /    (    )    ...填充0...
-    /* + (0) */ {'>', '>', '<', '<', '<', '>', '0', '0', '0', '0'},
-    /* - (1) */ {'>', '>', '<', '<', '<', '>', '0', '0', '0', '0'},
-    /* * (2) */ {'>', '>', '>', '>', '<', '>', '0', '0', '0', '0'},
-    /* / (3) */ {'>', '>', '>', '>', '<', '>', '0', '0', '0', '0'},
-    /* ( (4) */ {'<', '<', '<', '<', '<', '~', '0', '0', '0', '0'},
-    /* ) (5) */ {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
+    // 如果是0意味着非法, 如果是~意味着左括号出站. //右括号不可栈顶
+    //              +    -    * /    (    )      *.   ==   !=   &&..填充0...
+    /* + (0) */ {'>', '>', '<', '<', '<', '>', '<', '>', '>', '>', '0'},
+    /* - (1) */ {'>', '>', '<', '<', '<', '>', '<', '>', '>', '>', '0'},
+    /* * (2) */ {'>', '>', '>', '>', '<', '>', '<', '>', '>', '>', '0'},
+    /* / (3) */ {'>', '>', '>', '>', '<', '>', '<', '>', '>', '>', '0'},
+    /* ( (4) */ {'<', '<', '<', '<', '<', '~', '<', '<', '<', '<', '0'},
+    /* ) (5) */ {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
+
+    // 单目运算符高于逻辑运算符, 所以弹幕运算符遇上逻辑运算符的时候应该先出栈运算
+    /* $ (6) */ //{'>', '>', '>', '>', '<', '>', '<', '<', '>', '>', '>', '0'}, 栈顶根本不会有这个元素, 当扫描到的时候立马把对应数字入数字stack
+    /* * (7) */ {'>', '>', '>', '>', '<', '>', '<', '>', '>', '>', '0'},
+
+    // 判等和不等, 优先级都低于+-/*, 高于&&, 左结合
+    /*== (8) */ {'<', '<', '<', '<', '<', '>', '<', '>', '>', '>', '0'},
+    /*!= (9) */ {'<', '<', '<', '<', '<', '>', '<', '>', '>', '>', '0'},
+
+    // 优先级最低
+    /*&&(10) */ {'<', '<', '<', '<', '<', '>', '<', '<', '<', '>', '0'},
+    // 留一行, 缺省为全0
 };
+// 加入$ 和 解引用两个运算符. 两个都是单目运算符. 所以和bang同优先级
+// 假设是合法的式子, 那么一定是3 + $4或者3 * $4. 运算符先于运算数被扫描到, 所以一定要入栈
+
 // 输入的是两个enum下来的数值
-static char priority(int stacktopop, int seqop)
+static char priority(int stacktopop, int seqop) // 加了多少运算符之后都不用变
 {
   if (opstktop == 0)
     return '<';
@@ -317,16 +384,30 @@ word_t expr(char *e, bool *success)
   opstktop = 0;
   *success = true;
 
+  // todo: ~~十六进制~~, 解引用, 寄存器, 等于, 不等于, 与
   for (int i = 0; i < nr_token; i++)
   {
-    // 如果这个token的type是数字
-    if (tokens[i].type == TK_DEC)
+    // 如果这个token的type是数字或者寄存器
+    if (tokens[i].type == TK_DEC || tokens[i].type == TK_HEC || tokens[i].type == TK_REG)
     {
-      u_int32_t num = atoi(tokens[i].str);
-      numspush(num);
+      if (tokens[i].type == TK_DEC)
+      {
+        u_int32_t num = atoi(tokens[i].str); // atoi只能处理十进制数字, 处理不了十六进制
+        numspush(num);
+      }
+      else if (tokens[i].type == TK_HEC)
+      {
+        u_int32_t num;
+        sscanf(tokens[i].str, "%x", &num);
+        numspush(num);
+      }
+      else
+      { // 这个时候一定是寄存器. 寄存器出现一定就会立马用上, 所以可以在这里就调用寄存器阅读器
+        numspush(isa_reg_str2val(tokens[i].str, success));
+      }
     }
-    // 这个token的type是符号
-    else // 在pa1_2的时候,这里只有十进制和运算符
+    // 这个token的type是运算符
+    else
     {
       int top_val;
       if (opstktop == 0)
@@ -346,9 +427,20 @@ word_t expr(char *e, bool *success)
       { // 一次性计算所有的
         while (priority(optop(), tokens[i].type) == '>')
         {
-          calc();
-          if (opstktop == 0)
-            break;
+          if (optop() == TK_ADD || optop() == TK_MUL || optop() == TK_DIV || optop() == TK_MIN)
+          {
+            calc_arithmetic();
+            if (opstktop == 0)
+              break;
+          }
+          else if (optop() == TK_DER)
+          {
+            calc_unary();
+          }
+          else
+          { // 逻辑运算
+            calc_logical();
+          }
         }
         if (tokens[i].type == TK_RIGHT)
         {
@@ -371,7 +463,20 @@ word_t expr(char *e, bool *success)
   }
   while (opstktop)
   {
-    calc();
+    if (optop() == TK_ADD || optop() == TK_MUL || optop() == TK_DIV || optop() == TK_MIN)
+    {
+      calc_arithmetic();
+      if (opstktop == 0)
+        break;
+    }
+    else if (optop() == TK_DER)
+    {
+      calc_unary();
+    }
+    else
+    { // 逻辑运算
+      calc_logical();
+    }
   }
   // Log("The answer of the input seq is %d", numstk[0]);
   return numspop();
