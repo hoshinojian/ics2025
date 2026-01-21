@@ -256,7 +256,7 @@ static void calc_logical() // todo
 static void calc_unary()
 { // 一元运算符, 解决der
   int op = oppop();
-  uint32_t num = 0;
+  u_int32_t num = 0;
   if (op == TK_DER)
   { // 这个时候完成解引用. 这个时候用来计算的一定是一个地址.
     num = pmem_read(numspop(), 4);
@@ -405,7 +405,7 @@ word_t expr(char *e, bool *success)
       }
       else
       { // 这个时候一定是寄存器. 寄存器出现一定就会立马用上, 所以可以在这里就调用寄存器阅读器
-        numspush(isa_reg_str2val(tokens[i].str + 1, success));
+        numspush(isa_reg_str2val(tokens[i].str +1, success));
       }
     }
     // 这个token的type是运算符
