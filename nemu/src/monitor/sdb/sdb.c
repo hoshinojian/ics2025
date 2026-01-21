@@ -99,6 +99,7 @@ int cmd_p(char *args){
   if(args == NULL)return 0;
   bool success = true;
   int ans = expr(args,&success);
+  printf("ans\n");
   return ans;
 }
 
