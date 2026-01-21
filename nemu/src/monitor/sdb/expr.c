@@ -256,7 +256,7 @@ static void calc_logical() // todo
 static void calc_unary()
 { // 一元运算符, 解决der
   int op = oppop();
-  u_int32_t num = 0;
+  uint32_t num = 0;
   if (op == TK_DER)
   { // 这个时候完成解引用. 这个时候用来计算的一定是一个地址.
     num = pmem_read(numspop(), 4);
