@@ -264,7 +264,9 @@ static void calc_unary()
   numspush(num);
 }
 
+//输入格式应该是0, pc, ..直接是寄存器的名字, 而不是$寄存器的名字
 word_t isa_reg_str2val(const char *s, bool *success);
+
 
 static void calc_arithmetic() // 只负责解决+ - * /
 {
@@ -403,7 +405,7 @@ word_t expr(char *e, bool *success)
       }
       else
       { // 这个时候一定是寄存器. 寄存器出现一定就会立马用上, 所以可以在这里就调用寄存器阅读器
-        numspush(isa_reg_str2val(tokens[i].str, success));
+        numspush(isa_reg_str2val(tokens[i].str + 1, success));
       }
     }
     // 这个token的type是运算符
