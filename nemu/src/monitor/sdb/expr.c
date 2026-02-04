@@ -368,7 +368,7 @@ static char priority(int stacktopop, int seqop) // 加了多少运算符之后都不用变
   return pri[p][q];
 }
 
-word_t expr(char *e, bool *success)
+uint64_t expr(char *e, bool *success)
 {
   if (!make_token(e))
   {
