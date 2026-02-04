@@ -29,6 +29,7 @@ typedef struct
 void TESTCALC()
 {
   Log("TEST START.");
+
   FILE *fp = fopen("./tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   // fp里面每一行, 前面一个是结果后面一个是式子
@@ -86,4 +87,5 @@ int main(int argc, char *argv[])
   //TESTCALC();   //PA1_2 test
 
   return is_exit_status_bad();
+  //发现pa1.3做完之后, 
 }
