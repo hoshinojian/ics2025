@@ -97,12 +97,17 @@ static int cmd_x(char *args){
 int cmd_p(char *args){
   if(args == NULL)return 0;
   bool success = true;
-  int ans = expr(args,&success);
+  word_t ans = expr(args,&success);
   printf("The answer in DEC is %d\n",ans);
   printf("The answer in HEX is 0x%x\n", ans);
   return 0;
 }
 
+int cmd_w(char *args){
+  if(args == NULL)return 0;
+  //计算expr并且设置断点
+  return 0;
+}
 static struct {
   const char *name;
   const char *description;
@@ -115,6 +120,7 @@ static struct {
   { "info", "Print the state of the program. Eg: info r will print the REGS, and info w will print the info of watchpoints.", cmd_info },
   { "x", "Use the command in form of \"x N EXPR\", Eg:x 4 1+1. Calculate the expr, use the ans as the beginner position of mm, then print the following 4 * N Bytes. ", cmd_x},
   { "p", "Caculator", cmd_p},
+  { "w", "Set a watchpoint", cmd_w},
   /* TODO: Add more commands */
 
 };

@@ -27,6 +27,7 @@ typedef struct watchpoint {
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+//head组织检视点, free组织空闲的监视点结构
 
 void init_wp_pool() {
   int i;
