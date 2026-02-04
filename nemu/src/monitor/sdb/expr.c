@@ -88,6 +88,7 @@ static regex_t re[NR_REGEX] = {};
  * Therefore we compile them only once before any usage.
  */
 // 把所有rules转义
+// int regcomp(regex_t *preg, const char *pattern, int cflags). 把rules里面的一个个pattern转化成为一个个regex_t元素
 void init_regex()
 {
   int i;
@@ -106,6 +107,7 @@ void init_regex()
   }
 }
 
+//token里面最大只有32位, 过大的数字也没必要测试了
 typedef struct token
 {
   int type;
@@ -116,6 +118,7 @@ typedef struct token
 static Token tokens[tokensSize] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
+//对于输入的字符串一个个完成解析, 并且存储到tokens里面去
 static bool make_token(char *e)
 {
   int position = 0;
@@ -193,6 +196,7 @@ static bool make_token(char *e)
         case TK_DEC:
           tokens[nr_token].type = rules[i].token_type;
           strncpy(tokens[nr_token].str, substr_start, substr_len);
+          //sscanf(substr_start,"%s", tokens[nr_token].str);
           tokens[nr_token].str[substr_len] = '\0';
           nr_token++;
           break;
@@ -202,14 +206,12 @@ static bool make_token(char *e)
         break;
       }
     }
-
     if (i == NR_REGEX)
     {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
   }
-
   return true;
 }
 

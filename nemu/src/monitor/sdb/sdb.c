@@ -86,7 +86,6 @@ static int cmd_x(char *args){
   int n = sscanf(args,"%d %x", &steps, &addr);
   if(n == 2){
     for(int i = 0; i < steps;i++){
-      //printf("%x : %x\n",addr + (i * 4),pmem_read(addr + (i *4), 4));
       printf("%x : %x\n",addr + (i * 4),vaddr_read(addr + (i *4), 4));
     }
   }else if(n == 1){
