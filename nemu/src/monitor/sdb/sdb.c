@@ -98,7 +98,8 @@ int cmd_p(char *args){
   if(args == NULL)return 0;
   bool success = true;
   int ans = expr(args,&success);
-  printf("%d\n",ans);
+  printf("The answer in DEC is %d\n",ans);
+  printf("The answer in HEX is %x\n", ans);
   return ans;
 }
 
