@@ -63,6 +63,7 @@ static int cmd_si(char *args){
   cpu_exec(steps);
   return 0;
 }
+
 static int cmd_info(char *args){
   char _command;
   sscanf(args,"%c",&_command);
@@ -73,6 +74,7 @@ static int cmd_info(char *args){
   }
   return 0;
 }
+
 //第一个版本的cmd_x,允许第二个参数是一个位置而不是一个待计算的seq
 static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
