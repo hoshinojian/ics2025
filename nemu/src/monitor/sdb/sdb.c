@@ -97,10 +97,10 @@ static int cmd_x(char *args){
 int cmd_p(char *args){
   if(args == NULL)return 0;
   bool success = true;
-  long int ans = expr(args,&success);
-  printf("The answer in DEC is %ld\n",ans);
-  printf("The answer in HEX is %lx\n", ans);
-  return ans;
+  int ans = expr(args,&success);
+  printf("The answer in DEC is %d\n",ans);
+  printf("The answer in HEX is %x\n", ans);
+  return 0;
 }
 
 static struct {
