@@ -40,11 +40,13 @@ static int choose(int n){
 
 static int current = 0;//static每一轮调用完之后要归零
 
+//塞一个字符到buf里面去
 static void gen(char c){
   buf[current] = c;
   current++;
 }
 
+//塞一个运算符
 static void gen_rand_op(){
   switch(choose(4)){
     case 0:
