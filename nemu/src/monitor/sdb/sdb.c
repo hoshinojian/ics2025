@@ -20,6 +20,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/vaddr.h>
 
 static int is_batch_mode = false;
 
@@ -76,10 +77,7 @@ static int cmd_info(char *args){
 }
 
 //第一个版本的cmd_x,允许第二个参数是一个位置而不是一个待计算的seq
-static word_t pmem_read(paddr_t addr, int len) {
-  word_t ret = host_read(guest_to_host(addr), len);
-  return ret;
-}
+
 
 static int cmd_x(char *args){
   if(args == NULL)return 0;
@@ -88,8 +86,8 @@ static int cmd_x(char *args){
   int n = sscanf(args,"%d %x", &steps, &addr);
   if(n == 2){
     for(int i = 0; i < steps;i++){
-      printf("%x : %x\n",addr + (i * 4),pmem_read(addr + (i *4), 4));
-
+      //printf("%x : %x\n",addr + (i * 4),pmem_read(addr + (i *4), 4));
+      printf("%x : %x\n",addr + (i * 4),vaddr_read(addr + (i *4), 4));
     }
   }else if(n == 1){
     printf("Parameter invalid\n");
