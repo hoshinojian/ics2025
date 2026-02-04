@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <memory/paddr.h>
 #include <memory/host.h>
+#include <memory/vaddr.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -228,13 +229,7 @@ static void oppush(int n) { opstk[opstktop++] = n; }
 static int oppop() { return opstk[--opstktop]; }
 static int optop() { return opstk[opstktop - 1]; }
 
-static word_t pmem_read(paddr_t addr, int len)
-{
-  word_t ret = host_read(guest_to_host(addr), len);
-  return ret;
-}
-
-static void calc_logical() // todo
+static void calc_logical()
 {
   u_int32_t b = numspop();
   u_int32_t a = numspop();
@@ -255,13 +250,15 @@ static void calc_logical() // todo
   numspush(ans);
 }
 
+//
 static void calc_unary()
 { // 一元运算符, 解决der
   int op = oppop();
   u_int32_t num = 0;
   if (op == TK_DER)
   { // 这个时候完成解引用. 这个时候用来计算的一定是一个地址.
-    num = pmem_read(numspop(), 4);
+    num = vaddr_read(numspop(), 4);
+
   }
   numspush(num);
 }
