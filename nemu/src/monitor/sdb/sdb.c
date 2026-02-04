@@ -99,7 +99,7 @@ int cmd_p(char *args){
   bool success = true;
   int ans = expr(args,&success);
   printf("The answer in DEC is %d\n",ans);
-  printf("The answer in HEX is %x\n", ans);
+  printf("The answer in HEX is 0x%x\n", ans);
   return 0;
 }
 
