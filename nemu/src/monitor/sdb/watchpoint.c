@@ -128,8 +128,10 @@ bool check_wp(){
     bool success = true;
     if(wp -> old_value != (expr(wp->EXPR, &success))){
       //对改变的前值和后值进行输出, 然后修改旧值
-      printf("The watchpoint %s is changed. The old value is %d, %x",wp->EXPR, wp->old_value,wp->old_value);
-      printf("The new value is %d, %x", expr(wp->EXPR, &success),expr(wp->EXPR, &success));
+      printf("Hardware watchpoint %d: %s\n", wp->NO, wp->EXPR);      
+      printf("Old value = %u (0x%x)\n", wp->old_value, wp->old_value);
+      printf("New value = %u (0x%x)\n", expr(wp->EXPR, &success), expr(wp->EXPR, &success)); 
+      
       wp->old_value = (expr(wp->EXPR, &success));
       halt = true;
     }
