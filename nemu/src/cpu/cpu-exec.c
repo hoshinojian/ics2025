@@ -43,7 +43,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
   //扫描所有的监视点, 可能多个监视点同时改变
-  check_wp();
+  
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {

@@ -119,7 +119,8 @@ void free_wp(WP *wp)
   return;
 }
 
-void check_wp(){
+bool check_wp(){
+  bool ret = true;
   WP* wp = head;
   for(; wp!=NULL; wp = wp -> next){
     bool success = true;
@@ -128,7 +129,9 @@ void check_wp(){
       printf("The watchpoint %s is changed. The old value is %d, %x",wp->EXPR, wp->old_value,wp->old_value);
       printf("The new value is %d, %x", expr(wp->EXPR, &success),expr(wp->EXPR, &success));
       wp->old_value = (expr(wp->EXPR, &success));
+      ret = false;
     }
   }
+  return ret;
 }
 /* TODO: Implement the functionality of watchpoint */
