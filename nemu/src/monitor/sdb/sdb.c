@@ -72,7 +72,8 @@ static int cmd_info(char *args){
   if(_command == 'r'){
     isa_reg_display();
   }else if(_command == 'w'){
-
+    //输出所有的监视点
+    info_w();
   }
   return 0;
 }

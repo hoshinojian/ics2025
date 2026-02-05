@@ -149,4 +149,20 @@ bool check_wp()
   }
   return halt;
 }
+
+void info_w()
+{
+  WP *wp = head;
+  if (!wp)
+    return;
+  printf("%-4s %-30s %-14s %-14s\n", "Num", "Expr", "Value(Dec)", "Value(Hex)");
+  while (wp)
+  {
+    printf("%-4d %-30s %-14u 0x%08x\n",
+           wp->NO,
+           wp->EXPR,
+           wp->old_value,
+           wp->old_value);
+  }
+}
 /* TODO: Implement the functionality of watchpoint */
