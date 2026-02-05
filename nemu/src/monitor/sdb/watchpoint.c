@@ -52,7 +52,8 @@ WP *new_wp()
     head = ans;
     tail = ans;
     free_begin = free_begin->next;
-    if(free_begin){
+    if (free_begin)
+    {
       free_begin->prev = NULL;
     }
     head->prev = NULL;
@@ -74,24 +75,28 @@ WP *new_wp()
 
 void free_wp(WP *wp)
 {
-  if(!wp)return;
+  if (!wp)
+    return;
   WP *targ = head;
   for (; targ != NULL; targ = targ->next)
   {
     if (targ == wp)
       break;
   }
-  if (!targ)return;
+  if (!targ)
+    return;
 
   if (wp == head)
   {
     head = head->next;
-    if(head)head->prev = NULL;
+    if (head)
+      head->prev = NULL;
   }
   if (wp == tail)
   {
     tail = tail->prev;
-    if(tail)tail->next = NULL;
+    if (tail)
+      tail->next = NULL;
   }
 
   WP *PREV = wp->prev;
@@ -102,13 +107,15 @@ void free_wp(WP *wp)
     NEXT->prev = PREV;
 
   // 如果用光了所有监视点
-  if (!free_begin){
+  if (!free_begin)
+  {
     free_begin = wp;
-        memset(wp->EXPR, 0, DEST);
+    memset(wp->EXPR, 0, DEST);
     wp->old_value = 0;
-    free_begin -> prev = NULL;
-    free_begin -> next = NULL;
-  }else
+    free_begin->prev = NULL;
+    free_begin->next = NULL;
+  }
+  else
   {
     free_begin->prev = wp;
     wp->next = free_begin;
@@ -121,18 +128,22 @@ void free_wp(WP *wp)
   return;
 }
 
-bool check_wp(){
+bool check_wp()
+{
   bool halt = false;
-  WP* wp = head;
-  for(; wp!=NULL; wp = wp -> next){
+  WP *wp = head;
+  for (; wp != NULL; wp = wp->next)
+  {
     bool success = true;
-    if(wp -> old_value != (expr(wp->EXPR, &success))){
-      //对改变的前值和后值进行输出, 然后修改旧值
-      printf("Hardware watchpoint %d: %s\n", wp->NO, wp->EXPR);      
+    uint32_t new_val = expr(wp->EXPR, &success); // 先计算并存起来
+    if (wp->old_value != (expr(wp->EXPR, &success)))
+    {
+      // 对改变的前值和后值进行输出, 然后修改旧值
+      printf("Hardware watchpoint %d: %s\n", wp->NO, wp->EXPR);
       printf("Old value = %u (0x%x)\n", wp->old_value, wp->old_value);
-      printf("New value = %u (0x%x)\n", expr(wp->EXPR, &success), expr(wp->EXPR, &success)); 
-      
-      wp->old_value = (expr(wp->EXPR, &success));
+      printf("New value = %u (0x%x)\n", new_val, new_val);
+
+      wp->old_value = new_val;
       halt = true;
     }
   }
