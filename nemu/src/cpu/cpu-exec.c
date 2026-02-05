@@ -44,7 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
   //扫描所有的监视点, 可能多个监视点同时改变. 如果有改变的, 停止. 
   if(check_wp()){
-
+    nemu_state.state = NEMU_STOP;
   }
 }
 
