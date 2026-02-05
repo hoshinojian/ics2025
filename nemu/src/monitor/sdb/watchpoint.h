@@ -25,5 +25,6 @@ WP* new_wp();
 void free_wp(WP *wp);
 bool check_wp();
 void info_w();
+void free_by_expr(char* str);
 
 #endif

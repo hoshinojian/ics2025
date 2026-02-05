@@ -115,6 +115,13 @@ int cmd_w(char *args){
   wp->old_value = expr(args,&success);
   return 0;
 }
+
+int cmd_d(char *args){
+  if(!args)return 0;
+  free_by_expr(args);
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -128,6 +135,7 @@ static struct {
   { "x", "Use the command in form of \"x N EXPR\", Eg:x 4 1+1. Calculate the expr, use the ans as the beginner position of mm, then print the following 4 * N Bytes. ", cmd_x},
   { "p", "Caculator", cmd_p},
   { "w", "Set a watchpoint", cmd_w},
+  { "d", "Delete a watchpoint", cmd_d},
   /* TODO: Add more commands */
 
 };

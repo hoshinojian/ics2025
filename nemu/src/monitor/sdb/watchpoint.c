@@ -73,6 +73,18 @@ WP *new_wp()
   return ans;
 };
 
+void free_by_expr(char* str) {
+    if (!str) return;
+    WP* wp = head;
+    for (; wp != NULL; wp = wp->next) {
+        if (strcmp(wp->EXPR, str) == 0) {
+            free_wp(wp);
+            return;
+        }
+    }
+    return;
+  }
+
 void free_wp(WP *wp)
 {
   if (!wp)
