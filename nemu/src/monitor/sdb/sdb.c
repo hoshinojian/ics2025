@@ -20,6 +20,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/vaddr.h>
+#include "watchpoint.h"
 
 static int is_batch_mode = false;
 
@@ -63,21 +65,21 @@ static int cmd_si(char *args){
   cpu_exec(steps);
   return 0;
 }
+
 static int cmd_info(char *args){
   char _command;
   sscanf(args,"%c",&_command);
   if(_command == 'r'){
     isa_reg_display();
   }else if(_command == 'w'){
-
+    //输出所有的监视点
+    info_w();
   }
   return 0;
 }
+
 //第一个版本的cmd_x,允许第二个参数是一个位置而不是一个待计算的seq
-static word_t pmem_read(paddr_t addr, int len) {
-  word_t ret = host_read(guest_to_host(addr), len);
-  return ret;
-}
+
 
 static int cmd_x(char *args){
   if(args == NULL)return 0;
@@ -86,12 +88,37 @@ static int cmd_x(char *args){
   int n = sscanf(args,"%d %x", &steps, &addr);
   if(n == 2){
     for(int i = 0; i < steps;i++){
-      printf("%x : %x\n",addr + (i * 4),pmem_read(addr + (i *4), 4));
-
+      printf("0x%x : %x\n",addr + (i * 4),vaddr_read(addr + (i *4), 4));
     }
   }else if(n == 1){
     printf("Parameter invalid\n");
   }
+  return 0;
+}
+
+int cmd_p(char *args){
+  if(args == NULL)return 0;
+  bool success = true;
+  word_t ans = expr(args,&success);
+  printf("The answer in DEC is %d\n",ans);
+  printf("The answer in HEX is 0x%x\n", ans);
+  return 0;
+}
+
+int cmd_w(char *args){
+  if(args == NULL)return 0;
+  //把当前的断点塞到断点池里面去
+  WP* wp = new_wp();
+  if(!wp)return -1;
+  sscanf(args, "%s", wp->EXPR);
+  bool success = true;
+  wp->old_value = expr(args,&success);
+  return 0;
+}
+
+int cmd_d(char *args){
+  if(!args)return 0;
+  free_by_expr(args);
   return 0;
 }
 
@@ -106,7 +133,9 @@ static struct {
   { "si", "Program by steps as the form of \"si [x]\", the default x is 1", cmd_si},
   { "info", "Print the state of the program. Eg: info r will print the REGS, and info w will print the info of watchpoints.", cmd_info },
   { "x", "Use the command in form of \"x N EXPR\", Eg:x 4 1+1. Calculate the expr, use the ans as the beginner position of mm, then print the following 4 * N Bytes. ", cmd_x},
-  
+  { "p", "Caculator", cmd_p},
+  { "w", "Set a watchpoint", cmd_w},
+  { "d", "Delete a watchpoint", cmd_d},
   /* TODO: Add more commands */
 
 };

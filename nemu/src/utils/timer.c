@@ -45,6 +45,6 @@ uint64_t get_time() {
 }
 
 void init_rand() {
-  printf("init_monitor function calls init_rand() and generate a rand \n");
+  //printf("init_monitor function calls init_rand() and generate a rand \n");
   srand(get_time_internal());
 }
