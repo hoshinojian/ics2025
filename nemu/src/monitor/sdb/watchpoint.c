@@ -163,6 +163,7 @@ void info_w()
            wp->EXPR,
            wp->old_value,
            wp->old_value);
+    wp = wp->next;
   }
 }
 /* TODO: Implement the functionality of watchpoint */
