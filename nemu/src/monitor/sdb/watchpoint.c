@@ -15,6 +15,7 @@
 
 #include "sdb.h"
 #include "watchpoint.h" // 引入头文件
+#include "sdb.h"
 
 #define NR_WP 32
 
@@ -118,4 +119,16 @@ void free_wp(WP *wp)
   return;
 }
 
+void check_wp(){
+  WP* wp = head;
+  for(; wp!=NULL; wp = wp -> next){
+    bool success = true;
+    if(wp -> old_value != (expr(wp->EXPR, &success))){
+      //对改变的前值和后值进行输出, 然后修改旧值
+      printf("The watchpoint %s is changed. The old value is %d, %x",wp->EXPR, wp->old_value,wp->old_value);
+      printf("The new value is %d, %x", expr(wp->EXPR, &success),expr(wp->EXPR, &success));
+      wp->old_value = (expr(wp->EXPR, &success));
+    }
+  }
+}
 /* TODO: Implement the functionality of watchpoint */
