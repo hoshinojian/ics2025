@@ -109,7 +109,9 @@ int cmd_w(char *args){
   //把当前的断点塞到断点池里面去
   WP* wp = new_wp();
   if(!wp)return -1;
-  
+  sscanf(args, "%c", wp->EXPR);
+  bool success = true;
+  wp->old_value = expr(args,&success);
   return 0;
 }
 static struct {
