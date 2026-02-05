@@ -27,6 +27,8 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 
+
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -105,8 +107,7 @@ int cmd_p(char *args){
 
 int cmd_w(char *args){
   if(args == NULL)return 0;
-  //计算expr并且设置断点
-  
+  //把当前的断点塞到断点池里面去
 
   return 0;
 }
