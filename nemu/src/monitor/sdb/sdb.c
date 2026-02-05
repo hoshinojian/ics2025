@@ -107,7 +107,9 @@ int cmd_p(char *args){
 int cmd_w(char *args){
   if(args == NULL)return 0;
   //把当前的断点塞到断点池里面去
-
+  WP* wp = new_wp();
+  if(!wp)return -1;
+  
   return 0;
 }
 static struct {
