@@ -52,7 +52,9 @@ WP *new_wp()
     head = ans;
     tail = ans;
     free_begin = free_begin->next;
-    free_begin->prev = NULL;
+    if(free_begin){
+      free_begin->prev = NULL;
+    }
     head->prev = NULL;
     tail->next = NULL;
   }
@@ -79,8 +81,7 @@ void free_wp(WP *wp)
     if (targ == wp)
       break;
   }
-  if (!targ)
-    return;
+  if (!targ)return;
 
   if (wp == head)
   {
@@ -92,12 +93,14 @@ void free_wp(WP *wp)
     tail = tail->prev;
     if(tail)tail->next = NULL;
   }
+
   WP *PREV = wp->prev;
   WP *NEXT = wp->next;
   if (PREV)
     PREV->next = NEXT;
   if (NEXT)
     NEXT->prev = PREV;
+
   // 如果用光了所有监视点
   if (!free_begin){
     free_begin = wp;
@@ -105,22 +108,21 @@ void free_wp(WP *wp)
     wp->old_value = 0;
     free_begin -> prev = NULL;
     free_begin -> next = NULL;
-  }
-
-  else
+  }else
   {
     free_begin->prev = wp;
     wp->next = free_begin;
     free_begin = wp;
     memset(wp->EXPR, 0, DEST);
     wp->old_value = 0;
+    wp->prev = NULL;
   }
 
   return;
 }
 
 bool check_wp(){
-  bool ret = true;
+  bool halt = false;
   WP* wp = head;
   for(; wp!=NULL; wp = wp -> next){
     bool success = true;
@@ -129,9 +131,9 @@ bool check_wp(){
       printf("The watchpoint %s is changed. The old value is %d, %x",wp->EXPR, wp->old_value,wp->old_value);
       printf("The new value is %d, %x", expr(wp->EXPR, &success),expr(wp->EXPR, &success));
       wp->old_value = (expr(wp->EXPR, &success));
-      ret = false;
+      halt = true;
     }
   }
-  return ret;
+  return halt;
 }
 /* TODO: Implement the functionality of watchpoint */
