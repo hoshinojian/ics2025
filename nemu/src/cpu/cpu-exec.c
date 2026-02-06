@@ -52,7 +52,14 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;       //先固定下一条指令是本条指令
   isa_exec_once(s);   //单步执行
+/*
+  1. 从mm读取指令
+  2. 更新s->snpc, 加上4
+  3. 执行指令
+  4. 确定s->dnpc
+  */
   cpu.pc = s->dnpc;
+  
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);

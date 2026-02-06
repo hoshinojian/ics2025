@@ -22,7 +22,13 @@ typedef struct Decode {
   vaddr_t pc;
   vaddr_t snpc; // static next pc, 通常是pc + 4。不发生跳转就去这里
   vaddr_t dnpc; // dynamic next pc (动态下一条指令地址，处理跳转指令用)。 如果是普通指令， 那么下一条指令是snpc，如果是跳转指令，就去dnpc
-  ISADecodeInfo isa;
+  ISADecodeInfo isa;  //存放指令数据
+
+  //typedef concat(__GUEST_ISA__, _ISADecodeInfo) ISADecodeInfo;
+  //typedef struct {
+  //uint32_t inst;
+  //} MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
+
   IFDEF(CONFIG_ITRACE, char logbuf[128]);//存放地址 + 机器码 + 反汇编代码，0x80000000: 00000297 auipc t0, 0
 } Decode;
 
