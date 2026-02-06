@@ -20,10 +20,10 @@
 
 typedef struct Decode {
   vaddr_t pc;
-  vaddr_t snpc; // static next pc
-  vaddr_t dnpc; // dynamic next pc
+  vaddr_t snpc; // static next pc, 通常是pc + 4。不发生跳转就去这里
+  vaddr_t dnpc; // dynamic next pc (动态下一条指令地址，处理跳转指令用)。 如果是普通指令， 那么下一条指令是snpc，如果是跳转指令，就去dnpc
   ISADecodeInfo isa;
-  IFDEF(CONFIG_ITRACE, char logbuf[128]);
+  IFDEF(CONFIG_ITRACE, char logbuf[128]);//存放地址 + 机器码 + 反汇编代码，0x80000000: 00000297 auipc t0, 0
 } Decode;
 
 // --- pattern matching mechanism ---
