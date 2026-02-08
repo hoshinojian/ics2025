@@ -87,7 +87,7 @@ static int decode_exec(Decode *s)
 {
   s->dnpc = s->snpc;
 
-#define INSTPAT_INST(s) ((s)->isa.inst)
+#define INSTPAT_INST(s) ((s)->isa.inst)   //INSTPAT INST s 代表s的指令
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */)         \
   {                                                                  \
     int rd = 0;                                                      \
