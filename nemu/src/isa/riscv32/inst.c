@@ -95,6 +95,12 @@ static int decode_exec(Decode *s)
     decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
     __VA_ARGS__;                                                     \
   }
+  // s: 解码结构体指针
+  // name 指令名字
+  // type 什么类型的， uisj， 决定了怎么取出来立即数和寄存器索引
+  // ... 可变参数, 接受具体的C代码. 
+  //----------------------------------
+  //
 
   INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc, U, R(rd) = s->pc + imm);
