@@ -102,7 +102,12 @@ finish:
   } \
 } while (0)
 
+  /*//模式串解析成为key mask shift*/
+  // 解析出来之后, 检查当前的s合不合当前的指令模式
+  // 匹配到了就跳出去
+
 #define INSTPAT_START(name) { const void * __instpat_end = &&concat(__instpat_end_, name);
+// 定义跳出点,  `const void * __instpat_end = &&concat(__instpat_end_, name);`. && 标签地址, 获取一个标签的内存地址
 #define INSTPAT_END(name)   concat(__instpat_end_, name): ; }
 
 #endif
