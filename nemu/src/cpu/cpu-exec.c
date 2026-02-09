@@ -58,6 +58,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   3. 执行指令
   4. 确定s->dnpc
   */
+ //到这里, pc是当前指令, snpc是pc + 4, dnpc未知. 在指令执行过程中, dnpc会发生变化
   cpu.pc = s->dnpc;
   
 #ifdef CONFIG_ITRACE
