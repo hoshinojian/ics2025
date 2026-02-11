@@ -226,9 +226,25 @@ static int decode_exec(Decode *s)
         R(rd) = src1 / src2; // 正常计算
     }
 });
-  INSTPAT("0000001 ????? ????? 110 ????? 0110011", rem, R, {});
-  INSTPAT("0000001 ????? ????? 111 ????? 0110011", remu, R, {});
+  INSTPAT("0000001 ????? ????? 110 ????? 0110011", rem, R, {
+    sword_t rs1 = (sword_t)src1;
+    sword_t rs2 = (sword_t)src2;
+    if (rs2 == 0) {
+        R(rd) = rs1;        // 除以0，余数为被除数
+    } else if (rs1 == 0x80000000 && rs2 == -1) {
+        R(rd) = 0;          // 溢出情况，余数为0
+    } else {
+        R(rd) = rs1 % rs2;  // 正常计算
+    }
+});
 
+  INSTPAT("0000001 ????? ????? 111 ????? 0110011", remu, R, {
+    if (src2 == 0) {
+        R(rd) = src1;       // 除以0，余数为被除数
+    } else {
+        R(rd) = src1 % src2;// 正常计算
+    }
+});
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
   
