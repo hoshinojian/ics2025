@@ -44,21 +44,38 @@ enum
   {                 \
     *src2 = R(rs2); \
   } while (0)
+
+
+
 #define immI()                        \
   do                                  \
   {                                   \
     *imm = SEXT(BITS(i, 31, 20), 12); \
   } while (0)
-#define immU()                              \
-  do                                        \
-  {                                         \
-    *imm = SEXT(BITS(i, 31, 12), 20) << 12; \
-  } while (0)
+
 #define immS()                                               \
   do                                                         \
   {                                                          \
     *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); \
   } while (0)
+
+
+#define immB()                                       \
+  do                                                 \
+  {                                                  \
+    *imm = (SEXT(BITS(i, 31, 31), 1) << 12) |        \
+           (BITS(i, 7, 7) << 11) |                   \
+           (BITS(i, 30, 25) << 5) |                  \
+           (BITS(i, 11, 8) << 1);                    \
+  } while (0)
+
+
+#define immU()                              \
+  do                                        \
+  {                                         \
+    *imm = SEXT(BITS(i, 31, 12), 20) << 12; \
+  } while (0)
+
 
 /* J-type: imm[20] | imm[10:1] | imm[11] | imm[19:12] | rd | opcode */
 /* Content:  s  |  inst[30:21] | i11 | inst[19:12] | rd | 1101111  */
@@ -97,6 +114,9 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     break;
 
   case TYPE_B:
+    src1R();
+    src2R();
+    immB();
     break;
 
   case TYPE_U:
@@ -138,6 +158,7 @@ static int decode_exec(Decode *s)
   INSTPAT_START();
   //INSTPAT(模式字符串, 指令名称, 指令类型, 指令执行操作);
   INSTPAT("0000000 ????? ????? 000 ????? 0110011", add, R, {R(rd) = src1 + src2;});
+  //INSTPAT
 
   INSTPAT("????????????  ????? 010 ????? 0000011", lw, I, {R(rd) = Mr((src1 + imm), 4);});
   INSTPAT("??????? ????? ????? 100 ????? 0000011", lbu, I, R(rd) = Mr(src1 + imm, 1));
