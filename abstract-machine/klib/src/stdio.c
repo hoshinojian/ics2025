@@ -80,6 +80,14 @@ int sprintf(char *out, const char *fmt, ...) {
         *out++ = (char)c;
         break;
       }
+      case 's': {
+        char *s = va_arg(ap, char *); // È¡³ö×Ö·û´®Ö¸Õë
+        if (!s) s = "(null)";         // ·ÀÓùĞÔ±à³Ì£º·ÀÖ¹¿ÕÖ¸Õë±ÀÀ£
+        while (*s) {
+          *out++ = *s++;
+        }
+      break;
+      }
       default:
         *out++ = *fmt;
         break;
