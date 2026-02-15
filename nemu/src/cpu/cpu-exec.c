@@ -34,6 +34,14 @@ static bool g_print_step = false;
 
 void device_update();
 
+static char iringbuf[20][128];
+static int iringbuf_idx = 0;
+
+void iringbuf_write(char* log){
+  strncpy(iringbuf[iringbuf_idx], log, 128);
+  iringbuf_idx = (iringbuf_idx + 1) % 20;
+}
+
 //watchpoint的使用
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   //printf("1\n");  在这之后， 输出pc 反汇编
@@ -93,7 +101,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
-#endif
+  iringbuf_write(s->logbuf);
+  #endif
 }
 
 static void execute(uint64_t n) {

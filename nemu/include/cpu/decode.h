@@ -30,7 +30,7 @@ typedef struct Decode {
   //} MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
 
   IFDEF(CONFIG_ITRACE, char logbuf[128]);//存放地址 + 机器码 + 反汇编代码，0x80000000: 00000297 auipc t0, 0
-  IFDEF(CONFIG_ITRACE, char logbuf_[128]);
+  //IFDEF(CONFIG_ITRACE, char logbuf_[128]);
 } Decode;
 
 // --- pattern matching mechanism ---
