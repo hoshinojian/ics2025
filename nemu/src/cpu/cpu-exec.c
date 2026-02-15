@@ -36,7 +36,7 @@ void device_update();
 
 //watchpoint的使用
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
-  printf("1\n");
+  //printf("1\n");  在这之后， 输出pc 反汇编
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
@@ -47,6 +47,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if(check_wp()){
     nemu_state.state = NEMU_STOP;
   }
+  printf("2\n");
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
