@@ -40,7 +40,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
-  if (g_print_step) { //IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); 
+  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); 
   }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
@@ -70,7 +70,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   int ilen = s->snpc - s->pc;
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst;
-  
+
 #ifdef CONFIG_ISA_x86
   for (i = 0; i < ilen; i ++) {
 #else
