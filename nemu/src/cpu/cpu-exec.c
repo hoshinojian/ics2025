@@ -135,7 +135,6 @@ void assert_fail_msg() {
 
   for (int i = 0; i < 20; i++) {
         int current = (iringbuf_idx + i) % 20;
-        
         // 只有非空的时候才打印（防止刚启动就报错，buffer里有空字符串）
         if (strlen(iringbuf[current]) > 0) {
             // 如果是最后一条（刚出错的那条），可以给个特殊标记，比如 "-->"
