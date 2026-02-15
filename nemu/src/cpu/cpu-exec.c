@@ -36,6 +36,7 @@ void device_update();
 
 //watchpointµÄÊ¹ÓÃ
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
+  printf("1\n");
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
