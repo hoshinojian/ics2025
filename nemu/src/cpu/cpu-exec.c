@@ -47,7 +47,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if(check_wp()){
     nemu_state.state = NEMU_STOP;
   }
-  printf("2\n");
+  //printf("2\n"); 在这之前输出pc
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
