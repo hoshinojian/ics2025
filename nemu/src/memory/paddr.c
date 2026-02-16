@@ -19,6 +19,8 @@
 #include <isa.h>
 #include <stdio.h>
 
+#define CONFIG_MM_TRACE 1
+
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
