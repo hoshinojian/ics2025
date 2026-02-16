@@ -125,7 +125,9 @@ config CC_ASAN
 endmenu
 
 menu "Testing and Debugging"
-
+config MM_TRACE
+  bool "Enable Memory Trace(mtrace)"
+  default n
 
 config TRACE
   bool "Enable tracer"

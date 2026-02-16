@@ -19,6 +19,8 @@
 #include <isa.h>
 #include <stdio.h>
 
+#include <common.h> // 【必须加这行，否则看不见 Kconfig 定义的宏】
+#include <memory/host.h>
 
 
 #if   defined(CONFIG_PMEM_MALLOC)

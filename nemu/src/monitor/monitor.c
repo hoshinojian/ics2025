@@ -127,7 +127,6 @@ void init_monitor(int argc, char *argv[]) {
 
   //todo
   //在这里插入对于mtrace的定义
-  #define CONFIG_MM_TRACE 1
   IFDEF(CONFIG_MM_TRACE, init_mm_log(mm_log_file));
 
   /* Initialize memory. */
