@@ -58,24 +58,33 @@ void init_mem() {
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
+//使用在log.c里面定义的变量
+extern FILE* mm_log_fp;
 
-void write2mmlog(paddr_t addr, int len){
-  
+#define MTRACE_READ 0
+#define MTRACE_WRITE 1
+
+void write2mmlog(paddr_t addr, int len, int type, word_t data){
+  fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s  Data: " FMT_WORD "\n",
+            addr, 
+            len, 
+            type == MTRACE_READ ? "READ" : "WRITE",
+            data
+    );
 }
 
 
 word_t paddr_read(paddr_t addr, int len) {
+  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len, MTRACE_READ, 0)); 
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
-  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len));
   return 0;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
+  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len, MTRACE_WRITE, data));
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
-  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len));
-
 }
