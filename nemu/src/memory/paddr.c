@@ -68,7 +68,15 @@ extern FILE* mm_log_fp;
 #define MTRACE_READ 0
 #define MTRACE_WRITE 1
 
-void write2mmlog(paddr_t addr, int len, int type, word_t data){
+void write2mmlog_read(paddr_t addr, int len, int type){
+  fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s  ",
+            addr, 
+            len, 
+            type == MTRACE_READ ? "READ" : "WRITE"
+    );
+}
+
+void write2mmlog_write(paddr_t addr, int len, int type, word_t data){
   fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s  Data: " FMT_WORD "\n",
             addr, 
             len, 
@@ -79,7 +87,7 @@ void write2mmlog(paddr_t addr, int len, int type, word_t data){
 
 
 word_t paddr_read(paddr_t addr, int len) {
-  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len, MTRACE_READ, 0)); 
+  IFDEF(CONFIG_MM_TRACE, write2mmlog_read(addr, len, MTRACE_READ)); 
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -87,7 +95,7 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  IFDEF(CONFIG_MM_TRACE, write2mmlog(addr, len, MTRACE_WRITE, data));
+  IFDEF(CONFIG_MM_TRACE, write2mmlog_write(addr, len, MTRACE_WRITE, data));
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
