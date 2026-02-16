@@ -60,7 +60,7 @@ void init_mem() {
 
 
 void write2mmlog(paddr_t addr, int len){
-
+  
 }
 
 
