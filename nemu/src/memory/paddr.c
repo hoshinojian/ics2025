@@ -69,7 +69,7 @@ extern FILE* mm_log_fp;
 #define MTRACE_WRITE 1
 
 void write2mmlog_read(paddr_t addr, int len, int type){
-  fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s  ",
+  fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s \n ",
             addr, 
             len, 
             type == MTRACE_READ ? "READ" : "WRITE"
