@@ -37,6 +37,7 @@ bool log_enable() {
 #endif
 
 //Ä£·Âinit_log
+#define CONFIG_MM_TRACE 1
 #ifndef CONFIG_MM_TRACE
 FILE *mm_log_fp = NULL;
 
