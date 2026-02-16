@@ -119,6 +119,10 @@ void init_monitor(int argc, char *argv[]) {
   /* Open the log file. */
   init_log(log_file);
 
+  //todo
+  //在这里插入对于mtrace的定义
+  
+
   /* Initialize memory. */
   init_mem();
 
