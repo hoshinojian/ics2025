@@ -36,7 +36,17 @@ bool log_enable() {
 }
 #endif
 
+//Ä£·Âinit_log
 #ifndef CONFIG_MM_TRACE
+FILE *mm_log_fp = NULL;
 
+void init_mm_log(const char *mm_log_file){
+  if(mm_log_file != NULL){
+    FILE *fp = fopen(mm_log_file, "w");
+    Assert(fp, "Can not open '%s'", mm_log_file);
+    mm_log_fp = fp;
+  }
+  Log("MM LOG is written to %s", mm_log_file);
+}
 
 #endif

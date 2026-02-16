@@ -23,6 +23,7 @@ void init_difftest(char *ref_so_file, long img_size, int port);
 void init_device();
 void init_sdb();
 void init_disasm();
+void init_mm_log(const char *mm_log_file);
 
 static void welcome() {
 
@@ -52,6 +53,7 @@ static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
+static char *mm_log_file = NULL;
 
 static long load_img() {
   if (img_file == NULL) {
@@ -83,6 +85,7 @@ static int parse_args(int argc, char *argv[]) {
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
     {"help"     , no_argument      , NULL, 'h'},
+    {"mmlog"    , required_argument, NULL, 'm'},
     {0          , 0                , NULL,  0 },
   };
   int o;
@@ -92,6 +95,9 @@ static int parse_args(int argc, char *argv[]) {
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
+      case 'm': mm_log_file = optarg; break;
+
+      
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
@@ -121,7 +127,7 @@ void init_monitor(int argc, char *argv[]) {
 
   //todo
   //在这里插入对于mtrace的定义
-  
+  IFDEF(CONFIG_MM_TRACE, init_mm_log);
 
   /* Initialize memory. */
   init_mem();
