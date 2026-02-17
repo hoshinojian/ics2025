@@ -22,6 +22,13 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
+void log_ftrace(int type, uint32_t pc, uint32_t target);
+enum {
+  type_jal,
+  type_jalr_call,
+  type_jalr_ret
+};
+
 enum
 {
   TYPE_R,
@@ -193,7 +200,9 @@ static int decode_exec(Decode *s)
   INSTPAT("??????? ????? ????? ??? ????? 0010111", auipc, U, R(rd) = s->pc + imm);
   INSTPAT("????????????????????    ????? 0110111", lui, U, {R(rd) = imm;});
 
-  INSTPAT("????????????  ????? ??? ????? 1101111", jal, J, {R(rd) = s->snpc; s->dnpc = s->pc + imm;});
+  INSTPAT("????????????  ????? ??? ????? 1101111", jal, J, {R(rd) = s->snpc; s->dnpc = s->pc + imm;
+    log_ftrace(type_jal, s->pc, s->pc + imm);
+  });
   INSTPAT("????????????  ????? 000 ????? 1100111", jarl, I, {int target_ = (src1 + imm) & ~1; R(rd) = s->snpc; s->dnpc = target_;});
 
   INSTPAT("??????? ????? ????? 000 ????? 1100011", beq, B, {s->dnpc = src1 == src2 ? s->pc + imm : s-> snpc;});
@@ -237,7 +246,6 @@ static int decode_exec(Decode *s)
         R(rd) = rs1 % rs2;  // 正常计算
     }
 });
-
   INSTPAT("0000001 ????? ????? 111 ????? 0110011", remu, R, {
     if (src2 == 0) {
         R(rd) = src1;       // 除以0，余数为被除数
@@ -260,3 +268,22 @@ int isa_exec_once(Decode *s)
   s->isa.inst = inst_fetch(&s->snpc, 4);
   return decode_exec(s);
 }
+
+
+
+extern FILE* func_log_fp;
+void log_ftrace(int type, uint32_t pc, uint32_t target){
+  if(type == type_jal){
+    fprintf(func_log_fp, "0x%08x: call 0x%08x\n", pc, target);
+  }
+  else if(type == type_jalr_call){
+    // JALR (rd=ra): 间接调用，目标也是 target (虽然是通过寄存器算出来的)
+    fprintf(func_log_fp, "0x%08x: call 0x%08x\n", pc, target);
+  }
+  else if(type == type_jalr_ret){
+    // JALR (rd=0, rs1=ra): 函数返回，target 是返回到了哪里
+    fprintf(func_log_fp, "0x%08x: ret  0x%08x\n", pc, target);
+  }
+  fflush(func_log_fp);
+}
+
