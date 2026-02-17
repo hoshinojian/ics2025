@@ -139,7 +139,7 @@ config MM_TRACE_COND_START
   int "When MMTRACE_COND is enbaled"
   default 0x80000000
 
-config MM_ TRACE_COND_END
+config MM_TRACE_COND_END
   depends on MM_TRACE_COND
   int "When MMTRACE_COND is enabled"
   default 0x80000000
