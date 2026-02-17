@@ -129,6 +129,21 @@ config MM_TRACE
   bool "Enable Memory Trace(mtrace)"
   default n
 
+config MMTRACE_COND
+bool "Enable Condiitonal Trace(Addr Range)"
+  depends on MM_TRACE
+  default n
+
+config MMTRACE_COND_START
+  depends on MMTRACE_COND
+  int "When MMTRACE_COND is enbaled"
+  default 0x80000000
+
+config MMTRACE_COND_END
+  depends on MMTRACE_COND
+  int "When MMTRACE_COND is enabled"
+  default 0x80000000
+
 config TRACE
   bool "Enable tracer"
   default y
