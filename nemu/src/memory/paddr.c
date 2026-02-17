@@ -69,25 +69,25 @@ extern FILE* mm_log_fp;
 #define MTRACE_WRITE 1
 
 void write2mmlog_read(paddr_t addr, int len, int type){
-  #ifdef CONFIG_MM_TRACE
-
+  #ifndef CONFIG_MM_TRACE
+  return;
+  #endif
   #ifdef CONFIG_MM_TRACE_COND
     if (addr < CONFIG_MM_TRACE_START || addr > CONFIG_MM_TRACE_END) {
         return; // 不在范围内，直接忽略
     }
   #endif
-
   fprintf(mm_log_fp, "Addr: " FMT_PADDR "  Len: %d  Type: %s\n",
             addr, 
             len, 
             type == MTRACE_READ ? "READ" : "WRITE"
     );
-  #endif
 }
 
 void write2mmlog_write(paddr_t addr, int len, int type, word_t data){
-  #ifdef CONFIG_MM_TRACE
-
+  #ifndef CONFIG_MM_TRACE
+    return;
+  #endif
   #ifdef CONFIG_MM_TRACE_COND
     if (addr < CONFIG_MM_TRACE_START || addr > CONFIG_MM_TRACE_END) {
         return; // 不在范围内，直接忽略
@@ -99,7 +99,6 @@ void write2mmlog_write(paddr_t addr, int len, int type, word_t data){
             type == MTRACE_READ ? "READ" : "WRITE",
             data
     );
-  #endif
 }
 
 
