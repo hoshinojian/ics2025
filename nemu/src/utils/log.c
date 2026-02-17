@@ -36,6 +36,16 @@ bool log_enable() {
 }
 #endif
 
+FILE *func_log_fp = NULL;
+void init_func_log(const char *func_log_file){
+  if(func_log_file != NULL){
+    FILE *fp = fopen(func_log_file, "w");
+    Assert(fp, "Can not open '%s'", func_log_file);
+    func_log_fp = fp;
+    Log("Func LOG is written to %s", func_log_file);
+  }
+}
+
 //Ä£·Âinit_log
 #ifdef CONFIG_MM_TRACE
 FILE *mm_log_fp = NULL;
@@ -45,12 +55,12 @@ void init_mm_log(const char *mm_log_file){
     FILE *fp = fopen(mm_log_file, "w");
     Assert(fp, "Can not open '%s'", mm_log_file);
     mm_log_fp = fp;
-  }
-  Log("MM LOG is written to %s", mm_log_file);
+    Log("MM LOG is written to %s", mm_log_file);
   #ifdef CONFIG_MM_TRACE_COND
     Log("MM_TRACE_COND is ON and the begin is %x. ",CONFIG_MM_TRACE_COND_START);
     Log("MM_TRACE_COND is ON and the end   is %x. ",CONFIG_MM_TRACE_COND_END);
   #endif
+  }
 }
 
 #endif
