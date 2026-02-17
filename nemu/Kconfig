@@ -136,12 +136,12 @@ bool "Enable Condiitonal Trace(Addr Range)"
 
 config MM_TRACE_COND_START
   depends on MM_TRACE_COND
-  int "When MMTRACE_COND is enbaled"
+  hex "When MMTRACE_COND is enbaled"
   default 0x80000000
 
 config MM_TRACE_COND_END
   depends on MM_TRACE_COND
-  int "When MMTRACE_COND is enabled"
+  hex "When MMTRACE_COND is enabled"
   default 0x80000000
 
 config TRACE
