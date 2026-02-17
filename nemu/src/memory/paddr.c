@@ -73,7 +73,7 @@ void write2mmlog_read(paddr_t addr, int len, int type){
   return;
   #endif
   #ifdef CONFIG_MM_TRACE_COND
-    if (addr < CONFIG_MM_TRACE_START || addr > CONFIG_MM_TRACE_END) {
+    if (addr < CONFIG_MM_TRACE_COND_START || addr > CONFIG_MM_TRACE_COND_END) {
         return; // 不在范围内，直接忽略
     }
   #endif
@@ -89,7 +89,7 @@ void write2mmlog_write(paddr_t addr, int len, int type, word_t data){
     return;
   #endif
   #ifdef CONFIG_MM_TRACE_COND
-    if (addr < CONFIG_MM_TRACE_START || addr > CONFIG_MM_TRACE_END) {
+    if (addr < CONFIG_MM_TRACE_COND_START || addr > CONFIG_MM_TRACE_COND_END) {
         return; // 不在范围内，直接忽略
     }
   #endif

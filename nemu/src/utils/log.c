@@ -48,8 +48,8 @@ void init_mm_log(const char *mm_log_file){
   }
   Log("MM LOG is written to %s", mm_log_file);
   #ifdef CONFIG_MM_TRACE_COND
-    Log("MM_TRACE_COND is ON and the begin is %x. "CONFIG_MM_TRACE_BEGIN);
-    Log("MM_TRACE_COND is ON and the end   is %x. "CONFIG_MM_TRACE_END);
+    Log("MM_TRACE_COND is ON and the begin is %x. "CONFIG_MM_TRACE_COND_START);
+    Log("MM_TRACE_COND is ON and the end   is %x. "CONFIG_MM_TRACE_COND_END);
   #endif
 }
 
