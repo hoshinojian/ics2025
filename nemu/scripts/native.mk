@@ -28,6 +28,11 @@ $(BINARY):: compile_git
 override ARGS += --log=$(BUILD_DIR)/nemu-log.txt
 override ARGS += --mmlog=$(BUILD_DIR)/mmlog.txt
 override ARGS += --funclog=$(BUILD_DIR)/funclog.txt
+
+ifneq ($(IMG),)
+override ARGS += -e $(patsubst %.bin,%.elf,$(IMG))
+endif
+
 # override ARGS += --elf=cd 
 override ARGS += $(ARGS_DIFF)
 

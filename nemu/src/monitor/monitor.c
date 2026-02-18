@@ -81,6 +81,11 @@ static long load_img() {
 }
 
 static int parse_args(int argc, char *argv[]) {
+  printf("\n====== NEMU 参数大公开 ======\n");
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d]: %s\n", i, argv[i]);
+    }
+    printf("=============================\n\n");
   //printf("\n\n\nParsing the args");
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
