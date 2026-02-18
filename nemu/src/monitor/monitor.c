@@ -136,6 +136,8 @@ void init_monitor(int argc, char *argv[]) {
   /* Parse arguments. */
   parse_args(argc, argv);
 
+  Log("最终解析到的 elf_file 指针指向: %s", elf_file ? elf_file : "【失败！是个 NULL】");
+
   /* Set random seed. */
   init_rand();
 
