@@ -56,6 +56,7 @@ static char *img_file = NULL;
 static int difftest_port = 1234;
 static char *mm_log_file = NULL;
 static char *func_log_file = NULL;
+static char *elf_file = NULL;
 
 static long load_img() {
   if (img_file == NULL) {
@@ -89,10 +90,11 @@ static int parse_args(int argc, char *argv[]) {
     {"help"     , no_argument      , NULL, 'h'},
     {"mmlog"    , required_argument, NULL, 'm'},
     {"funclog"  , required_argument, NULL, 'f'},
+    {"elf"      , required_argument, NULL, 'e'},
     {0          , 0                , NULL,  0 },
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "-bhl:d:p:m:f:", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-bhl:d:p:m:f:e:", table, NULL)) != -1) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
@@ -100,6 +102,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'd': diff_so_file = optarg; break;
       case 'm': mm_log_file = optarg; break;
       case 'f': func_log_file = optarg; break;
+      case 'e': elf_file = optarg; break;
 
       
       case 1: img_file = optarg; return 0;
