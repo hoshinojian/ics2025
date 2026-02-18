@@ -107,12 +107,13 @@ static int parse_args(int argc, char *argv[]) {
       case 'd': diff_so_file = optarg; break;
       case 'm': mm_log_file = optarg; break;
       case 'f': func_log_file = optarg; break;
-      case 'e': {elf_file = optarg; break;
+      case 'e': {elf_file = optarg; 
                 if (elf_file != NULL) {
     printf("【FTRACE 成功】我拿到的 ELF 路径是: %s\n", elf_file);
 } else {
     printf("【FTRACE 失败】报告，elf_file 还是 NULL！\n");
 }
+break;
       }
       
       case 1: img_file = optarg; return 0;
