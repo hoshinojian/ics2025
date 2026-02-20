@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <memory/paddr.h>
+#include "log.h"
 
 void init_rand();
 void init_log(const char *log_file);
@@ -23,8 +24,8 @@ void init_difftest(char *ref_so_file, long img_size, int port);
 void init_device();
 void init_sdb();
 void init_disasm();
-void init_mm_log(const char *mm_log_file);
-void init_func_log(const char *func_log_file);
+// void init_mm_log(const char *mm_log_file);
+// void init_func_log(const char *func_log_file);
 
 static void welcome() {
 
@@ -143,7 +144,7 @@ void init_monitor(int argc, char *argv[]) {
   //在这里插入对于mtrace的定义
   IFDEF(CONFIG_MM_TRACE, init_mm_log(mm_log_file));//对于mm的调用需要加上宏, 但是对于函数的调用借助ITRACE就行了, 所以也没必要加上宏
 
-  init_func_log(func_log_file);
+  init_func_log(func_log_file, elf_file);
 
   /* Initialize memory. */
   init_mem();

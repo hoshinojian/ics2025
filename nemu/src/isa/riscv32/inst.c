@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#include "log.h"
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -290,18 +291,57 @@ int isa_exec_once(Decode *s)
 
 
 extern FILE* func_log_fp;
-void log_ftrace(int type, uint32_t pc, uint32_t target){
-  if(type == type_jal){
-    fprintf(func_log_fp, "0x%08x: call 0x%08x\n", pc, target);
-  }
-  else if(type == type_jalr_call){
-    // JALR (rd=ra): 间接调用，目标也是 target (虽然是通过寄存器算出来的)
-    fprintf(func_log_fp, "0x%08x: call 0x%08x\n", pc, target);
-  }
-  else if(type == type_jalr_ret){
-    // JALR (rd=0, rs1=ra): 函数返回，target 是返回到了哪里
-    fprintf(func_log_fp, "0x%08x: ret  0x%08x\n", pc, target);
-  }
-  fflush(func_log_fp);
+
+static const char* get_func_name(uint32_t addr) {
+  if (funcinfo == NULL || global_func_count == 0) {
+        return "???";
+    }
+    for (int i = 0; i < global_func_count; i++) {
+        uint32_t start = (uint32_t)(uintptr_t)funcinfo[i].addr_begin;
+        uint32_t end   = (uint32_t)(uintptr_t)funcinfo[i].addr_end;
+        
+        if (addr >= start && addr < end) {
+            return funcinfo[i].func_name;
+        }
+    }
+    return "???";
 }
+
+void log_ftrace(int type, uint32_t pc, uint32_t target){
+  if (func_log_fp == NULL) {
+        return;
+    }
+  static int call_depth = 0;
+  if (type == type_jal || type == type_jalr_call) {
+        // Call: 查目标地址的函数名
+        const char* target_name = get_func_name(target);
+        
+        fprintf(func_log_fp, "0x%08x:", pc);
+        // 打印缩进和引导线
+        for (int i = 0; i < call_depth; i++) {
+            fprintf(func_log_fp, "  | ");
+        }
+        fprintf(func_log_fp, "call [%s@0x%08x]\n", target_name, target);
+        
+        call_depth++; // 进入下一层
+    } 
+  else if (type == type_jalr_ret) {
+        // Ret: 查当前 PC 地址所在的函数名，代表从哪个函数返回
+        const char* pc_name = get_func_name(pc);
+        
+        if (call_depth > 0) {
+            call_depth--; // 退出当前层
+        }
+        
+        fprintf(func_log_fp, "0x%08x:", pc);
+        // 打印缩进和引导线
+        for (int i = 0; i < call_depth; i++) {
+            fprintf(func_log_fp, "  | ");
+        }
+        fprintf(func_log_fp, "ret  [%s]\n", pc_name);
+    }
+    
+    fflush(func_log_fp);
+}
+
 
