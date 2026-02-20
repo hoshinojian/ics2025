@@ -30,6 +30,7 @@ override ARGS += --mmlog=$(BUILD_DIR)/mmlog.txt
 override ARGS += --funclog=$(BUILD_DIR)/funclog.txt
 
 ifneq ($(IMG),)
+# 匹配模式, 替代模式, 要切的参数
 override ARGS += -e $(patsubst %.bin,%.elf,$(IMG))
 endif
 

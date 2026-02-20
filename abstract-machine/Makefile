@@ -1,22 +1,44 @@
+# NAME = add
+# SRCS = tests/add.c
+# include $(AM_HOME)/Makefile
+
+
 # Makefile for AbstractMachine Kernels and Libraries
 
 ### *Get a more readable version of this Makefile* by `make html` (requires python-markdown)
 html:
+# Makefile指的是这个文件自身. 这一句语句完成缩进替换. 
 	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
+# 伪目标, 强行执行
 .PHONY: html
 
 ## 1. Basic Setup and Checks
 
 ### Default to create a bare-metal kernel image
+# makefile里面, ifeq(1,2). 
+# 搭配变量使用, ifeq($(something), x86). 
+# 搭配shell使用 ifeq($(shell name), linux)
+# 在这里的使用是判断变量是不是为空. 在这里, 如果makecmdgoals没有定义, 就会运行下面语句
+# makecmdgoals是gnu make里面的变量. 执行make的时候, make程序读取命令行参数, 赋值给makecmdgoals
+# 比如说 make run, 那么makecmdgoals 就是 run, make clean all, ~ clean alloc
+# 这一个if判断， 当单纯make 的时候, 相当于是make image
+# 但是目标 和 变量赋值不是一个东西. ARCH=riscv32-nemu run的时候, MAKECMDGOALS只是run
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = image
   .DEFAULT_GOAL = image
 endif
 
 ### Override checks when `make clean/clean-all/html`
+# findstring GNU内置函数, 文本中查找子字符串
+# findstring <要找什么>, <查找范围>. 找到了返回这个字符串, 没找到返回空
+# 如果没有找到， 也就是说没有进行clean html, 那就执行if里面的
 ifeq ($(findstring $(MAKECMDGOALS),clean|clean-all|html),)
 
 ### Print build info message
+# info类似于echo
+# name 接受来自于am-kernels
+# make ARCH=riscv32-nemu run的时候, 就是: 
+# # Building add-run [riscv32-nemu]
 $(info # Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
 
 ### Check: environment variable `$AM_HOME` looks sane
@@ -25,17 +47,23 @@ ifeq ($(wildcard $(AM_HOME)/am/include/am.h),)
 endif
 
 ### Check: environment variable `$ARCH` must be in the supported list
+# notdir, 把路径里面的目录部分删掉, 只剩下文件名
+# basename 去掉文件名的后缀
 ARCHS = $(basename $(notdir $(shell ls $(AM_HOME)/scripts/*.mk)))
+# filter, 在ARCHs列表里面寻找和ARCH一样的字符串
 ifeq ($(filter $(ARCHS), $(ARCH)), )
   $(error Expected $$ARCH in {$(ARCHS)}, Got "$(ARCH)")
 endif
 
 ### Extract instruction set architecture (`ISA`) and platform from `$ARCH`. Example: `ARCH=x86_64-qemu -> ISA=x86_64; PLATFORM=qemu`
+# $(subst <from>,<to>,<text>). 把ARCH里面的- 改变成为空格. 
 ARCH_SPLIT = $(subst -, ,$(ARCH))
 ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
+# 原本的ARCH是riscv32-nemu. 后面ISA变成了riscv32. platfrom变成了nemu
 
 ### Check if there is something to build
+# flavor 内置函数, 如果变量没有定义过, 那么返回undefined
 ifeq ($(flavor SRCS), undefined)
   $(error Nothing to build)
 endif
