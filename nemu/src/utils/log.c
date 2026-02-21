@@ -132,7 +132,7 @@ FuncInfo* func_addr(Elf32_Shdr symtab_shdr, Elf32_Shdr strtab_shdr, const char *
 }
 #endif
 
-//Ä£·Âinit_log
+
 #ifdef CONFIG_MM_TRACE
 FILE *mm_log_fp = NULL;
 
