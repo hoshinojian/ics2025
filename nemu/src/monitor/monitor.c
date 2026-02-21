@@ -147,10 +147,10 @@ static int parse_args(int argc, char *argv[]) {
 
 void init_monitor(int argc, char *argv[]) {
   /* Perform some global initialization. */
-
+  Log("test");
   /* Parse arguments. */
   parse_args(argc, argv);
-  Log("test");
+  //Log("test");
   //Log("************* elf_file : %s", elf_file ? elf_file : "fail!!!!!");
 
   /* Set random seed. */
