@@ -148,5 +148,4 @@ void init_mm_log(const char *mm_log_file){
   #endif
   }
 }
-
 #endif
