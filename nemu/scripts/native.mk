@@ -26,8 +26,14 @@ $(BINARY):: compile_git
 
 # override ARGS ?= --batch
 override ARGS += --log=$(BUILD_DIR)/nemu-log.txt
+
+ifeq ($(CONFIG_MM_TRACE),y)
 override ARGS += --mmlog=$(BUILD_DIR)/mmlog.txt
+endif
+
+ifeq ($(CONFIG_FUNC_TRACE),y)
 override ARGS += --funclog=$(BUILD_DIR)/funclog.txt
+endif
 
 ifneq ($(IMG),)
 # 匹配模式, 替代模式, 要切的参数
