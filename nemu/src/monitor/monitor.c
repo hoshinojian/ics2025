@@ -4,7 +4,7 @@
 * NEMU is licensed under Mulan PSL v2.
 * You can use this software according to the terms and conditions of the Mulan PSL v2.
 * You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
+* http://license.coscl.org.cn/MulanPSL2
 *
 * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -126,16 +126,16 @@ static int parse_args(int argc, char *argv[]) {
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
-        printf("\t-b,--batch            run with batch mode\n");
-        printf("\t-l,--log=FILE         output log to FILE\n");
-        printf("\t-d,--diff=REF_SO      run DiffTest with reference REF_SO\n");
-        printf("\t-p,--port=PORT        run DiffTest with port PORT\n");
+        printf("\t-b,--batch              run with batch mode\n");
+        printf("\t-l,--log=FILE           output log to FILE\n");
+        printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+        printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
 #ifdef CONFIG_MM_TRACE
-        printf("\t-m,--mmlog=FILE       output mm log to FILE\n");
+        printf("\t-m,--mmlog=FILE         output mm log to FILE\n");
 #endif
 #ifdef CONFIG_FUNC_TRACE
-        printf("\t-f,--funclog=FILE     output func log to FILE\n");
-        printf("\t-e,--elf=FILE         ELF file for func trace\n");
+        printf("\t-f,--funclog=FILE       output func log to FILE\n");
+        printf("\t-e,--elf=FILE           ELF file for func trace\n");
 #endif
         printf("\n");
         exit(0);
@@ -156,7 +156,6 @@ void init_monitor(int argc, char *argv[]) {
   /* Set random seed. */
   init_rand();
 
-  /* Open the log file. */
   /* Open the log file. */
   init_log(log_file);
 
