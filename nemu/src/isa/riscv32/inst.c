@@ -4,7 +4,7 @@
  * NEMU is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2
+ * http://license.coscl.org.cn/MulanPSL2
  *
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
  * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -23,12 +23,14 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
+#ifdef CONFIG_FUNC_TRACE
 void log_ftrace(int type, uint32_t pc, uint32_t target);
 enum {
   type_jal,
   type_jalr_call,
   type_jalr_ret
 };
+#endif
 
 enum
 {
@@ -204,7 +206,9 @@ static int decode_exec(Decode *s)
   INSTPAT("????????????  ????? ??? ????? 1101111", jal, J, {
     R(rd) = s->snpc;
     s->dnpc = s->pc + imm;
+#ifdef CONFIG_FUNC_TRACE
     if(rd == 1)log_ftrace(type_jal, s->pc, s->dnpc);
+#endif
   });
   INSTPAT("????????????  ????? 000 ????? 1100111", jarl, I, {
     // 计算跳转目标地址 (src1 是寄存器里的值, imm 是立即数, & ~1 是为了对齐)
@@ -213,6 +217,7 @@ static int decode_exec(Decode *s)
     R(rd) = s->snpc; 
     s->dnpc = target_;
     
+#ifdef CONFIG_FUNC_TRACE
     // 【补全部分】
     // 1. 如果 rd == 1 (ra)，说明把返回地址存进了 ra，这是函数调用 (Call)
     if (rd == 1) {
@@ -222,6 +227,7 @@ static int decode_exec(Decode *s)
     else if (rd == 0 && BITS(s->isa.inst, 19, 15) == 1) {
         log_ftrace(type_jalr_ret, s->pc, target_);
     }
+#endif
   });
 
   INSTPAT("??????? ????? ????? 000 ????? 1100011", beq, B, {s->dnpc = src1 == src2 ? s->pc + imm : s-> snpc;});
@@ -231,7 +237,7 @@ static int decode_exec(Decode *s)
   INSTPAT("??????? ????? ????? 110 ????? 1100011", bltu, B, {s->dnpc = (uint32_t)src1 < (uint32_t)src2 ? s->pc + imm : s-> snpc;});
   INSTPAT("??????? ????? ????? 111 ????? 1100011", bgeu, B, {s->dnpc = (uint32_t)src1 >= (uint32_t)src2 ? s->pc + imm : s-> snpc;});
 
-/*        RISCV M EXTENSION        */
+/* RISCV M EXTENSION        */
   INSTPAT("0000001 ????? ????? 000 ????? 0110011", mul, R, {R(rd) = src1 * src2;});
   INSTPAT("0000001 ????? ????? 001 ????? 0110011", mulh, R, R(rd) = ((int64_t)(int32_t)src1*(int64_t)(int32_t)src2) >> 32);
   INSTPAT("0000001 ????? ????? 010 ????? 0110011", mulhsu, R, R(rd) = ((int64_t)(int32_t)src1 * (uint64_t)(uint32_t)src2) >> 32;);
@@ -289,7 +295,7 @@ int isa_exec_once(Decode *s)
 }
 
 
-
+#ifdef CONFIG_FUNC_TRACE
 extern FILE* func_log_fp;
 
 static const char* get_func_name(uint32_t addr) {
@@ -343,5 +349,4 @@ void log_ftrace(int type, uint32_t pc, uint32_t target){
     
     fflush(func_log_fp);
 }
-
-
+#endif

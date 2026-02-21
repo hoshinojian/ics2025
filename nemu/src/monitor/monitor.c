@@ -55,9 +55,15 @@ static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
+
+#ifdef CONFIG_MM_TRACE
 static char *mm_log_file = NULL;
+#endif
+
+#ifdef CONFIG_FUNC_TRACE
 static char *func_log_file = NULL;
 static char *elf_file = NULL;
+#endif
 
 static long load_img() {
   if (img_file == NULL) {
@@ -94,9 +100,13 @@ static int parse_args(int argc, char *argv[]) {
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
     {"help"     , no_argument      , NULL, 'h'},
+#ifdef CONFIG_MM_TRACE
     {"mmlog"    , required_argument, NULL, 'm'},
+#endif
+#ifdef CONFIG_FUNC_TRACE
     {"funclog"  , required_argument, NULL, 'f'},
     {"elf"      , required_argument, NULL, 'e'},
+#endif
     {0          , 0                , NULL,  0 },
   };
   int o;
@@ -106,18 +116,27 @@ static int parse_args(int argc, char *argv[]) {
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
+#ifdef CONFIG_MM_TRACE
       case 'm': mm_log_file = optarg; break;
+#endif
+#ifdef CONFIG_FUNC_TRACE
       case 'f': func_log_file = optarg; break;
-      case 'e': {elf_file = optarg; break;
-      }
-      
+      case 'e': {elf_file = optarg; break; }
+#endif
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
-        printf("\t-b,--batch              run with batch mode\n");
-        printf("\t-l,--log=FILE           output log to FILE\n");
-        printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
-        printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
+        printf("\t-b,--batch            run with batch mode\n");
+        printf("\t-l,--log=FILE         output log to FILE\n");
+        printf("\t-d,--diff=REF_SO      run DiffTest with reference REF_SO\n");
+        printf("\t-p,--port=PORT        run DiffTest with port PORT\n");
+#ifdef CONFIG_MM_TRACE
+        printf("\t-m,--mmlog=FILE       output mm log to FILE\n");
+#endif
+#ifdef CONFIG_FUNC_TRACE
+        printf("\t-f,--funclog=FILE     output func log to FILE\n");
+        printf("\t-e,--elf=FILE         ELF file for func trace\n");
+#endif
         printf("\n");
         exit(0);
     }
@@ -138,13 +157,14 @@ void init_monitor(int argc, char *argv[]) {
   init_rand();
 
   /* Open the log file. */
+  /* Open the log file. */
   init_log(log_file);
 
   //todo
   //在这里插入对于mtrace的定义
   IFDEF(CONFIG_MM_TRACE, init_mm_log(mm_log_file));//对于mm的调用需要加上宏, 但是对于函数的调用借助ITRACE就行了, 所以也没必要加上宏
 
-  init_func_log(func_log_file, elf_file);
+  IFDEF(CONFIG_FUNC_TRACE, init_func_log(func_log_file, elf_file));
 
   /* Initialize memory. */
   init_mem();

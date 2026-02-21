@@ -144,6 +144,10 @@ config MM_TRACE_COND_END
   hex "When MMTRACE_COND is enabled"
   default 0x80000000
 
+config FUNC_TRACE
+bool "Enable Func Trace"
+default n
+
 config TRACE
   bool "Enable tracer"
   default y

@@ -4,7 +4,7 @@
 * NEMU is licensed under Mulan PSL v2.
 * You can use this software according to the terms and conditions of the Mulan PSL v2.
 * You may obtain a copy of Mulan PSL v2 at:
-*          http://license.coscl.org.cn/MulanPSL2
+* http://license.coscl.org.cn/MulanPSL2
 *
 * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -18,12 +18,15 @@
 #include <elf.h>
 
 extern uint64_t g_nr_guest_inst;
+
+#ifdef CONFIG_FUNC_TRACE
 FuncInfo* funcinfo = NULL;
 int global_func_count = 0;
 
 Elf32_Shdr symtab_shdr;
 Elf32_Shdr strtab_shdr;
 FILE *func_log_fp = NULL;
+#endif
 
 #ifndef CONFIG_TARGET_AM
 FILE *log_fp = NULL;
@@ -44,6 +47,7 @@ bool log_enable() {
 }
 #endif
 
+#ifdef CONFIG_FUNC_TRACE
 void init_func_log(const char *func_log_file, const char *elf_file){
   if(func_log_file != NULL){
     parse_elf(elf_file);
@@ -54,9 +58,6 @@ void init_func_log(const char *func_log_file, const char *elf_file){
     Log("Func LOG is written to %s", func_log_file);
   }
 }
-
-
-
 
 void parse_elf(const char *elf_file){
   FILE* fp = fopen(elf_file, "rb");
@@ -82,8 +83,6 @@ void parse_elf(const char *elf_file){
   fclose(fp);
   //????, ???????????????
 };
-
-
 
 FuncInfo* func_addr(Elf32_Shdr symtab_shdr, Elf32_Shdr strtab_shdr, const char *elf_file, int *out_func_count){
   FILE* fp = fopen(elf_file, "rb");
@@ -131,8 +130,7 @@ FuncInfo* func_addr(Elf32_Shdr symtab_shdr, Elf32_Shdr strtab_shdr, const char *
   *out_func_count = actual_count;
   return func_array;
 }
-
-
+#endif
 
 //Ä£·Âinit_log
 #ifdef CONFIG_MM_TRACE
