@@ -21,12 +21,14 @@
 typedef void(*io_callback_t)(uint32_t, int, bool);
 uint8_t* new_space(int size);
 
+//名字，映射的开始地址到结束地址， 目标空间，和一个回调函数
 typedef struct {
   const char *name;
   // we treat ioaddr_t as paddr_t here
   paddr_t low;
   paddr_t high;
   void *space;
+  //目标空间, 在宿主机上面分配的真实的内存, 模拟设备内部的寄存器
   io_callback_t callback;
 } IOMap;
 
