@@ -6,6 +6,9 @@
 #define AM_DEVREG(id, reg, perm, ...) \
   enum { AM_##reg = (id) }; \
   typedef struct { __VA_ARGS__; } AM_##reg##_T;
+// AM_DEVREG( 6, TIMER_UPTIME, RD, uint64_t us);
+// enum { AM_TIMER_UPTIME = 6 };              // 生成了一个值为 6 的常量 ID
+// typedef struct { uint64_t us; } AM_TIMER_UPTIME_T; // 生成了一个包含 uint64_t 的结构体
 
 AM_DEVREG( 1, UART_CONFIG,  RD, bool present);
 AM_DEVREG( 2, UART_TX,      WR, char data);
@@ -34,6 +37,11 @@ AM_DEVREG(24, NET_RX,       WR, Area buf);
 
 // Input
 
+// 当把 AM_KEY_NAMES 这个宏作为参数传给 AM_KEYS 时，所有的 _(A) 都会变成 AM_KEY_NAMES(A)，进而拼接成 AM_KEY_A,。
+// enum {
+//   AM_KEY_NONE = 0,
+//   AM_KEY_ESCAPE, AM_KEY_F1, AM_KEY_F2, ... , AM_KEY_A, AM_KEY_S, AM_KEY_D, ...
+// };
 #define AM_KEYS(_) \
   _(ESCAPE) _(F1) _(F2) _(F3) _(F4) _(F5) _(F6) _(F7) _(F8) _(F9) _(F10) _(F11) _(F12) \
   _(GRAVE) _(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) _(9) _(0) _(MINUS) _(EQUALS) _(BACKSPACE) \
