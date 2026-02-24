@@ -10,6 +10,7 @@ void __am_input_init();
 void __am_uart_init();
 void __am_audio_init();
 void __am_disk_init();
+//接受一个AM_INPUT_CONFIG_T类型的指针
 void __am_input_config(AM_INPUT_CONFIG_T *);
 void __am_timer_config(AM_TIMER_CONFIG_T *);
 void __am_timer_rtc(AM_TIMER_RTC_T *);
@@ -30,9 +31,19 @@ void __am_disk_status(AM_DISK_STATUS_T *stat);
 void __am_disk_blkio(AM_DISK_BLKIO_T *io);
 static void __am_net_config (AM_NET_CONFIG_T *cfg)    { cfg->present = false; }
 
+// *handler_t代表一个指针! 不加括号, void* hanler_t(void*)可以理解成为一个返回void地址的函数
+//但是加上括号之后, 这就是一个指针. 
+//tdef  返回值  表明是一个指针  表明接受什么变量
 typedef void (*handler_t)(void *buf);
+//没有typedef, 就是定义了一个handler_t的变量, 这是一个函数指针.
+    //对于int* a, 也是a这个类型是一个指针, 而不是*a是一个指针
+//加上之后, 这就是一个新类型,类型名字叫做handler_t
+
+
+//是一个存放函数指针的数组, 每一个元素接受在amdev.h里面的enum出来的元素,
+//然后给这个元素, 也就是int, 在数组里面找到一个位置, 存放函数的指针
 static void *lut[128] = {
-  [AM_TIMER_CONFIG] = __am_timer_config,
+  [AM_TIMER_CONFIG] = __am_timer_config,//下标为AM_~ 的地址里面, 存放了这个函数的指针
   [AM_TIMER_RTC   ] = __am_timer_rtc,
   [AM_TIMER_UPTIME] = __am_timer_uptime,
   [AM_INPUT_CONFIG] = __am_input_config,
