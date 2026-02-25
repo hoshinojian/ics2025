@@ -6,58 +6,12 @@
 
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+  int int_to_char(int, char*);
 
-int printf(const char *fmt, ...) {
-  panic("Not implemented");
-}
-
-int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
-}
-
-int int_to_char(int num, char* buf){
-  int i = 0;
-  int is_neg = 0;
-  char* begin = buf;
-
-  if(num == -2147483648){
-    strcpy(buf, "-2147483648");
-    return 11;
-  }
-
-  if(num == 0){
-    *buf++ = '0';
-    return 1;
-  }
-
-  if(num < 0){
-    is_neg = 1;
-    num = -num;
-  }
-
-    char temp_buf[32]; // 暂存反向的数 
-    while (num > 0) {
-        temp_buf[i++] = (num % 10) + '0';
-        num = num / 10;
-    }
-    if (is_neg) {
-        temp_buf[i++] = '-';
-    }
-
-    for(int j = 0; j < i; j++){
-        *buf++ = temp_buf[i - 1 - j];
-    }
-    
-    return buf - begin; // 返回写入的长度
-}
-
-//格式化之后的结果写到out数组里面去, 而不是输出到标准输出.
-int sprintf(char *out, const char *fmt, ...) {
-  char* begin_ = out;
-  va_list ap;
-  va_start(ap, fmt);
-  //switch(va_arg(ap, type)){
-  while(*fmt){
+//  调用的时候, ap已经被初始化了
+  int vsprintf(char* out, const char* fmt, va_list ap){
+    char* begin_ = out;
+    while(*fmt){
     if(*fmt == '%'){
       fmt++;
       switch (*fmt)
@@ -98,8 +52,69 @@ int sprintf(char *out, const char *fmt, ...) {
     fmt++;
   }
   *out = '\0';
-  va_end(ap);
   return out - begin_;
+  }
+
+
+  int printf(const char *fmt, ...) {
+    char out[1024];
+    va_list ap;
+    va_start(ap, fmt);
+    int ans = vsprintf(out, fmt, ap);
+    va_end(ap);
+    for(int i = 0; i < ans; i++)putch(out[i]);
+    return ans;
+}
+
+
+
+int int_to_char(int num, char* buf){
+  if(num == -2147483648){
+    strcpy(buf, "-2147483648"); // ?? 依赖：你的 string.c 实现 strcpy 了吗？
+    return 11;
+}
+  int i = 0;
+  int is_neg = 0;
+  char* begin = buf;
+
+  if(num == -2147483648){
+    strcpy(buf, "-2147483648");
+    return 11;
+  }
+
+  if(num == 0){
+    *buf++ = '0';
+    return 1;
+  }
+
+  if(num < 0){
+    is_neg = 1;
+    num = -num;
+  }
+
+    char temp_buf[32]; // 暂存反向的数 
+    while (num > 0) {
+        temp_buf[i++] = (num % 10) + '0';
+        num = num / 10;
+    }
+    if (is_neg) {
+        temp_buf[i++] = '-';
+    }
+
+    for(int j = 0; j < i; j++){
+        *buf++ = temp_buf[i - 1 - j];
+    }
+    
+    return buf - begin; // 返回写入的长度
+}
+
+//格式化之后的结果写到out数组里面去, 而不是输出到标准输出.
+int sprintf(char *out, const char *fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  int ans =  vsprintf(out, fmt, ap);
+  va_end(ap);
+  return ans;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
