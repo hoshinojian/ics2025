@@ -85,12 +85,18 @@ void __am_ioe_init() {
   ioe_init_done = true;
 }
 
+//reg是一个int, 来自于amdev.h的定义. 物理意义上面就是一个下标
+//再次认清楚,lut就是一个存放各个函数指针的一个数组, buf是一个结构体变量的内存地址
+//做什么也是buf决定的. 这个函数的作用只是传递下去
+//                    让谁      干什么
 static void do_io(int reg, void *buf) {
   if (!ioe_init_done) {
-    __am_ioe_init();
+    __am_ioe_init();//懒加载：如果还没初始化，就先去初始化
   }
+  //这个handle_t联系着typedef来看, 相当于是一个强制类型转换, 当成一个函数来处理
   ((handler_t)lut[reg])(buf);
 }
 
+// 读还是写，本质上都是“带着数据缓冲区去触发某个设备的专属函数”。
 void ioe_read (int reg, void *buf) { do_io(reg, buf); }
 void ioe_write(int reg, void *buf) { do_io(reg, buf); }
