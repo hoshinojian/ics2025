@@ -10,7 +10,7 @@ void __am_timer_init() {
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   //假设io寄存器这个时候已经有了数据, 那么直接从io寄存器取到总线上
-
+  inl(RTC_ADDR);
   //然后输出就好了
 
   uptime->us = 0;
