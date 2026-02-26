@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
+#include "../../am/include/trm.h"
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
@@ -29,12 +30,31 @@ int atoi(const char* nptr) {
   return x;
 }
 
+
+#define WORD_SIZE 8
+#define WORD_MASK (WORD_SIZE - 1)
+
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
 #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  panic("Not implemented");
+  //在malloc()中维护一个上次分配内存位置的变量addr, 每次调用malloc()时, 
+  //就返回[addr, addr + size)这段空间. addr的初值设为heap.start, 表示从堆区开始分配. 
+  //你也可以参考microbench中的相关代码. 注意malloc()对返回的地址有一定的要求, 具体情况请RTFM.
+  static void* heap_point = NULL;
+  heap_point = heap.start;
+  int _size = (size + (WORD_SIZE - 1)) & ~WORD_MASK;
+  if ((uintptr_t)heap_point + size > (uintptr_t)heap.end) {
+        return NULL;
+    }
+  void* old = heap_point;
+  heap_point += _size;
+  // for (uint64_t *p = (uint64_t *)old; p != (uint64_t *)heap_point; p ++) {
+  //   *p = 0;
+  // }
+  return old;
+  //panic("Not implemented");
 #endif
   return NULL;
 }
