@@ -19,12 +19,14 @@
 
 static uint32_t *rtc_port_base = NULL;
 
+//
 static void rtc_io_handler(uint32_t offset, int len, bool is_write) {
-  assert(offset == 0 || offset == 4);
-  if (!is_write && offset == 4) {
+  assert(offset == 0 || offset == 4);//一定是第一个或者第二个寄存器
+  if (!is_write && offset == 4) {//如果是读并且读取第二个寄存器的话
     uint64_t us = get_time();
     rtc_port_base[0] = (uint32_t)us;
     rtc_port_base[1] = us >> 32;
+    //直接修改io设备的寄存器
   }
 }
 
