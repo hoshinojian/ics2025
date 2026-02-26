@@ -74,6 +74,17 @@ static inline void update_screen() {
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
+
+  // 1. 检查 Sync 寄存器 (vgactl_port_base[1] 对应偏移量 4)
+  uint32_t sync = vgactl_port_base[1];
+
+  if (sync != 0) {
+    // 2. 调用具体的绘图函数 (将 vmem 投射到 SDL 窗口)
+    update_screen();
+
+    // 3. 清除 Sync 寄存器 (归零，等待下一次同步)
+    vgactl_port_base[1] = 0;
+  }
 }
 
 void init_vga() {
