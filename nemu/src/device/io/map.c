@@ -72,8 +72,20 @@ void init_map() {
 //从addr映射到map所指示的目标空间并且访问, 这个过程可能触发callback, 对设备和目标空间的状态更新
 //每一次io读写的时候, 才会调用设备提供的callback
 extern FILE* device_log_fp;
-void device_log_write(IOMap *map){
-  fprintf(device_log_fp, "%s\n", map->name);
+static void device_log_write(paddr_t addr, int len, word_t data, bool is_write, IOMap *map) {
+  if (device_log_fp == NULL) return;
+
+  fprintf(device_log_fp, 
+    "[%-10s] %s addr=0x%08x, len=%d, data=0x%08x\n",
+    map->name,                // 设备名称 (如 "serial", "rtc")
+    is_write ? "WRITE" : "READ ", // 操作类型
+    (uint32_t)addr,           // 发生访问的物理地址
+    len,                      // 访问长度
+    (uint32_t)data            // 读/写的数据内容
+  );
+  
+  // 建议加上 fflush，防止模拟器崩溃时日志没写入磁盘
+  fflush(device_log_fp); 
 }
 
 
@@ -83,7 +95,13 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
   paddr_t offset = addr - map->low;
 
   invoke_callback(map->callback, offset, len, false); // prepare data to read
+  
+  // 真正读取数据
   word_t ret = host_read(map->space + offset, len);
+
+  // 2. 插入日志调用：记录读取到的值
+  device_log_write(addr, len, ret, false, map);
+
   return ret;
 }
 
@@ -91,7 +109,10 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
   paddr_t offset = addr - map->low;
+
   host_write(map->space + offset, len, data);
-  
   invoke_callback(map->callback, offset, len, true);
+
+  // 2. 插入日志调用：记录写入的值
+  device_log_write(addr, len, data, true, map);
 }
