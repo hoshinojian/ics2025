@@ -1,22 +1,23 @@
 #include <am.h>
 #include <nemu.h>
 
-#include <nemu.h>
+#include "../../../riscv/riscv.h"
+
 //#include <riscv.h>
 
 void __am_timer_init() {
 }
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
+  //假设io寄存器这个时候已经有了数据, 那么直接从io寄存器取到总线上
+
+  //然后输出就好了
+
   uptime->us = 0;
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
-  //1. 总线上从io寄存器里面拿到数据
-  // map_write(CONFIG_RTC_MMIO, 0, *rtc_port_base, *rtc);
-  //2. 拿到数据之后完成计算
-  //extern uint32_t *rtc_port_base;
-  //paddr_write(RTC_ADDR, 8, *rtc_port_base);
+
   
 
   rtc->second = 0;
