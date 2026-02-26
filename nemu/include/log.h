@@ -48,4 +48,8 @@ bool log_enable(void);
 void init_mm_log(const char *mm_log_file);
 #endif
 
+#ifdef CONFIG_DEVICE_TRACE
+void init_device_log(const char* func_log_file);
+#endif
+
 #endif // __ELF_LOG_H__

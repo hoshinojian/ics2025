@@ -149,3 +149,17 @@ void init_mm_log(const char *mm_log_file){
   }
 }
 #endif
+
+#ifdef CONFIG_DEVICE_TRACE
+FILE* device_log_fp = NULL;
+
+void init_device_log(const char *device_log_file){
+  if(device_log_file){
+    FILE *fp = fopen(device_log_file, "w");
+    Assert(fp, "Can not open '%s'", device_log_file);
+    device_log_fp = fp;
+    Log("Device LOG is written to %s", device_log_file);
+  }
+}
+
+#endif

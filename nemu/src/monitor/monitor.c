@@ -148,6 +148,11 @@ static int parse_args(int argc, char *argv[]) {
         printf("\t-f,--funclog=FILE       output func log to FILE\n");
         printf("\t-e,--elf=FILE           ELF file for func trace\n");
 #endif
+
+#ifdef CONFIG_DEVICE_TRACE
+        printf("\t-d,--device=FILE        output device log to FILE\n");
+#endif
+
         printf("\n");
         exit(0);
     }
@@ -175,6 +180,8 @@ void init_monitor(int argc, char *argv[]) {
   IFDEF(CONFIG_MM_TRACE, init_mm_log(mm_log_file));//对于mm的调用需要加上宏, 但是对于函数的调用借助ITRACE就行了, 所以也没必要加上宏
 
   IFDEF(CONFIG_FUNC_TRACE, init_func_log(func_log_file, elf_file));
+
+  IFDEF(CONFIG_DEVICE_TRACE, init_device_log(device_trace_file));
 
   /* Initialize memory. */
   init_mem();
