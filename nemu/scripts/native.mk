@@ -34,6 +34,9 @@ endif
 ifeq ($(CONFIG_FUNC_TRACE),y)
 override ARGS += --funclog=$(BUILD_DIR)/funclog.txt
 
+ifeq ($(CONFIG_DEVICE_TRACE),y)
+override ARGS += --device=$(BUILD_DIR)/devicelog.txt
+endif
 
 ifneq ($(IMG),)
 # 匹配模式, 替代模式, 要切的参数

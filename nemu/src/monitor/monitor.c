@@ -65,6 +65,10 @@ static char *func_log_file = NULL;
 static char *elf_file = NULL;
 #endif
 
+#ifdef CONFIG_DEVICE_TRACE
+static char* device_trace_file = NULL;
+#endif
+
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
@@ -107,6 +111,9 @@ static int parse_args(int argc, char *argv[]) {
     {"funclog"  , required_argument, NULL, 'f'},
     {"elf"      , required_argument, NULL, 'e'},
 #endif
+#ifdef CONFIG_DEVICE_TRACE
+    {"device"   , required_argument, NULL, 't'},
+#endif
     {0          , 0                , NULL,  0 },
   };
   int o;
@@ -123,6 +130,10 @@ static int parse_args(int argc, char *argv[]) {
       case 'f': func_log_file = optarg; break;
       case 'e': {elf_file = optarg; break; }
 #endif
+#ifdef CONFIG_DEVICE_TRACE
+      case 't': device_trace_file = optarg; break;
+#endif
+
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);

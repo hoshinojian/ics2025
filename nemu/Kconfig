@@ -148,6 +148,10 @@ config FUNC_TRACE
 bool "Enable Func Trace"
 default n
 
+config DEVICE_TRACE
+  bool "Enable device trace"
+  default n
+
 config TRACE
   bool "Enable tracer"
   default y
