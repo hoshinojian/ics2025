@@ -13,7 +13,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   //uint64_t low = inl(RTC_ADDR);
   //uint64_t high = inl(RTC_ADDR + 4);
 
-  //真傻逼 看update, 要调转先后顺序
+  //真傻逼 看update, 要调转先后顺序. 不然取到的数据是有错的
 
   uint64_t high = inl(RTC_ADDR + 4);
   uint64_t low = inl(RTC_ADDR);
