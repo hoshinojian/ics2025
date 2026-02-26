@@ -71,6 +71,12 @@ void init_map() {
 
 //从addr映射到map所指示的目标空间并且访问, 这个过程可能触发callback, 对设备和目标空间的状态更新
 //每一次io读写的时候, 才会调用设备提供的callback
+extern FILE* device_log_fp;
+void device_log_write(IOMap *map){
+  fprintf(device_log_fp, "%s\n", map->name);
+}
+
+
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
