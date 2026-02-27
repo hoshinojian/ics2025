@@ -77,13 +77,17 @@ endif
 WORK_DIR  = $(shell pwd)
 DST_DIR   = $(WORK_DIR)/build/$(ARCH)
 $(shell mkdir -p $(DST_DIR))
+#mkdir -p 强制创建目录. 如果运行dummy， 最后在/home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/riscv32-nemu创建
 
 ### Compilation targets (a binary image or archive)
+# 相对路径
+# 获取pwd， 和相对路径拼接
 IMAGE_REL = build/$(NAME)-$(ARCH)
 IMAGE     = $(abspath $(IMAGE_REL))
 ARCHIVE   = $(WORK_DIR)/build/$(NAME)-$(ARCH).a
 
 ### Collect the files to be linked: object files (`.o`) and libraries (`.a`)
+# /home/.../build/riscv32-nemu/tests/dummy.o
 OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS)  # library archives are added by LIB_TEMPLATE below
@@ -99,22 +103,38 @@ AR        = $(CROSS_COMPILE)ar
 OBJDUMP   = $(CROSS_COMPILE)objdump
 OBJCOPY   = $(CROSS_COMPILE)objcopy
 READELF   = $(CROSS_COMPILE)readelf
-# = 是延迟展开, :=才是立即展开. 所以这时候无所谓的
+# = 是延迟展开 和 递归赋值, :=才是立即展开. 所以这时候无所谓的
 
 ### Compilation flags
+# 所有include加入到inc_path里面去
+# 然后在所有的path前面加上一个-I, 成为-I/home/...
+# -I给编译器指路, #include和-I配合
+# include默认只找在标准路径下面的,但是这下面绝对没有am.h头文件. -I给编译器的搜索目录表里面强制加上新的. 
+# gcc -I/home/xingjian/ics2025/abstract-machine/am/include -c dummy.c, 这时候先找标准目录, 没找到， 检查-I参数, 在后续的目录下面找到am.h
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 
 ARCH_H := arch/$(ARCH).h
+# -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
+# -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
             -D__ISA__=\"$(ISA)\" -D__ISA_$(shell echo $(ISA) | tr a-z A-Z)__ \
             -D__ARCH__=$(ARCH) -D__ARCH_$(shell echo $(ARCH) | tr a-z A-Z | tr - _) \
             -D__PLATFORM__=$(PLATFORM) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z | tr - _) \
+
             -DARCH_H=\"$(ARCH_H)\" \
+# -fno-buildin 禁止做替换, 比如printf不换乘puts. 			# stack那个防止做栈溢出保护, 这玩意正经linux才有
             -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
+# -wno来不检查main的参数格式, 避免因为带上了argc argv报错, -U_~U_FORTIFY_SOURCE也是防止做栈溢出. 
+#tables和hidden减小生成的二进制体积
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
+# freestanding告诉编译器不假设标准库存在, -fno-rtti依旧减小体积, 并且exce~ 关闭对抛出异常的处理
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
+# asflag控制汇编文件的处理. -mmd和cflags的作用一样
 ASFLAGS  += -MMD $(INCFLAGS)
+# -z noe,,, 强制要求链接器在生成的 ELF 文件头部打上一个物理标
+# 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。
+# 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
 LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
 
 ## 4. Arch-Specific Configurations

@@ -58,6 +58,17 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   //printf("2\n"); 在这之前输出pc
 }
 
+/*
+typedef struct Decode {
+  vaddr_t pc;
+  vaddr_t snpc; // static next pc, 通常是pc + 4。不发生跳转就去这里
+  vaddr_t dnpc; // dynamic next pc (动态下一条指令地址，处理跳转指令用)。 如果是普通指令， 那么下一条指令是snpc，如果是跳转指令，就去dnpc
+  ISADecodeInfo isa;  //存放指令数据, 实际上是一个uint32数字
+  IFDEF(CONFIG_ITRACE, char logbuf[128]);//存放地址 + 机器码 + 反汇编代码，0x80000000: 00000297 auipc t0, 0
+} Decode;
+*/
+
+//nemu/src/isa/$ISA/include/isa-def.h
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -110,7 +121,7 @@ static void execute(uint64_t n) {
   for (;n > 0; n --) {
     //这里一步一步执行了所有代码
     exec_once(&s, cpu.pc);
-    g_nr_guest_inst ++;
+    g_nr_guest_inst ++;//计数器来记录客户指令的数目
     trace_and_difftest(&s, cpu.pc);
     
     if (nemu_state.state != NEMU_RUNNING) break;
@@ -147,6 +158,7 @@ void assert_fail_msg() {
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
   g_print_step = (n < MAX_INST_TO_PRINT);
+  //刚开始时, nemu.state是stop, 所以这时候转化成为running
   switch (nemu_state.state) {
     case NEMU_END: case NEMU_ABORT: case NEMU_QUIT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -168,7 +180,6 @@ void cpu_exec(uint64_t n) {
       if (nemu_state.state == NEMU_ABORT || nemu_state.halt_ret != 0) {
           assert_fail_msg();
       }   
-
 
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :

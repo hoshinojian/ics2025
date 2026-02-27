@@ -1,3 +1,5 @@
+//PA4 的核心（虚拟内存扩展）。包含维护多级页表、建立虚拟地址到物理地址映射的底层逻辑。
+
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>

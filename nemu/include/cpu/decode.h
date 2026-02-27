@@ -107,6 +107,7 @@ finish:
   // 解析出来之后, 检查当前的s合不合当前的指令模式
   // 匹配到了就跳出去
 
+  //&&是一个gnu拓展。goto 只能跳转到一个固定的标签。而使用 && 运算符可以获取代码中某个标签（Label）的内存地址。
 #define INSTPAT_START(name) { const void * __instpat_end = &&concat(__instpat_end_, name);
 // 定义跳出点,  `const void * __instpat_end = &&concat(__instpat_end_, name);`. && 标签地址, 获取一个标签的内存地址
 #define INSTPAT_END(name)   concat(__instpat_end_, name): ; }

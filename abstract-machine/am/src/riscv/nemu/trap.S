@@ -1,3 +1,6 @@
+// 极其关键的陷入（Trap）汇编代码。当程序触发系统调用（执行 ecall）时，
+// CPU 会跳转到这里，这段汇编负责把当前 32 个通用寄存器的值全部强行写入内存（保存现场），等处理完后再从内存读回寄存器（恢复现场）。
+
 #define concat_temp(x, y) x ## y
 #define concat(x, y) concat_temp(x, y)
 #define MAP(c, f) c(f)
