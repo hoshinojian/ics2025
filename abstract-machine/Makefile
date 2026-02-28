@@ -117,14 +117,14 @@ INCFLAGS += $(addprefix -I, $(INC_PATH))
 ARCH_H := arch/$(ARCH).h
 # -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 # -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
+
 # -fno-buildin 禁止做替换, 比如printf不换乘puts. 			# stack那个防止做栈溢出保护, 这玩意正经linux才有
 # -wno来不检查main的参数格式, 避免因为带上了argc argv报错, -U_~U_FORTIFY_SOURCE也是防止做栈溢出. 
 #tables和hidden减小生成的二进制体积
+
 # freestanding告诉编译器不假设标准库存在, -fno-rtti依旧减小体积, 并且exce~ 关闭对抛出异常的处理
 # asflag控制汇编文件的处理. -mmd和cflags的作用一样
 # -z noe,,, 强制要求链接器在生成的 ELF 文件头部打上一个物理标
-# 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。
-# 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
 CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -D__ISA__=\"$(ISA)\" -D__ISA_$(shell echo $(ISA) | tr a-z A-Z)__ \
             -D__ARCH__=$(ARCH) -D__ARCH_$(shell echo $(ARCH) | tr a-z A-Z | tr - _) \
@@ -134,6 +134,10 @@ CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
+
+# 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。
+# 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
+# +=也是延迟展开
 LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
 
 ## 4. Arch-Specific Configurations
@@ -165,6 +169,7 @@ $(DST_DIR)/%.o: %.S
 
 ifeq ($(MAKECMDGOALS),archive)
 ### Rule (archive): objects (`*.o`) -> `ARCHIVE.a` (ar)
+# ar是打包的指令, 把多个 .o 文件 “打包压缩” 成的一个文件，也叫静态库，本质是 .o 文件的集合
 $(ARCHIVE): $(OBJS)
 	@echo + AR "->" $(shell realpath $@ --relative-to .)
 	@$(AR) rcs $@ $^
@@ -182,8 +187,8 @@ endif
 
 ### Rule (link): objects (`*.o`) and libraries (`*.a`) -> `IMAGE.elf`, the final ELF binary to be packed into image (ld)
 $(IMAGE).elf: $(LINKAGE) $(LDSCRIPTS)
-	@echo \# Creating image [$(ARCH)]
-	@echo + LD "->" $(IMAGE_REL).elf
+	echo \# Creating image [$(ARCH)]
+	echo + LD "->" $(IMAGE_REL).elf
 ifneq ($(filter $(ARCH),native),)
 	@$(CXX) -o $@ -Wl,--whole-archive $(LINKAGE) -Wl,-no-whole-archive $(LDFLAGS_CXX)
 else
