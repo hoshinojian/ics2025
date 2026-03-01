@@ -6,10 +6,11 @@
 # Makefile for AbstractMachine Kernels and Libraries
 
 ### *Get a more readable version of this Makefile* by `make html` (requires python-markdown)
-html:
 # Makefile指的是这个文件自身. 这一句语句完成缩进替换. 
-	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
 # 伪目标, 强行执行
+
+html:
+	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
 .PHONY: html
 
 ## 1. Basic Setup and Checks
@@ -60,6 +61,7 @@ endif
 ARCH_SPLIT = $(subst -, ,$(ARCH))
 ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
+
 # 原本的ARCH是riscv32-nemu. 后面ISA变成了riscv32. platfrom变成了nemu
 
 ### Check if there is something to build
