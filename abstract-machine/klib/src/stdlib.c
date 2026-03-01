@@ -43,9 +43,12 @@ void *malloc(size_t size) {
   //就返回[addr, addr + size)这段空间. addr的初值设为heap.start, 表示从堆区开始分配. 
   //你也可以参考microbench中的相关代码. 注意malloc()对返回的地址有一定的要求, 具体情况请RTFM.
   static void* heap_point = NULL;
-  heap_point = heap.start;
+  if (heap_point == NULL) {
+      heap_point = heap.start;
+  }
   int _size = (size + (WORD_SIZE - 1)) & ~WORD_MASK;
   if ((uintptr_t)heap_point + size > (uintptr_t)heap.end) {
+        printf("no enough size\n");
         return NULL;
     }
   void* old = heap_point;
