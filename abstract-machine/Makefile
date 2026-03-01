@@ -112,10 +112,7 @@ READELF   = $(CROSS_COMPILE)readelf
 # include默认只找在标准路径下面的,但是这下面绝对没有am.h头文件. -I给编译器的搜索目录表里面强制加上新的. 
 # gcc -I/home/xingjian/ics2025/abstract-machine/am/include -c dummy.c, 这时候先找标准目录, 没找到， 检查-I参数, 在后续的目录下面找到am.h
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
-
-$(info # INC_PATH $(INC_PATH) )
-
-
+# $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 
 ARCH_H := arch/$(ARCH).h
