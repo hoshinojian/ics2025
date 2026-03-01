@@ -72,6 +72,7 @@ void init_map() {
 
 //从addr映射到map所指示的目标空间并且访问, 这个过程可能触发callback, 对设备和目标空间的状态更新
 //每一次io读写的时候, 才会调用设备提供的callback
+#ifdef CONFIG_DEVICE_TRACE
 extern FILE* device_log_fp;
 static void device_log_write(paddr_t addr, int len, word_t data, bool is_write, IOMap *map) {
   if (device_log_fp == NULL) return;
@@ -88,6 +89,7 @@ static void device_log_write(paddr_t addr, int len, word_t data, bool is_write, 
   // 建议加上 fflush，防止模拟器崩溃时日志没写入磁盘
   fflush(device_log_fp); 
 }
+#endif
 
 
 word_t map_read(paddr_t addr, int len, IOMap *map) {
@@ -101,8 +103,9 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
   word_t ret = host_read(map->space + offset, len);
 
   // 2. 插入日志调用：记录读取到的值
+#ifdef CONFIG_DEVICE_TRACE
   device_log_write(addr, len, ret, false, map);
-
+#endif
   return ret;
 }
 
@@ -115,5 +118,7 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   invoke_callback(map->callback, offset, len, true);
 
   // 2. 插入日志调用：记录写入的值
+#ifdef CONFIG_DEVICE_TRACE
   device_log_write(addr, len, data, true, map);
+#endif
 }
