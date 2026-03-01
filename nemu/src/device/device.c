@@ -74,7 +74,8 @@ void sdl_clear_event_queue() {
 }
 
 void init_device() {
-  printf("\n\nthis is init_device running\n\n");
+  // printf("this is init_device running\n");
+  IFDEF(CONFIG_TARGET_AM, printf("\n\nfuck!\n\n"));
   IFDEF(CONFIG_TARGET_AM, ioe_init());
   init_map();
 
