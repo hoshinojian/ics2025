@@ -25,8 +25,7 @@ uint8_t* new_space(int size);
 typedef struct {
   const char *name;
   // we treat ioaddr_t as paddr_t here
-  paddr_t low;
-  paddr_t high;
+  paddr_t low, high;
   void *space;
   //目标空间, 在宿主机上面分配的真实的内存, 模拟设备内部的寄存器
   io_callback_t callback;
