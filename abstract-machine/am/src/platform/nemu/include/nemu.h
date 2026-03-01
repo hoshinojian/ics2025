@@ -5,7 +5,9 @@
 
 #include ISA_H // the macro `ISA_H` is defined in CFLAGS
                // it will be expanded as "x86/x86.h", "mips/mips32.h", ...
-
+//asm volatile("汇编指令" : 输出约束 : 输入约束 : 破坏约束)
+//执行ebreak后，NEMU 模拟器的陷阱处理程序会被触发，处理程序会读取a0寄存器的值（0x123），从而知道这次陷阱的类型（比如 0x123 代表 “内存访问错误”“系统调用” 等）。
+//$0占位符
 #if defined(__ISA_X86__)
 # define nemu_trap(code) asm volatile ("int3" : :"a"(code))
 #elif defined(__ISA_MIPS32__)

@@ -63,6 +63,7 @@ static void invoke_callback(io_callback_t c, paddr_t offset, int len, bool is_wr
   if (c != NULL) { c(offset, len, is_write); }
 }
 
+//初始化io_space到默认大小；初始化p_space到io_space
 void init_map() {
   io_space = malloc(IO_SPACE_MAX);//空间起始指针
   assert(io_space);
