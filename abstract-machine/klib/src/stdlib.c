@@ -34,16 +34,19 @@ int atoi(const char* nptr) {
 #define WORD_SIZE 8
 #define WORD_MASK (WORD_SIZE - 1)
 
+// 它的意思是：如果不是 native 环境，或者明确要求在 native 测试 klib，才编译以下代码。
+#if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
-#if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
+//#if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
   //在malloc()中维护一个上次分配内存位置的变量addr, 每次调用malloc()时, 
   //就返回[addr, addr + size)这段空间. addr的初值设为heap.start, 表示从堆区开始分配. 
   //你也可以参考microbench中的相关代码. 注意malloc()对返回的地址有一定的要求, 具体情况请RTFM.
   static void* heap_point = NULL;
-  if (heap_point == NULL) {
+  if(heap_point == NULL){
       heap_point = heap.start;
   }
   int _size = (size + (WORD_SIZE - 1)) & ~WORD_MASK;
@@ -58,9 +61,10 @@ void *malloc(size_t size) {
   // }
   return old;
   //panic("Not implemented");
-#endif
+//#endif
   return NULL;
 }
+#endif
 
 void free(void *ptr) {
 }
