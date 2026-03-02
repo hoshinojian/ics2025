@@ -65,8 +65,9 @@ static inline void update_screen() {
   SDL_RenderPresent(renderer);
 }
 #else
-static void init_screen() {}
+static void init_screen() {}//AM 平台不需要 SDL（AM 框架自己处理显示），所以init_screen()为空
 
+//update_screen()直接调用 AM 框架的io_write，把显存数据传给 AM 的 GPU 模块显示。
 static inline void update_screen() {
   io_write(AM_GPU_FBDRAW, 0, 0, vmem, screen_width(), screen_height(), true);
 }
