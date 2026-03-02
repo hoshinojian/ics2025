@@ -75,7 +75,7 @@ void sdl_clear_event_queue() {
 
 void init_device() {
   IFDEF(CONFIG_TARGET_AM, {
-    printf("\nCONFIG_TARGET_AM\n");
+    printf("\n\n\nCONFIG_TARGET_AM\n\n\n");
   });
 
   IFDEF(CONFIG_TARGET_AM, ioe_init());
