@@ -41,10 +41,11 @@ static uint32_t *vgactl_port_base = NULL;
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture = NULL;
 
+//创建 SDL 窗口（标题带模拟器的 ISA 架构，比如 x86/NEMU），初始化渲染相关的资源
 static void init_screen() {
   SDL_Window *window = NULL;
   char title[128];
-  sprintf(title, "%s-NEMU", str(__GUEST_ISA__));
+  sprintf(title, "%s-HOSHI", str(__GUEST_ISA__));
   SDL_Init(SDL_INIT_VIDEO);
   SDL_CreateWindowAndRenderer(
       SCREEN_W * (MUXDEF(CONFIG_VGA_SIZE_400x300, 2, 1)),
@@ -56,6 +57,7 @@ static void init_screen() {
   SDL_RenderPresent(renderer);
 }
 
+//vmem里面的像素数据更新到sdl，再渲染到窗口
 static inline void update_screen() {
   SDL_UpdateTexture(texture, NULL, vmem, SCREEN_W * sizeof(uint32_t));
   SDL_RenderClear(renderer);
@@ -83,13 +85,13 @@ void vga_update_screen() {
     update_screen();
 
     // 3. 清除 Sync 寄存器 (归零，等待下一次同步)
-    vgactl_port_base[1] = 0;
+    vgactl_port_base[1] = 0;//cpu负责写非0到这里，表示同步寄存器
   }
 }
 
 void init_vga() {
   vgactl_port_base = (uint32_t *)new_space(8);
-  vgactl_port_base[0] = (screen_width() << 16) | screen_height();
+  vgactl_port_base[0] = (screen_width() << 16) | screen_height();//分辨率寄存器
 #ifdef CONFIG_HAS_PORT_IO
   add_pio_map ("vgactl", CONFIG_VGA_CTL_PORT, vgactl_port_base, 8, NULL);
 #else
