@@ -80,7 +80,8 @@ void init_device() {
 });
   init_map();
 
-  IFDEF(CONFIG_HAS_SERIAL, {init_serial();     printf("\n\n\nCONFIG_HAS_SERIAL\n\n\n");
+  IFDEF(CONFIG_HAS_SERIAL, {init_serial();
+    //     printf("\n\n\nCONFIG_HAS_SERIAL\n\n\n");
 });
   IFDEF(CONFIG_HAS_TIMER, init_timer());
   IFDEF(CONFIG_HAS_VGA, init_vga());
