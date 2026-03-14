@@ -41,6 +41,9 @@ endif
 remove_quote = $(patsubst "%",%,$(1))
 
 # Extract variabls from menuconfig
+# 在auto.conf里面. 把guest_isa变成riscv32
+# CONFIG_ENGINE="interpreter"
+# CONFIG_ISA="riscv32"
 GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
 ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
@@ -48,6 +51,12 @@ NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 
 # Include all filelist.mk to merge file lists
 # 调用系统 Shell 执行括号内的命令，并将命令的输出结果（stdout）作为函数返回值；
+# find -L -name "filelist.mk"
+#./src/engine/filelist.mk
+# ./src/utils/filelist.mk
+# ./src/isa/filelist.mk
+# ./src/device/filelist.mk
+# ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
 include $(FILELIST_MK)
 
@@ -59,6 +68,7 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 # Extract compiler and options from menuconfig
+# CONFIG_CC="gcc"
 ifneq ($(CONFIG_CC),)
 CC = $(call remove_quote,$(CONFIG_CC))
 endif

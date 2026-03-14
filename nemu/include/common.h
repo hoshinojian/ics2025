@@ -13,6 +13,8 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+//默认的全局使用头文件
+
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
@@ -24,9 +26,12 @@
 #include <generated/autoconf.h>
 #include <macro.h>
 
+
+//这个宏在nemu编译成为am的时候用到， 这个时候通过AM IOE实现nemu的设备。 sdb调试功能不开启， 因为am提供不了库函数
 #ifdef CONFIG_TARGET_AM
 #include <klib.h>
 #else
+
 #include <assert.h>
 #include <stdlib.h>
 #endif
