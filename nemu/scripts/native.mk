@@ -13,6 +13,11 @@
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
 
+YELLOW := $(shell printf "\033[03m")
+NONE := $(shell printf "\033[0m")
+
+$(info $(YELLOW)file NEMU/native is used$(NONE))
+
 -include $(NEMU_HOME)/../Makefile
 include $(NEMU_HOME)/scripts/build.mk
 
