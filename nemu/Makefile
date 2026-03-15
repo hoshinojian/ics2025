@@ -116,6 +116,10 @@ LDFLAGS += $(CFLAGS_BUILD)
 include $(NEMU_HOME)/scripts/config.mk
 
 # 这个时候把nemu当做一个客体程序
+$(info =================================================)
+$(info if(CONFIG_TARGET_AM), 1,2)
+$(info =================================================)
+
 ifdef CONFIG_TARGET_AM
 include $(AM_HOME)/Makefile
 LINKAGE += $(ARCHIVES)
