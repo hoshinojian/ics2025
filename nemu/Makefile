@@ -47,6 +47,10 @@ remove_quote = $(patsubst "%",%,$(1))
 GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
 ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
+
+$(info GUEST_ISA = $(GUEST_ISA))
+$(info ENGINE = $(ENGINE))
+$(info NAME = $(NAME))
 # 到这里, NAME变成了riscv32-nemu-interpreter
 
 # Include all filelist.mk to merge file lists
@@ -102,3 +106,5 @@ else
 # Include rules to build NEMU
 include $(NEMU_HOME)/scripts/native.mk
 endif
+
+
