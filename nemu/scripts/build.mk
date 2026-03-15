@@ -19,7 +19,7 @@ BUILD_DIR = $(WORK_DIR)/build
 $(info $(YELLOW)build.mk                                    BUILD_DIR is $(BUILD_DIR)$(NONE))
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
-$(info $(YELLOW)build.mk                                    BUILD_DIR is $(INC_PATH)$(NONE))
+$(info $(YELLOW)build.mk                                    INC_PATH is $(INC_PATH)$(NONE))
 
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
 $(info $(YELLOW)build.mk                                    OBJ_DIR is $(OBJ_DIR)$(NONE))
