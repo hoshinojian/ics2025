@@ -3,10 +3,10 @@ NONE := $(shell printf "\033[0m")
 
 $(info $(YELLOW)file: NEMU/build is used$(NONE))
 
-
 .DEFAULT_GOAL = app
 
 # Add necessary options if the target is a shared library
+# 判断是不是要编译成为动态链接库
 ifeq ($(SHARE),1)
 SO = -so
 CFLAGS  += -fPIC -fvisibility=hidden
@@ -14,6 +14,7 @@ LDFLAGS += -shared -fPIC
 endif
 
 WORK_DIR  = $(shell pwd)
+$(info $(YELLOW)build.mk                                    WORK_DIR is $(WORK_DIR)$(NONE))
 BUILD_DIR = $(WORK_DIR)/build
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
