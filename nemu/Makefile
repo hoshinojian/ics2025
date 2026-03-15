@@ -57,8 +57,8 @@ ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 
 $(info $(GREEN)GUEST_ISA$(NONE) = $(GUEST_ISA))
-$(info ENGINE = $(ENGINE))
-$(info NAME = $(NAME))
+$(info $(GREEN)ENGINE$(NONE) = $(ENGINE))
+$(info $(GREEN)NAME$(NONE) = $(NAME))
 # 到这里, NAME变成了riscv32-nemu-interpreter
 
 # Include all filelist.mk to merge file lists
@@ -70,9 +70,8 @@ $(info NAME = $(NAME))
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 $(info =================================================)
-$(info =================================================)
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
-$(info The value of TILELIST_MK is $(FILELIST_MK))
+$(info $(GREEN)The value of TILELIST_MK is $(NONE)$(FILELIST_MK))
 include $(FILELIST_MK)
 
 # Filter out directories and files in blacklist to obtain the final set of source files
