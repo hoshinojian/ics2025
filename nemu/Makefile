@@ -58,6 +58,7 @@ NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
+$(info The value of TILELIST_MK is $(FILELIST_MK))
 include $(FILELIST_MK)
 
 # Filter out directories and files in blacklist to obtain the final set of source files
