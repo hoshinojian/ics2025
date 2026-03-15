@@ -13,6 +13,12 @@
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
 
+COLOR_RED    = \033[1;31m
+COLOR_GREEN  = \033[1;32m
+COLOR_YELLOW = \033[1;33m
+COLOR_NONE   = \033[0m
+
+
 # Sanity check
 # wildcardcard是一个内置函数，作用是检查指定路径的文件 / 目录是否存在。 
 # 如果存在，返回该文件的完整路径（如 ~/nemu/src/nemu-main.c）如果不存在，返回空
@@ -61,6 +67,8 @@ $(info NAME = $(NAME))
 # ./src/isa/filelist.mk
 # ./src/device/filelist.mk
 # ./src/filelist.mk
+$(info =================================================)
+$(info =================================================)
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
 $(info The value of TILELIST_MK is $(FILELIST_MK))
 include $(FILELIST_MK)
