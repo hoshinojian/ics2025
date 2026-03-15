@@ -58,6 +58,7 @@ app: $(BINARY)
 $(BINARY):: $(OBJS) $(ARCHIVES)
 	@echo + LD $@
 	@$(LD) -o $@ $(OBJS) $(LDFLAGS) $(ARCHIVES) $(LIBS)
+	$($(YELLOW)info the command Binary(build.mk) is used$(NONE))
 
 clean:
 	-rm -rf $(BUILD_DIR)
