@@ -69,7 +69,6 @@ $(info $(GREEN)NAME$(NONE) = $(NAME))
 # ./src/isa/filelist.mk
 # ./src/device/filelist.mk
 # ./src/filelist.mk
-$(info =================================================)
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
 $(info $(GREEN)The value of TILELIST_MK is $(NONE)$(FILELIST_MK))
 include $(FILELIST_MK)
@@ -82,10 +81,12 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 $(info =================================================)
+$(info $(GREEN))
 $(info DIRS-BLACKLIST-y : $(DIRS-BLACKLIST-y))
 $(info SRCS-BLACKLIST-y : $(SRCS-BLACKLIST-y))
 $(info SRCS-y           : $(SRCS-y))
 $(info FINAL SRCS       : $(SRCS))
+$(info $(NONE))
 $(info =================================================)
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
