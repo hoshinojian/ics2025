@@ -25,6 +25,7 @@ include $(NEMU_HOME)/tools/difftest.mk
 
 compile_git:
 	$(call git_commit, "compile NEMU")
+	$(info $(YELLOW)compile_git called$(NONE))
 $(BINARY):: compile_git
 
 # Some convenient rules
@@ -54,6 +55,9 @@ override ARGS += $(ARGS_DIFF)
 
 # Command to execute NEMU
 IMG ?=
+ifeq ($(IMG), )
+$(info($(YELLOW) IMG of NEMU is $(IMG)$(NONE)))
+endif
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
 run-env: $(BINARY) $(DIFF_REF_SO)
