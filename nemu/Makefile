@@ -13,8 +13,12 @@
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
 
+# 转义.
+# 借助shell进行翻译, 
 RED    := $(shell printf "\033[31m")
-GREEN  := $(shell printf "\033[32m")
+# GREEN  := $(shell printf "\033[32m")
+GREEN := \033[32m
+
 YELLOW := $(shell printf "\033[33m")
 NONE   := $(shell printf "\033[0m")
 
