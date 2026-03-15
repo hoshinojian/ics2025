@@ -83,11 +83,11 @@ SRCS-BLACKLIST-y += $(SRCS-BLACKLIST)
 SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
-$(info $(RED)=================================================$(NONE))
+$(info $(RED)=================================================)
 # $(info $(GREEN))
 $(info FINAL SRCS       : $(SRCS))
 # $(info $(NONE))
-$(info $(RED)=================================================$(NONE))
+$(info =================================================$(NONE))
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
 # debug:
