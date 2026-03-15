@@ -85,7 +85,7 @@ SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 $(info $(RED)=================================================)
 # $(info $(GREEN))
-$(info FINAL SRCS       : $(nodir $(SRCS)))
+$(info FINAL SRCS       : $(notdir $(SRCS)))
 # $(info $(NONE))
 $(info =================================================$(NONE))
 
