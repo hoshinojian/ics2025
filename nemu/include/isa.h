@@ -20,9 +20,17 @@
 #include <isa-def.h>
 
 // The macro `__GUEST_ISA__` is defined in $(CFLAGS).
-// It will be expanded as "x86" or "mips32" ...
+// CFLAGS =     -DITRACE_COND=true -D__GUEST_ISA__=riscv32
+// typedef struct {
+//   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
+//   vaddr_t pc;
+// } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 typedef concat(__GUEST_ISA__, _CPU_state) CPU_state;
 typedef concat(__GUEST_ISA__, _ISADecodeInfo) ISADecodeInfo;
+// typedef struct {
+//   uint32_t inst;
+// } MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
+
 
 // monitor
 extern unsigned char isa_logo[];
