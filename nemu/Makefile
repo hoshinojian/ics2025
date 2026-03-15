@@ -122,8 +122,7 @@ CFLAGS_TRACE += -DITRACE_COND=$(if $(CONFIG_ITRACE_COND),$(call remove_quote,$(C
 # -D 编译参数, 
 CFLAGS  += $(CFLAGS_BUILD) $(CFLAGS_TRACE) -D__GUEST_ISA__=$(GUEST_ISA)
 LDFLAGS += $(CFLAGS_BUILD)
-$(info CFLAGS = $(CFLAGS))
-$(info LDFLAGS = $(LDFLAGS))
+
 
 # Include rules for menuconfig
 include $(NEMU_HOME)/scripts/config.mk
@@ -142,6 +141,9 @@ else
 include $(NEMU_HOME)/scripts/native.mk
 endif
 
+
+$(info CFLAGS = $(CFLAGS))
+$(info LDFLAGS = $(LDFLAGS))
 
 # 定义 info 靶点
 .PHONY: info
