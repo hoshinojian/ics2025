@@ -1,3 +1,8 @@
+YELLOW := $(shell printf "\033[03m")
+NONE := $(shell printf "\033[0m")
+
+$(info $(YELLOW)file NEMU/build is used$(NONE))
+
 .DEFAULT_GOAL = app
 
 # Add necessary options if the target is a shared library
