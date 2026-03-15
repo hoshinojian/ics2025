@@ -1,8 +1,8 @@
-YELLOW := $(shell printf "\033[03m")
+YELLOW := $(shell printf "\033[33m")
+
 NONE := $(shell printf "\033[0m")
 
 $(info $(YELLOW)file: NEMU/build is used$(NONE))
-$(info $(YELLOW)file: NEMU/makefile is used $(NONE))
 
 
 .DEFAULT_GOAL = app
