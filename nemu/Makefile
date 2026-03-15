@@ -13,10 +13,6 @@
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
 
-define newline
-
-endef
-
 # Sanity check
 # wildcardcard是一个内置函数，作用是检查指定路径的文件 / 目录是否存在。 
 # 如果存在，返回该文件的完整路径（如 ~/nemu/src/nemu-main.c）如果不存在，返回空
@@ -66,8 +62,7 @@ $(info NAME = $(NAME))
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
-$(info The value of TILELIST_MK is)
-$(info $(subst $(empty) $(empty),$(newline),$(FILELIST_MK)))
+$(info The value of TILELIST_MK is $(FILELIST_MK))
 include $(FILELIST_MK)
 
 # Filter out directories and files in blacklist to obtain the final set of source files
@@ -116,6 +111,10 @@ CFLAGS_TRACE += -DITRACE_COND=$(if $(CONFIG_ITRACE_COND),$(call remove_quote,$(C
 # -D 编译参数, 
 CFLAGS  += $(CFLAGS_BUILD) $(CFLAGS_TRACE) -D__GUEST_ISA__=$(GUEST_ISA)
 LDFLAGS += $(CFLAGS_BUILD)
+$(info =================================================)
+$(info CFLAGS = $(CFLAGS))
+$(info LDFLAGS = $(LDFLAGS))
+$(info =================================================)
 
 # Include rules for menuconfig
 include $(NEMU_HOME)/scripts/config.mk
