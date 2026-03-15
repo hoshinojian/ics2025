@@ -13,10 +13,10 @@
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
 
-COLOR_RED    = \033[1;31m
-COLOR_GREEN  = \033[1;32m
-COLOR_YELLOW = \033[1;33m
-COLOR_NONE   = \033[0m
+RED    := $(shell printf "\033[31m")
+GREEN  := $(shell printf "\033[32m")
+YELLOW := $(shell printf "\033[33m")
+NONE   := $(shell printf "\033[0m")
 
 
 # Sanity check
@@ -54,7 +54,7 @@ GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
 ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 
-$(info GUEST_ISA = $(GUEST_ISA))
+$(info $(GREEN)GUEST_ISA$(NONE) = $(GUEST_ISA))
 $(info ENGINE = $(ENGINE))
 $(info NAME = $(NAME))
 # 到这里, NAME变成了riscv32-nemu-interpreter
