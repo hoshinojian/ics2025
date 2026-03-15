@@ -16,10 +16,16 @@ endif
 WORK_DIR  = $(shell pwd)
 $(info $(YELLOW)build.mk                                    WORK_DIR is $(WORK_DIR)$(NONE))
 BUILD_DIR = $(WORK_DIR)/build
+$(info $(YELLOW)build.mk                                    BUILD_DIR is $(BUILD_DIR)$(NONE))
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
+$(info $(YELLOW)build.mk                                    BUILD_DIR is $(INC_PATH)$(NONE))
+
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
+$(info $(YELLOW)build.mk                                    OBJ_DIR is $(OBJ_DIR)$(NONE))
+
 BINARY   = $(BUILD_DIR)/$(NAME)$(SO)
+$(info $(YELLOW)build.mk                                    BIINARY is $(BINARY)$(NONE))
 
 # Compilation flags
 ifeq ($(CC),clang)
