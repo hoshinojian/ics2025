@@ -85,7 +85,8 @@ SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 $(info $(RED)=================================================)
 # $(info $(GREEN))
-$(info FINAL SRCS       : $(notdir $(SRCS)))
+$(info nemu/makefileFINAL SRCS       :)
+$(info $(notdir $(SRCS)))
 # $(info $(NONE))
 $(info =================================================$(NONE))
 
