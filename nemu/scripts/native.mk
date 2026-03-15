@@ -65,7 +65,7 @@ endif
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
 run-env: $(BINARY) $(DIFF_REF_SO)
-	$(info Command run-env(native.mk) is used)
+	$(info $(YELLOW)Command run-env(native.mk) is used$(NONE))
 
 run: run-env
 	$(call git_commit, "run NEMU")
