@@ -25,6 +25,7 @@ include $(NEMU_HOME)/tools/difftest.mk
 
 compile_git:
 	$(call git_commit, "compile NEMU")
+
 	$(info $(YELLOW)compile_git called$(NONE))
 $(BINARY):: compile_git
 
@@ -64,14 +65,14 @@ endif
 
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
+
 run-env: $(BINARY) $(DIFF_REF_SO)
 	$(info $(YELLOW)Command run-env(native.mk) is used$(NONE))
 
 run: run-env
-	$(info $(YELLOW)Command(native.mk) is used$(NONE))
+	$(info $(YELLOW)Command run(native.mk) is used$(NONE))
 	$(call git_commit, "run NEMU")
 	$(NEMU_EXEC)
-	$(info $(YELLOW)run$(NONE))
 
 gdb: run-env
 	$(call git_commit, "gdb NEMU")
