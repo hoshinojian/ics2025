@@ -56,7 +56,9 @@ override ARGS += $(ARGS_DIFF)
 # Command to execute NEMU
 IMG ?=
 ifeq ($(IMG), )
-$(info $(YELLOW)IMG of NEMU is not assigned (Empty)$(NONE))
+$(info $(YELLOW)IMG of NEMU is not assigned $(NONE))
+else
+$(info $(YELLOW)IMG of NEMU is $(IMG)$(NONE))
 endif
 
 
