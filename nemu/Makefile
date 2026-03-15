@@ -72,6 +72,19 @@ SRCS-BLACKLIST-y += $(SRCS-BLACKLIST)
 SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
+$(info =================================================)
+$(info VAR CHECKING:)
+$(info DIRS-BLACKLIST-y : $(DIRS-BLACKLIST-y))
+$(info SRCS-BLACKLIST-y : $(SRCS-BLACKLIST-y))
+$(info SRCS-y           : $(SRCS-y))
+$(info FINAL SRCS       : $(SRCS))
+$(info =================================================)
+
+# VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
+# debug:
+# 	@$(foreach v, $(VARS), echo "$(v) = "; echo "$($(v))"; echo "-------------------";)
+
+
 # Extract compiler and options from menuconfig
 # CONFIG_CC="gcc"
 ifneq ($(CONFIG_CC),)
