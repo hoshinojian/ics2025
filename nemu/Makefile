@@ -110,10 +110,8 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
-$(info =================================================)
 $(info CC : $(CC))
 $(info CFLAGS_BUILD : $(CFLAGS_BUILD))
-$(info =================================================)
 
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
@@ -124,10 +122,8 @@ CFLAGS_TRACE += -DITRACE_COND=$(if $(CONFIG_ITRACE_COND),$(call remove_quote,$(C
 # -D 编译参数, 
 CFLAGS  += $(CFLAGS_BUILD) $(CFLAGS_TRACE) -D__GUEST_ISA__=$(GUEST_ISA)
 LDFLAGS += $(CFLAGS_BUILD)
-$(info =================================================)
 $(info CFLAGS = $(CFLAGS))
 $(info LDFLAGS = $(LDFLAGS))
-$(info =================================================)
 
 # Include rules for menuconfig
 include $(NEMU_HOME)/scripts/config.mk
