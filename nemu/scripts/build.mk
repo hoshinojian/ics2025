@@ -43,8 +43,8 @@ LDFLAGS := -O2 $(LDFLAGS)
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
 $(info $(RED)=================================================)
 
-$(info $(RED)build.mk                            OBJS = )
-$(info $(notdir $(OBJS)) $(NONE))
+$(info build.mk                            OBJS = )
+$(info $(notdir $(OBJS)) )
 $(info =================================================$(NONE))
 
 # Compilation patterns
