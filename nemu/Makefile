@@ -15,12 +15,14 @@
 
 # 转义.
 # 借助shell进行翻译, 
+
+
 RED    := $(shell printf "\033[31m")
 GREEN  := $(shell printf "\033[32m")
 YELLOW := $(shell printf "\033[33m")
 NONE   := $(shell printf "\033[0m")
 
-
+$(info $(YELLOW) file: NEMU/makefile is used $(NONE))
 # Sanity check
 # wildcardcard是一个内置函数，作用是检查指定路径的文件 / 目录是否存在。 
 # 如果存在，返回该文件的完整路径（如 ~/nemu/src/nemu-main.c）如果不存在，返回空
@@ -82,12 +84,12 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 $(info $(RED)=================================================$(NONE))
-$(info $(GREEN))
+# $(info $(GREEN))
 $(info DIRS-BLACKLIST-y : $(DIRS-BLACKLIST-y))
 $(info SRCS-BLACKLIST-y : $(SRCS-BLACKLIST-y))
 $(info SRCS-y           : $(SRCS-y))
 $(info FINAL SRCS       : $(SRCS))
-$(info $(NONE))
+# $(info $(NONE))
 $(info $(RED)=================================================$(NONE))
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
