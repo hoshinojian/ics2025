@@ -97,6 +97,11 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
+$(info =================================================)
+$(info CC : $(CC))
+$(info CFLAGS_BUILD : $(CFLAGS_BUILD))
+$(info =================================================)
+
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
 # 最终生成的编译参数为 -DITRACE_COND=true。这相当于在 C 代码中加入了 #define ITRACE_COND true。
