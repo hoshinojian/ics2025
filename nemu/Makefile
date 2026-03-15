@@ -73,7 +73,6 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 
 $(info =================================================)
-$(info VAR CHECKING:)
 $(info DIRS-BLACKLIST-y : $(DIRS-BLACKLIST-y))
 $(info SRCS-BLACKLIST-y : $(SRCS-BLACKLIST-y))
 $(info SRCS-y           : $(SRCS-y))
