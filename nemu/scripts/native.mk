@@ -73,6 +73,7 @@ run: run-env
 	$(info $(YELLOW)Command run(native.mk) is used$(NONE))
 	$(call git_commit, "run NEMU")
 	$(NEMU_EXEC)
+	$(info $(YELLOW)During this running, BINARY is $(BINARY), ARGS is $(ARGS)$(NONE))
 
 gdb: run-env
 	$(call git_commit, "gdb NEMU")
