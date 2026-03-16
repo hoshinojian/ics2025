@@ -143,9 +143,3 @@ endif
 
 $(info CFLAGS = $(CFLAGS))
 $(info LDFLAGS = $(LDFLAGS))
-
-# ∂®“Â info ∞–µ„
-.PHONY: info
-info:
-	@echo "================ [ Included Files List ] ================"
-	@$(foreach f, $(MAKEFILE_LIST), echo "Included: $(f)";)
