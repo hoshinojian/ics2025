@@ -123,8 +123,8 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
 ### (Cross) compilers, e.g., mips-linux-gnu-g++
 # $(info $(GREEN)$(PREFIX_AM)$(NONE)CROSS_COMPILE = $(CROSS_COMPILE) )
 
-AS        := $(CROSS_COMPILE)gcc
-CC        := $(CROSS_COMPILE)gcc
+AS        = $(CROSS_COMPILE)gcc
+CC        = $(CROSS_COMPILE)gcc
 CXX       = $(CROSS_COMPILE)g++
 LD        = $(CROSS_COMPILE)ld
 AR        = $(CROSS_COMPILE)ar
@@ -142,8 +142,13 @@ READELF   = $(CROSS_COMPILE)readelf
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 # $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)INCFLAGS = $(INCFLAGS) )
+
 
 ARCH_H := arch/$(ARCH).h
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCH_H = $(ARCH_H) )
+
 # -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 # -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
 
@@ -163,11 +168,15 @@ CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
+$(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS = $(CFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS = $(CXXFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS = $(ASFLAGS) )
 
 # 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。
 # 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
 # +=也是延迟展开
 LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 
 ## 4. Arch-Specific Configurations
 
