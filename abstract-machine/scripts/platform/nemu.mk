@@ -26,10 +26,13 @@ MAINARGS_PLACEHOLDER = the_insert-arg_rule_in_Makefile_will_insert_mainargs_here
 CFLAGS += -DMAINARGS_MAX_LEN=$(MAINARGS_MAX_LEN) -DMAINARGS_PLACEHOLDER=$(MAINARGS_PLACEHOLDER)
 
 
+# $(info $(GREEN)$(PREFIX_am_nemu)$(NONE)MAINARGS_MAX_LEN = $(MAINARGS_MAX_LEN))
+# $(info $(GREEN)$(PREFIX_am_nemu)$(NONE)MAINARGS_PLACEHOLDER = $(MAINARGS_PLACEHOLDER))
+# $(info $(GREEN)$(PREFIX_am_nemu)$(NONE)CFLAGS = $(CFLAGS))
+ifeq ($(PRINT_INFO),1)
 $(info $(GREEN)$(PREFIX_am_nemu)$(NONE)MAINARGS_MAX_LEN = $(MAINARGS_MAX_LEN))
 $(info $(GREEN)$(PREFIX_am_nemu)$(NONE)MAINARGS_PLACEHOLDER = $(MAINARGS_PLACEHOLDER))
-$(info $(GREEN)$(PREFIX_am_nemu)$(NONE)CFLAGS = $(CFLAGS))
-
+endif
 
 # ??mainargs???
 insert-arg: image

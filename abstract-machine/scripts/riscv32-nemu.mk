@@ -12,15 +12,15 @@ include $(AM_HOME)/scripts/isa/riscv.mk
 include $(AM_HOME)/scripts/platform/nemu.mk
 #define ISA_H "riscv/riscv.h"。
 CFLAGS  += -DISA_H=\"riscv/riscv.h\"
-$(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)CFLAGS = $(CFLAGS))
+# $(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)CFLAGS = $(CFLAGS))
 
 # 告诉gcc底层硬件的能力: -march=~, 指令集架构. 
 COMMON_CFLAGS += -march=rv32im_zicsr -mabi=ilp32   # overwrite
-$(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)COMMON_CFLAGS = $(COMMON_CFLAGS))
+# $(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)COMMON_CFLAGS = $(COMMON_CFLAGS))
 
 # 最后的elf必须是32位, 小端序, riscv格式
 LDFLAGS       += -melf32lriscv                     # overwrite
-$(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)LDFLAGS = $(LDFLAGS))
+# $(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)LDFLAGS = $(LDFLAGS))
 
 
 # /home/xingjian/ics2025/abstract-machine/am/src/riscv/nemu/start.S
@@ -29,5 +29,8 @@ AM_SRCS += riscv/nemu/start.S \
            riscv/nemu/trap.S \
            riscv/nemu/vme.c
            
-$(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)AM_SRCS = $(AM_SRCS))
+# $(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)AM_SRCS = $(AM_SRCS))
 
+ifeq ($(PRINT_INFO),1)
+$(info $(GREEN)$(PREFIX_riscv32_nemu)$(NONE)AM_SRCS = $(AM_SRCS))
+endif
