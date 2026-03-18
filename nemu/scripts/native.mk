@@ -26,7 +26,6 @@ include $(NEMU_HOME)/tools/difftest.mk
 
 compile_git:
 	$(call git_commit, "compile NEMU")
-
 	$(info $(YELLOW)$(PREFIX_NATIVE)compile_git called$(NONE))
 $(BINARY):: compile_git
 
