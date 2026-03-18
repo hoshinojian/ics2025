@@ -16,8 +16,9 @@
 YELLOW := $(shell printf "\033[33m")
 NONE := $(shell printf "\033[0m")
 PREFIX_NATIVE := [=== NEMU / NATIVE.MK ===]
+$(info)
 $(info $(YELLOW)$(PREFIX_NATIVE)$(NONE))
-
+$(info)
 -include $(NEMU_HOME)/../Makefile
 include $(NEMU_HOME)/scripts/build.mk
 
