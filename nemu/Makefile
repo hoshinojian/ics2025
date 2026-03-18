@@ -22,9 +22,9 @@ GREEN  := $(shell printf "\033[32m")
 YELLOW := $(shell printf "\033[33m")
 NONE   := $(shell printf "\033[0m")
 
-PREFIX := [=== NEMU / Makefile ===]
+PREFIX_NEMU := [=== NEMU / Makefile ===]
 
-$(info $(YELLOW)$(PREFIX)$(NONE))
+$(info $(YELLOW)$(PREFIX_NEMU)$(NONE))
 # Sanity check
 # wildcardcard是一个内置函数，作用是检查指定路径的文件 / 目录是否存在。 
 # 如果存在，返回该文件的完整路径（如 ~/nemu/src/nemu-main.c）如果不存在，返回空
@@ -60,9 +60,9 @@ GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
 ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 
-$(info $(GREEN)$(PREFIX) GUEST_ISA$(NONE) = $(GUEST_ISA))
-$(info $(GREEN)$(PREFIX) ENGINE$(NONE) = $(ENGINE))
-$(info $(GREEN)$(PREFIX) NAME$(NONE) = $(NAME))
+$(info $(GREEN)$(PREFIX_NEMU) GUEST_ISA$(NONE) = $(GUEST_ISA))
+$(info $(GREEN)$(PREFIX_NEMU) ENGINE$(NONE) = $(ENGINE))
+$(info $(GREEN)$(PREFIX_NEMU) NAME$(NONE) = $(NAME))
 # 到这里, NAME变成了riscv32-nemu-interpreter
 
 # Include all filelist.mk to merge file lists
@@ -74,8 +74,8 @@ $(info $(GREEN)$(PREFIX) NAME$(NONE) = $(NAME))
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
-$(info $(GREEN)$(PREFIX) The value of FILELIST_MK is )
-$(foreach file, $(FILELIST_MK), $(info $(PREFIX) $(file)))
+$(info $(GREEN)$(PREFIX_NEMU) The value of FILELIST_MK is )
+$(foreach file, $(FILELIST_MK), $(info $(PREFIX_NEMU) $(file)))
 $(info $(NONE))
 include $(FILELIST_MK)
 
@@ -87,16 +87,16 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 # 在menuconfig中选中TARGET_AM时, nemu/src/monitor/sdb目录下的所有文件都不会参与编译.
 
-$(info $(GREEN)$(PREFIX) =================================================)
-# $(info $(GREEN)$(PREFIX))
-$(info $(PREFIX) FINAL SRCS       :)
-$(info $(PREFIX) $(notdir $(SRCS)))
+$(info $(GREEN)$(PREFIX_NEMU) =================================================)
+# $(info $(GREEN)$(PREFIX_NEMU))
+$(info $(PREFIX_NEMU) FINAL SRCS      :)
+$(info $(PREFIX_NEMU) $(notdir $(SRCS)))
 # $(info $(NONE))
-$(info $(PREFIX) =================================================$(NONE))
+$(info $(PREFIX_NEMU) =================================================$(NONE))
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
 # debug:
-# 	@$(foreach v, $(VARS), echo "$(v) = "; echo "$($(v))"; echo "-------------------";)
+#   @$(foreach v, $(VARS), echo "$(v) = "; echo "$($(v))"; echo "-------------------";)
 
 
 # Extract compiler and options from menuconfig
@@ -112,8 +112,8 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
-$(info $(GREEN)$(PREFIX) CC : $(CC))
-$(info $(PREFIX) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
+$(info $(GREEN)$(PREFIX_NEMU) CC : $(CC))
+$(info $(PREFIX_NEMU) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
 
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
@@ -144,6 +144,6 @@ include $(NEMU_HOME)/scripts/native.mk
 endif
 
 $(info $(GREEN))
-$(info $(PREFIX) CFLAGS = $(CFLAGS))
-$(info $(PREFIX) LDFLAGS = $(LDFLAGS))
+$(info $(PREFIX_NEMU) CFLAGS = $(CFLAGS))
+$(info $(PREFIX_NEMU) LDFLAGS = $(LDFLAGS))
 $(info $(NONE))
