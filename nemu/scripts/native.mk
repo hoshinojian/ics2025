@@ -16,7 +16,7 @@
 YELLOW := $(shell printf "\033[33m")
 NONE := $(shell printf "\033[0m")
 PREFIX_NATIVE := [=== NEMU / NATIVE.MK ===]
-$(info $(YELLOW)$(PREFIX_NATIVE) file: NEMU/makefile is used $(NONE))
+$(info $(YELLOW)$(PREFIX_NATIVE)$(NONE))
 
 -include $(NEMU_HOME)/../Makefile
 include $(NEMU_HOME)/scripts/build.mk
@@ -57,9 +57,9 @@ override ARGS += $(ARGS_DIFF)
 # Command to execute NEMU
 IMG ?=
 ifeq ($(IMG), )
-$(info $(YELLOW)IMG of NEMU is not assigned $(NONE))
+$(info $(YELLOW)$(PREFIX_NATIVE)IMG of NEMU is not assigned $(NONE))
 else
-$(info $(YELLOW)IMG of NEMU is $(IMG)$(NONE))
+$(info $(YELLOW)$(PREFIX_NATIVE)IMG of NEMU is $(IMG)$(NONE))
 endif
 
 
@@ -67,13 +67,13 @@ NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
 
 run-env: $(BINARY) $(DIFF_REF_SO)
-	$(info $(YELLOW)Command run-env(native.mk) is used$(NONE))
+	$(info $(YELLOW)$(PREFIX_NATIVE)Command run-env(native.mk) is used$(NONE))
 
 run: run-env
-	$(info $(YELLOW)Command run(native.mk) is used$(NONE))
+	$(info $(YELLOW)$(PREFIX_NATIVE)Command run(native.mk) is used$(NONE))
 	$(call git_commit, "run NEMU")
 	$(NEMU_EXEC)
-	$(info $(YELLOW)During this running, BINARY is $(BINARY), ARGS is $(ARGS)$(NONE))
+	$(info $(YELLOW)$(PREFIX_NATIVE)During this running, BINARY is $(BINARY), ARGS is $(ARGS)$(NONE))
 
 gdb: run-env
 	$(call git_commit, "gdb NEMU")
