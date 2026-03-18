@@ -108,6 +108,16 @@ OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS)  # library archives are added by LIB_TEMPLATE below
 
+$(info $(GREEN)$(PREFIX_AM)$(NONE)WORK_DIR = $(WORK_DIR))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)DST_DIR = $(DST_DIR) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE_REL = $(IMAGE_REL) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE = $(IMAGE) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCHIVE = $(ARCHIVE) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)OBJS = $(OBJS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LIBS = $(LIBS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
+
+
 ## 3. General Compilation Flags
 
 ### (Cross) compilers, e.g., mips-linux-gnu-g++
