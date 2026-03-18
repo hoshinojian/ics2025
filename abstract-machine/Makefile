@@ -135,7 +135,7 @@ READELF   = $(CROSS_COMPILE)readelf
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 # $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
+# $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
 
 
 ARCH_H := arch/$(ARCH).h
