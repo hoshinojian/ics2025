@@ -112,8 +112,8 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
-$(info $(PREFIX) CC : $(CC))
-$(info $(PREFIX) CFLAGS_BUILD : $(CFLAGS_BUILD))
+$(info $(GREEN)$(PREFIX) CC : $(CC))
+$(info $(PREFIX) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
 
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
