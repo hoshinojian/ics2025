@@ -108,14 +108,7 @@ OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS)  # library archives are added by LIB_TEMPLATE below
 
-$(info $(GREEN)$(PREFIX_AM)$(NONE)WORK_DIR = $(WORK_DIR))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)DST_DIR = $(DST_DIR) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE_REL = $(IMAGE_REL) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE = $(IMAGE) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCHIVE = $(ARCHIVE) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)OBJS = $(OBJS) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)LIBS = $(LIBS) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
+
 
 
 ## 3. General Compilation Flags
@@ -143,11 +136,9 @@ INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, 
 # $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
-$(info $(GREEN)$(PREFIX_AM)$(NONE)INCFLAGS = $(INCFLAGS) )
 
 
 ARCH_H := arch/$(ARCH).h
-$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCH_H = $(ARCH_H) )
 
 # -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 # -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
@@ -174,7 +165,6 @@ ASFLAGS  += -MMD $(INCFLAGS)
 # 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
 # +=也是延迟展开
 LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 
 ## 4. Arch-Specific Configurations
 
@@ -186,10 +176,23 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 
 ### Rule (compile): a single `.c` -> `.o` (gcc)
 
+$(info $(GREEN)$(PREFIX_AM)$(NONE)WORK_DIR = $(WORK_DIR))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)DST_DIR = $(DST_DIR) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE_REL = $(IMAGE_REL) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE = $(IMAGE) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCHIVE = $(ARCHIVE) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)OBJS = $(OBJS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LIBS = $(LIBS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS = $(CFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS = $(CXXFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS = $(ASFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)COMMON_CFLAGS = $(COMMON_CFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)AM_SRCS = $(AM_SRCS))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)INCFLAGS = $(INCFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE) ARCH_H        : $(ARCH_H))
+
 
 $(DST_DIR)/%.o: %.c
 	@mkdir -p $(dir $@) && echo + CC $<
