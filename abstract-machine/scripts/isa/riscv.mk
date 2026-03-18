@@ -1,6 +1,6 @@
 PREFIX_riscv := [=== AM/ isa / riscv.mk ===]
 
-$(info $(YELLOW)$(riscv)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv)$(NONE))
 
 CROSS_COMPILE := riscv64-linux-gnu-
 
@@ -19,3 +19,10 @@ LDFLAGS       += -melf64lriscv
 
 # overwrite ARCH_H defined in $(AM_HOME)/Makefile
 ARCH_H := arch/riscv.h
+
+$(info $(YELLOW)$(PREFIX_riscv) CROSS_COMPILE : $(CROSS_COMPILE)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv) CFLAGS        : $(CFLAGS)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv) ASFLAGS       : $(ASFLAGS)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv) LDFLAGS       : $(LDFLAGS)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv) ARCH_H        : $(ARCH_H)$(NONE))
+
