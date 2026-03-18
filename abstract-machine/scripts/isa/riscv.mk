@@ -1,4 +1,4 @@
-PREFIX_riscv := [=== AM/ isa / riscv.mk ===]
+PREFIX_riscv := [=== AM / isa / riscv.mk ===]
 
 $(info $(YELLOW)$(PREFIX_riscv)$(NONE))
 
