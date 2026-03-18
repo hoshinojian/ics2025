@@ -24,6 +24,15 @@ html:
 # 比如说 make run, 那么makecmdgoals 就是 run, make clean all, ~ clean alloc
 # 这一个if判断， 当单纯make 的时候, 相当于是make image
 # 但是目标 和 变量赋值不是一个东西. ARCH=riscv32-nemu run的时候, MAKECMDGOALS只是run
+
+RED    := $(shell printf "\033[31m")
+GREEN  := $(shell printf "\033[32m")
+YELLOW := $(shell printf "\033[33m")
+NONE   := $(shell printf "\033[0m")
+
+PREFIX_AM := [=== AM/Makfile ===]
+
+
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = image
   .DEFAULT_GOAL = image
