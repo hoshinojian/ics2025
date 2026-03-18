@@ -19,6 +19,7 @@ PREFIX_NATIVE := [=== NEMU / NATIVE.MK ===]
 $(info $(NONE))
 $(info $(YELLOW)$(PREFIX_NATIVE)$(NONE))
 $(info $(NONE))
+
 -include $(NEMU_HOME)/../Makefile
 include $(NEMU_HOME)/scripts/build.mk
 
