@@ -182,13 +182,7 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 
 ### Paste in arch-specific configurations (e.g., from `scripts/x86_64-qemu.mk`)
 -include $(AM_HOME)/scripts/$(ARCH).mk
-PREFIX_riscv32nemu := [=== AM/riscv32nemu.mk ===]
-
-$(info$(YELLOW)$(PREFIX_riscv32nemu)$(NONE))
-$(info$(YELLOW)$(PREFIX_riscv32nemu)$(NONE))
-$(info$(YELLOW)$(PREFIX_riscv32nemu)$(NONE))
-$(info$(YELLOW)$(PREFIX_riscv32nemu)$(NONE))
-$(info$(YELLOW)$(PREFIX_riscv32nemu)$(NONE))
+$(info $(RED)fuck!$(NONE))
 
 ## 5. Compilation Rules
 
