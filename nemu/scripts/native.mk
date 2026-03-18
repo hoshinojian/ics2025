@@ -71,9 +71,9 @@ run-env: $(BINARY) $(DIFF_REF_SO)
 	$(info $(YELLOW)$(PREFIX_NATIVE)Command run-env is used$(NONE))
 
 run: run-env
-	$(info $(YELLOW)$(PREFIX_NATIVE)Command run is used$(NONE))
 	$(call git_commit, "run NEMU")
 	$(NEMU_EXEC)
+	$(info $(YELLOW)$(PREFIX_NATIVE)Command run is used$(NONE))
 	$(info $(YELLOW)$(PREFIX_NATIVE)During this running, BINARY is $(BINARY), ARGS is $(ARGS)$(NONE))
 
 gdb: run-env
