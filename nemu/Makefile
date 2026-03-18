@@ -109,7 +109,7 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
-$(info $(GREEN)$(PREFIX_NEMU) CC : $(CC))
+$(info $(GREEN)$(PREFIX_NEMU) $(NONE) CC : $(CC) $(NONE))
 $(info $(PREFIX_NEMU) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
 
 
