@@ -1,3 +1,7 @@
+PREFIX_riscv := [=== AM/ isa / riscv.mk ===]
+
+$(info $(YELLOW)$(riscv)$(NONE))
+
 CROSS_COMPILE := riscv64-linux-gnu-
 
 # -mstrict-align (严格内存对齐)：这极其关键。底层硬件（NEMU）处理未对齐的内存读写非常麻烦甚至会直接崩溃。
