@@ -20,9 +20,9 @@ LDFLAGS       += -melf64lriscv
 # overwrite ARCH_H defined in $(AM_HOME)/Makefile
 ARCH_H := arch/riscv.h
 
-$(info $(GREEN)$(PREFIX_riscv) CROSS_COMPILE : $(CROSS_COMPILE)$(NONE))
-$(info $(GREEN)$(PREFIX_riscv) CFLAGS        : $(CFLAGS)$(NONE))
-$(info $(GREEN)$(PREFIX_riscv) ASFLAGS       : $(ASFLAGS)$(NONE))
-$(info $(GREEN)$(PREFIX_riscv) LDFLAGS       : $(LDFLAGS)$(NONE))
-$(info $(GREEN)$(PREFIX_riscv) ARCH_H        : $(ARCH_H)$(NONE))
+$(info $(GREEN)$(PREFIX_riscv)$(NONE) CROSS_COMPILE : $(CROSS_COMPILE))
+$(info $(GREEN)$(PREFIX_riscv)$(NONE) CFLAGS        : $(CFLAGS))
+$(info $(GREEN)$(PREFIX_riscv)$(NONE) ASFLAGS       : $(ASFLAGS))
+$(info $(GREEN)$(PREFIX_riscv)$(NONE) LDFLAGS       : $(LDFLAGS))
+$(info $(GREEN)$(PREFIX_riscv)$(NONE) ARCH_H        : $(ARCH_H))
 
