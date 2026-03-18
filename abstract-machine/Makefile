@@ -34,6 +34,8 @@ PREFIX_AM := [=== AM/Makfile ===]
 
 $(info $(YELLOW)$(PREFIX_AM)$(NONE))
 
+$(info $(YELLOW)$(PREFIX_AM)MAKECMDGOALS = $(MAKECMDGOALS)$(NONE))
+
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = image
   .DEFAULT_GOAL = image
