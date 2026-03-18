@@ -1,8 +1,9 @@
 YELLOW := $(shell printf "\033[33m")
 RED    := $(shell printf "\033[31m")
 NONE := $(shell printf "\033[0m")
+PREFIX_BUILD := [=== NEMU / BUILD.MK ===]
 
-$(info $(YELLOW)file: NEMU/build is used$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)$(NONE))
 
 .DEFAULT_GOAL = app
 
@@ -15,18 +16,18 @@ LDFLAGS += -shared -fPIC
 endif
 
 WORK_DIR  = $(shell pwd)
-$(info $(YELLOW)build.mk                                    WORK_DIR is $(WORK_DIR)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)WORK_DIR is $(WORK_DIR)$(NONE))
 BUILD_DIR = $(WORK_DIR)/build
-$(info $(YELLOW)build.mk                                    BUILD_DIR is $(BUILD_DIR)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD) BUILD_DIR is $(BUILD_DIR)$(NONE))
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
-$(info $(YELLOW)build.mk                                    INC_PATH is $(INC_PATH)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)INC_PATH is $(INC_PATH)$(NONE))
 
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
-$(info $(YELLOW)build.mk                                    OBJ_DIR is $(OBJ_DIR)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)OBJ_DIR is $(OBJ_DIR)$(NONE))
 
 BINARY   = $(BUILD_DIR)/$(NAME)$(SO)
-$(info $(YELLOW)build.mk                                    BIINARY is $(BINARY)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)BIINARY is $(BINARY)$(NONE))
 
 # Compilation flags
 ifeq ($(CC),clang)
@@ -41,10 +42,7 @@ LDFLAGS := -O2 $(LDFLAGS)
 
 # srcs里面的所有东西全部变成.o形式,丢到objs里面去
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
-$(info $(RED)=================================================)
-$(info build.mk                            OBJS = )
-$(info $(notdir $(OBJS)) )
-$(info =================================================$(NONE))
+$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
 
 # Compilation patterns
 $(OBJ_DIR)/%.o: %.c
@@ -71,7 +69,7 @@ app: $(BINARY)
 $(BINARY):: $(OBJS) $(ARCHIVES)
 	@echo + LD $@
 	@$(LD) -o $@ $(OBJS) $(LDFLAGS) $(ARCHIVES) $(LIBS)
-	$($(YELLOW)info the command Binary(build.mk) is used$(NONE))
+	$($(YELLOW)$(PREFIX_BUILD)info the command Binary(build.mk) is used$(NONE))
 
 clean:
 	-rm -rf $(BUILD_DIR)
