@@ -74,8 +74,9 @@ $(info $(GREEN)$(PREFIX) NAME$(NONE) = $(NAME))
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
-$(info $(GREEN)$(PREFIX) The value of FILELIST_MK is $(NONE))
+$(info $(GREEN)$(PREFIX) The value of FILELIST_MK is )
 $(foreach file, $(FILELIST_MK), $(info $(PREFIX) $(file)))
+$(info $(NONE))
 include $(FILELIST_MK)
 
 # Filter out directories and files in blacklist to obtain the final set of source files
