@@ -121,6 +121,8 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
 ## 3. General Compilation Flags
 
 ### (Cross) compilers, e.g., mips-linux-gnu-g++
+$(info $(GREEN)$(PREFIX_AM)$(NONE)CROSS_COMPILE = $(CROSS_COMPILE) )
+
 AS        = $(CROSS_COMPILE)gcc
 CC        = $(CROSS_COMPILE)gcc
 CXX       = $(CROSS_COMPILE)g++
