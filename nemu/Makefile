@@ -87,12 +87,12 @@ SRCS-y += $(if $(DIRS-y), $(shell find -L $(DIRS-y) -name "*.c"),)
 SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 # 在menuconfig中选中TARGET_AM时, nemu/src/monitor/sdb目录下的所有文件都不会参与编译.
 
-$(info $(RED)=================================================)
-# $(info $(GREEN))
-$(info nemu/makefileFINAL SRCS       :)
-$(info $(notdir $(SRCS)))
+$(info $(RED)$(PREFIX) =================================================)
+# $(info $(GREEN)$(PREFIX))
+$(info $(PREFIX) FINAL SRCS       :)
+$(info $(PREFIX) $(notdir $(SRCS)))
 # $(info $(NONE))
-$(info =================================================$(NONE))
+$(info $(PREFIX) =================================================$(NONE))
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
 # debug:
@@ -112,8 +112,8 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
-$(info CC : $(CC))
-$(info CFLAGS_BUILD : $(CFLAGS_BUILD))
+$(info $(PREFIX) CC : $(CC))
+$(info $(PREFIX) CFLAGS_BUILD : $(CFLAGS_BUILD))
 
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
@@ -144,5 +144,5 @@ include $(NEMU_HOME)/scripts/native.mk
 endif
 
 
-$(info CFLAGS = $(CFLAGS))
-$(info LDFLAGS = $(LDFLAGS))
+$(info $(PREFIX) CFLAGS = $(CFLAGS))
+$(info $(PREFIX) LDFLAGS = $(LDFLAGS))
