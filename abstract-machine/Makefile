@@ -54,7 +54,7 @@ ifeq ($(findstring $(MAKECMDGOALS),clean|clean-all|html),)
 # name 接受来自于am-kernels
 # make ARCH=riscv32-nemu run的时候, 就是: 
 # # Building add-run [riscv32-nemu]
-$(info # Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
+$(info $(GREEN)$(PREFIX_AM)$(NONE)# Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
 
 ### Check: environment variable `$AM_HOME` looks sane
 ifeq ($(wildcard $(AM_HOME)/am/include/am.h),)
