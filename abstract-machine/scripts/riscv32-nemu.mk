@@ -1,3 +1,10 @@
+RED    := $(shell printf "\033[31m")
+GREEN  := $(shell printf "\033[32m")
+YELLOW := $(shell printf "\033[33m")
+NONE   := $(shell printf "\033[0m")
+
+PREFIX_riscv32_nemu := [=== AM/riscv32-nemu.mk ===]
+
 include $(AM_HOME)/scripts/isa/riscv.mk
 include $(AM_HOME)/scripts/platform/nemu.mk
 #define ISA_H "riscv/riscv.h"¡£
