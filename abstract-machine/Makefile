@@ -124,7 +124,7 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
 # $(info $(GREEN)$(PREFIX_AM)$(NONE)CROSS_COMPILE = $(CROSS_COMPILE) )
 
 AS        := $(CROSS_COMPILE)gcc
-CC        = $(CROSS_COMPILE)gcc
+CC        := $(CROSS_COMPILE)gcc
 CXX       = $(CROSS_COMPILE)g++
 LD        = $(CROSS_COMPILE)ld
 AR        = $(CROSS_COMPILE)ar
