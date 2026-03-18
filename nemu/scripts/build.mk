@@ -69,7 +69,7 @@ app: $(BINARY)
 $(BINARY):: $(OBJS) $(ARCHIVES)
 	@echo + LD $@
 	@$(LD) -o $@ $(OBJS) $(LDFLAGS) $(ARCHIVES) $(LIBS)
-	$(info $(GREEN)$(PREFIX_BUILD)$(NONE)the command Binary(build.mk) is used$(NONE))
+	$(info $(GREEN)$(PREFIX_BUILD)$(NONE)the command Binary is used$(NONE))
 
 clean:
 	-rm -rf $(BUILD_DIR)
