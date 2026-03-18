@@ -189,6 +189,8 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS = $(CFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS = $(CXXFLAGS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS = $(ASFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)COMMON_CFLAGS = $(COMMON_CFLAGS) )
+
 $(DST_DIR)/%.o: %.c
 	@mkdir -p $(dir $@) && echo + CC $<
 	@$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
