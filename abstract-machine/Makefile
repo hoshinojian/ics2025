@@ -13,7 +13,7 @@ html:
 	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
 .PHONY: html
 
-ifeq ($(MAKELEVEL),0)
+ifeq ($(filter archive clean clean-all,$(MAKECMDGOALS)),)
   PRINT_INFO := 1
 else
   PRINT_INFO := 0
