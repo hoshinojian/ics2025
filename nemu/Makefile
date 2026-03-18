@@ -75,7 +75,7 @@ $(info $(GREEN)$(PREFIX_NEMU) NAME$(NONE) = $(NAME))
 # ./src/device/filelist.mk
 # ./src/filelist.mk
 FILELIST_MK = $(shell find -L ./src -name "filelist.mk")
-$(info $(GREEN)$(PREFIX_NEMU) The value of FILELIST_MK is )
+$(info $(GREEN)$(PREFIX_NEMU) The value of FILELIST_MK is $(NONE))
 $(foreach file, $(FILELIST_MK), $(info $(PREFIX_NEMU) $(file) $(NONE))) 
 include $(FILELIST_MK)
 
