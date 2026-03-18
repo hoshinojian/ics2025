@@ -42,8 +42,9 @@ LDFLAGS := -O2 $(LDFLAGS)
 
 # srcs里面的所有东西全部变成.o形式,丢到objs里面去
 
+
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
-$(info$(GREEN)$(PREFIX_BUILD)$(NONE) OBJS = $(notdir $(OBJS)) $(NONE))
+$(info $(GREEN)$(PREFIX_BUILD)$(NONE) OBJS = $(notdir $(OBJS)) $(NONE))
 
 # Compilation patterns
 $(OBJ_DIR)/%.o: %.c
