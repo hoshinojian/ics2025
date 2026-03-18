@@ -5,7 +5,7 @@ NONE   := $(shell printf "\033[0m")
 
 PREFIX_riscv32_nemu := [=== AM/riscv32nemu.mk ===]
 
-$(info$(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
+$(info$(RED)$(PREFIX_riscv32_nemu)$(NONE))
 $(info$(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
 $(info$(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
 $(info$(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
