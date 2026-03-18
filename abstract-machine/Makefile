@@ -13,12 +13,6 @@ html:
 	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
 .PHONY: html
 
-ifeq ($(filter archive clean clean-all,$(MAKECMDGOALS)),)
-  PRINT_INFO := 1
-else
-  PRINT_INFO := 0
-endif
-
 ## 1. Basic Setup and Checks
 
 ### Default to create a bare-metal kernel image
@@ -46,9 +40,8 @@ ifeq ($(MAKECMDGOALS),)
   .DEFAULT_GOAL = image
 endif
 
-ifeq ($(PRINT_INFO),1)
 $(info $(YELLOW)$(PREFIX_AM)MAKECMDGOALS = $(MAKECMDGOALS)$(NONE))
-endif
+
 
 ### Override checks when `make clean/clean-all/html`
 # findstring GNU内置函数, 文本中查找子字符串
@@ -61,9 +54,8 @@ ifeq ($(findstring $(MAKECMDGOALS),clean|clean-all|html),)
 # name 接受来自于am-kernels
 # make ARCH=riscv32-nemu run的时候, 就是: 
 # # Building add-run [riscv32-nemu]
-ifeq ($(PRINT_INFO),1)
 $(info $(GREEN)$(PREFIX_AM)$(NONE)# Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
-endif
+
 ### Check: environment variable `$AM_HOME` looks sane
 ifeq ($(wildcard $(AM_HOME)/am/include/am.h),)
   $(error $$AM_HOME must be an AbstractMachine repo)
@@ -116,7 +108,6 @@ OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS)  # library archives are added by LIB_TEMPLATE below
 
-ifeq ($(PRINT_INFO),1)
 $(info $(GREEN)$(PREFIX_AM)$(NONE)WORK_DIR = $(WORK_DIR))
 $(info $(GREEN)$(PREFIX_AM)$(NONE)DST_DIR = $(DST_DIR) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE_REL = $(IMAGE_REL) )
@@ -125,7 +116,6 @@ $(info $(GREEN)$(PREFIX_AM)$(NONE)ARCHIVE = $(ARCHIVE) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)OBJS = $(OBJS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)LIBS = $(LIBS) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)LINKAGE = $(LINKAGE) )
-endif
 
 
 ## 3. General Compilation Flags
@@ -152,13 +142,12 @@ READELF   = $(CROSS_COMPILE)readelf
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 # $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
-ifeq ($(PRINT_INFO),1)
 $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
 $(info $(GREEN)$(PREFIX_AM)$(NONE)INCFLAGS = $(INCFLAGS) )
-endif
+
 
 ARCH_H := arch/$(ARCH).h
-# $(info $(GREEN)$(PREFIX_AM)$(NONE)ARCH_H = $(ARCH_H) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCH_H = $(ARCH_H) )
 
 # -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 # -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
@@ -179,30 +168,21 @@ CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
-# $(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS = $(CFLAGS) )
-# $(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS = $(CXXFLAGS) )
-# $(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS = $(ASFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS = $(CFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS = $(CXXFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS = $(ASFLAGS) )
 
 # 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。
 # 控制链接器的合并规则. -T的作用是放弃默认的内存排布, 按照linker.ld来
 # +=也是延迟展开
 LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
-# $(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
+$(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS = $(LDFLAGS) )
 
 ## 4. Arch-Specific Configurations
 
 ### Paste in arch-specific configurations (e.g., from `scripts/x86_64-qemu.mk`)
 -include $(AM_HOME)/scripts/$(ARCH).mk
 
-ifeq ($(PRINT_INFO),1)
-$(info $(GREEN)$(PREFIX_AM)$(NONE)=== Final Configuration (after arch/platform) ===)
-$(info $(GREEN)$(PREFIX_AM)$(NONE)CROSS_COMPILE = $(CROSS_COMPILE))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)CFLAGS        = $(CFLAGS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)CXXFLAGS      = $(CXXFLAGS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)ASFLAGS       = $(ASFLAGS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)LDFLAGS       = $(LDFLAGS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCH_H        = $(ARCH_H))
-endif
 
 ## 5. Compilation Rules
 
