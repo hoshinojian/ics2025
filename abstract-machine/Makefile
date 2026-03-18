@@ -233,6 +233,7 @@ ifneq ($(filter $(ARCH),native),)
 else
 	@$(LD) $(LDFLAGS) -o $@ --start-group $(LINKAGE) --end-group
 endif
+	$(info $(GREEN)$(PREFIX_AM)$(NONE)Command image.elf Called)
 # group¾ä, ·´¸´µü´ú
 
 
