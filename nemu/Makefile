@@ -89,8 +89,7 @@ SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
 # 在menuconfig中选中TARGET_AM时, nemu/src/monitor/sdb目录下的所有文件都不会参与编译.
 
 # $(info $(GREEN))
-$(info $(GREEN)$(PREFIX_NEMU) FINAL SRCS      :)
-$(info $(PREFIX_NEMU) $(notdir $(SRCS))$(NONE))
+$(info $(GREEN)$(PREFIX_NEMU)FINAL SRCS: $(notdir $(SRCS))$(NONE))
 # $(info $(NONE))
 
 # VARS = DIRS-BLACKLIST-y SRCS-BLACKLIST-y SRCS-y SRCS
