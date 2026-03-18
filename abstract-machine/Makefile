@@ -32,6 +32,7 @@ NONE   := $(shell printf "\033[0m")
 
 PREFIX_AM := [=== AM/Makfile ===]
 
+$(info $(YELLOW)$(PREFIX_AM)$(NONE))
 
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = image
