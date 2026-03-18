@@ -18,7 +18,7 @@ endif
 WORK_DIR  = $(shell pwd)
 $(info $(YELLOW)$(PREFIX_BUILD)WORK_DIR is $(WORK_DIR)$(NONE))
 BUILD_DIR = $(WORK_DIR)/build
-$(info $(YELLOW)$(PREFIX_BUILD) BUILD_DIR is $(BUILD_DIR)$(NONE))
+$(info $(YELLOW)$(PREFIX_BUILD)BUILD_DIR is $(BUILD_DIR)$(NONE))
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
 $(info $(YELLOW)$(PREFIX_BUILD)INC_PATH is $(INC_PATH)$(NONE))
@@ -42,11 +42,6 @@ LDFLAGS := -O2 $(LDFLAGS)
 
 # srcs里面的所有东西全部变成.o形式,丢到objs里面去
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
-$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
-$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
-$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
-$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
-$(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
 $(info$(PREFIX_BUILD)OBJS = $(notdir $(OBJS)) $(NONE))
 
 # Compilation patterns
