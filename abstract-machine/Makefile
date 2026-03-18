@@ -34,14 +34,11 @@ PREFIX_AM := [=== AM/Makfile ===]
 
 $(info $(YELLOW)$(PREFIX_AM)$(NONE))
 
-
+# 默认目标。直接敲make 就变成make image
 ifeq ($(MAKECMDGOALS),)
   MAKECMDGOALS  = image
   .DEFAULT_GOAL = image
 endif
-
-$(info $(YELLOW)$(PREFIX_AM)MAKECMDGOALS = $(MAKECMDGOALS)$(NONE))
-
 
 ### Override checks when `make clean/clean-all/html`
 # findstring GNU内置函数, 文本中查找子字符串
@@ -102,6 +99,12 @@ IMAGE_REL = build/$(NAME)-$(ARCH)
 IMAGE     = $(abspath $(IMAGE_REL))
 ARCHIVE   = $(WORK_DIR)/build/$(NAME)-$(ARCH).a
 
+$(info $(GREEN)$(PREFIX_AM)$(NONE)WORK_DIR = $(WORK_DIR))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)DST_DIR = $(DST_DIR))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE_REL = $(IMAGE_REL))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)IMAGE = $(IMAGE))
+$(info $(GREEN)$(PREFIX_AM)$(NONE)ARCHIVE = $(ARCHIVE))
+
 ### Collect the files to be linked: object files (`.o`) and libraries (`.a`)
 # /home/.../build/riscv32-nemu/tests/dummy.o
 OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
@@ -142,8 +145,9 @@ ARCH_H := arch/$(ARCH).h
 
 # -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
 # -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
-
+# -fno-builtin -fno-stack-protector → 裸机专用（禁止 libc 替换和栈保护）
 # -fno-buildin 禁止做替换, 比如printf不换乘puts. 			# stack那个防止做栈溢出保护, 这玩意正经linux才有
+
 # -wno来不检查main的参数格式, 避免因为带上了argc argv报错, -U_~U_FORTIFY_SOURCE也是防止做栈溢出. 
 #tables和hidden减小生成的二进制体积
 
