@@ -3,9 +3,9 @@ GREEN  := $(shell printf "\033[32m")
 YELLOW := $(shell printf "\033[33m")
 NONE   := $(shell printf "\033[0m")
 
-PREFIX_riscv32_nemu := [=== AM/riscv32nemu.mk ===]
+PREFIX_riscv32_nemu := [=== AM / riscv32-nemu.mk ===]
 
-$(info $(RED)$(PREFIX_riscv32_nemu)$(NONE))
+$(info $(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
 
 
 include $(AM_HOME)/scripts/isa/riscv.mk
