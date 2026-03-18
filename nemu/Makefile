@@ -110,7 +110,7 @@ CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
 # 如果开启了 ASAN（内存地址清理），就加入 -fsanitize=address。
 CFLAGS_BUILD += $(if $(CONFIG_CC_ASAN),-fsanitize=address,)
 $(info $(GREEN)$(PREFIX_NEMU) $(NONE) CC : $(CC) $(NONE))
-$(info $(PREFIX_NEMU) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
+$(info $(GREEN)$(PREFIX_NEMU) $(NONE) CFLAGS_BUILD : $(CFLAGS_BUILD)$(NONE))
 
 
 # 情况 A（用户未配置条件）：CONFIG_ITRACE_COND 为空。Makefile 函数返回 true。
