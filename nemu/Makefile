@@ -143,6 +143,7 @@ else
 include $(NEMU_HOME)/scripts/native.mk
 endif
 
-
+$(info $(GREEN))
 $(info $(PREFIX) CFLAGS = $(CFLAGS))
 $(info $(PREFIX) LDFLAGS = $(LDFLAGS))
+$(info $(NONE))
