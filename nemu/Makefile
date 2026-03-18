@@ -22,7 +22,9 @@ GREEN  := $(shell printf "\033[32m")
 YELLOW := $(shell printf "\033[33m")
 NONE   := $(shell printf "\033[0m")
 
-$(info $(YELLOW)file: NEMU/makefile is used $(NONE))
+PREFIX := [=== NEMU / Makefile ===]
+
+$(info $(YELLOW)$(PREFIX)$(NONE))
 # Sanity check
 # wildcardcard是一个内置函数，作用是检查指定路径的文件 / 目录是否存在。 
 # 如果存在，返回该文件的完整路径（如 ~/nemu/src/nemu-main.c）如果不存在，返回空
