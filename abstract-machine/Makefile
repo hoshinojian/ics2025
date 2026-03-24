@@ -87,6 +87,27 @@ endif
 ## 2. General Compilation Targets
 
 ### Create the destination directory (`build/$ARCH`)
+# run
+# [=== AM/Makfile ===]WORK_DIR = /home/xingjian/ics2025/am-kernels/tests/cpu-tests
+# [=== AM/Makfile ===]DST_DIR =  /home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/riscv32-nemu
+# [=== AM/Makfile ===]IMAGE_REL = build/dummy-riscv32-nemu
+# [=== AM/Makfile ===]IMAGE = /home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/dummy-riscv32-nemu
+# [=== AM/Makfile ===]ARCHIVE = /home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/dummy-riscv32-nemu.a
+
+# [=== AM/Makfile ===]# Building am-archive [riscv32-nemu]
+# [=== AM/Makfile ===]WORK_DIR = /home/xingjian/ics2025/abstract-machine/am
+# [=== AM/Makfile ===]DST_DIR = /home/xingjian/ics2025/abstract-machine/am/build/riscv32-nemu
+# [=== AM/Makfile ===]IMAGE_REL = build/am-riscv32-nemu
+# [=== AM/Makfile ===]IMAGE = /home/xingjian/ics2025/abstract-machine/am/build/am-riscv32-nemu
+# [=== AM/Makfile ===]ARCHIVE = /home/xingjian/ics2025/abstract-machine/am/build/am-riscv32-nemu.a
+
+# [=== AM/Makfile ===]# Building klib-archive [riscv32-nemu]
+# [=== AM/Makfile ===]WORK_DIR = /home/xingjian/ics2025/abstract-machine/klib
+# [=== AM/Makfile ===]DST_DIR = /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu
+# [=== AM/Makfile ===]IMAGE_REL = build/klib-riscv32-nemu
+# [=== AM/Makfile ===]IMAGE = /home/xingjian/ics2025/abstract-machine/klib/build/klib-riscv32-nemu
+# [=== AM/Makfile ===]ARCHIVE = /home/xingjian/ics2025/abstract-machine/klib/build/klib-riscv32-nemu.a
+# 当make的目标不一样的时候, 几个变量也不一样
 WORK_DIR  = $(shell pwd)
 DST_DIR   = $(WORK_DIR)/build/$(ARCH)
 $(shell mkdir -p $(DST_DIR))
@@ -95,6 +116,7 @@ $(shell mkdir -p $(DST_DIR))
 ### Compilation targets (a binary image or archive)
 # 相对路径
 # 获取pwd， 和相对路径拼接
+
 IMAGE_REL = build/$(NAME)-$(ARCH)
 IMAGE     = $(abspath $(IMAGE_REL))
 ARCHIVE   = $(WORK_DIR)/build/$(NAME)-$(ARCH).a
@@ -236,6 +258,8 @@ $(foreach lib, $(LIBS), $(eval $(call LIB_TEMPLATE,$(lib))))
 endif
 
 ### Rule (link): objects (`*.o`) and libraries (`*.a`) -> `IMAGE.elf`, the final ELF binary to be packed into image (ld)
+# LINKAGE = $(OBJS) + am-riscv32-nemu.a + klib-riscv32-nemu.a
+# $(LDSCRIPTS) = linker.ld
 $(IMAGE).elf: $(LINKAGE) $(LDSCRIPTS)
 	@echo \# Creating image [$(ARCH)]
 	@echo + LD "->" $(IMAGE_REL).elf
