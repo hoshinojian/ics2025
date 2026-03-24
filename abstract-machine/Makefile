@@ -132,11 +132,28 @@ ARCHIVE   = $(WORK_DIR)/build/$(NAME)-$(ARCH).a
 OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS)  # library archives are added by LIB_TEMPLATE below
+# [=== AM/Makfile ===]# Building dummy-run [riscv32-nemu]
+# [=== AM/Makfile ===] OBJS = /home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/riscv32-nemu/tests/dummy.o
+# [=== AM/Makfile ===] LIBS = am klib 
+# [=== AM/Makfile ===] LINKAGE = /home/xingjian/ics2025/am-kernels/tests/cpu-tests/build/riscv32-nemu/tests/dummy.o  
 
-$(info $(GREEN)$(PREFIX_AM)$(NONE) OBJS = $(OBJS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE) LIBS = $(LIBS))
-$(info $(GREEN)$(PREFIX_AM)$(NONE) LINKAGE = $(LINKAGE))
+# [=== AM/Makfile ===]# Building klib-archive [riscv32-nemu]
+# [=== AM/Makfile ===] OBJS = /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/stdlib.o 
+# /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/int64.o 
+# /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/cpp.o 
+# /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/stdio.o /
+# home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/string.o
+# [=== AM/Makfile ===] LIBS = am klib 
+# [=== AM/Makfile ===] LINKAGE = /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/stdlib.o 
+# /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/int64.o
+#  /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/cpp.o 
+#  /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/stdio.o
+#   /home/xingjian/ics2025/abstract-machine/klib/build/riscv32-nemu/src/string.o  
 
+# [=== AM/Makfile ===]# Building am-archive [riscv32-nemu]
+# [=== AM/Makfile ===] OBJS = 
+# [=== AM/Makfile ===] LIBS = am klib 
+# [=== AM/Makfile ===] LINKAGE =   
 
 
 ## 3. General Compilation Flags
@@ -161,7 +178,7 @@ READELF   = $(CROSS_COMPILE)readelf
 # include默认只找在标准路径下面的,但是这下面绝对没有am.h头文件. -I给编译器的搜索目录表里面强制加上新的. 
 # gcc -I/home/xingjian/ics2025/abstract-machine/am/include -c dummy.c, 这时候先找标准目录, 没找到， 检查-I参数, 在后续的目录下面找到am.h
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
-# $(info # INC_PATH $(INC_PATH) )
+$(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 # $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
 
