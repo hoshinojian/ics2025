@@ -184,7 +184,7 @@ READELF   = $(CROSS_COMPILE)readelf
 #   /home/xingjian/ics2025/abstract-machine/klib/include/ 
 
 # [=== AM/Makfile ===]# Building am-archive [riscv32-nemu]
-# # INC_PATH /home/xingjian/ics2025/abstract-machine/am/src 
+# # INC_PATH /home/xingjian/ics2025/abstract-machine/am/src  ************这个src哪来的
 # /home/xingjian/ics2025/abstract-machine/am/include 
 # /home/xingjian/ics2025/abstract-machine/am/include/ 
 # /home/xingjian/ics2025/abstract-machine/klib/include/ 
@@ -193,7 +193,7 @@ READELF   = $(CROSS_COMPILE)readelf
 # # INC_PATH /home/xingjian/ics2025/abstract-machine/klib/include 
 # /home/xingjian/ics2025/abstract-machine/am/include/ 
 # /home/xingjian/ics2025/abstract-machine/klib/include/ 
-INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
+INC_PATH := $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 # $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
