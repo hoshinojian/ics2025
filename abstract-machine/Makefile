@@ -184,7 +184,7 @@ READELF   = $(CROSS_COMPILE)readelf
 #   /home/xingjian/ics2025/abstract-machine/klib/include/ 
 
 # [=== AM/Makfile ===]# Building am-archive [riscv32-nemu]
-# # INC_PATH /home/xingjian/ics2025/abstract-machine/am/src  ************这个src哪来的
+# # INC_PATH /home/xingjian/ics2025/abstract-machine/am/src  赋值改成立即展开 := 之后, src消失
 # /home/xingjian/ics2025/abstract-machine/am/include 
 # /home/xingjian/ics2025/abstract-machine/am/include/ 
 # /home/xingjian/ics2025/abstract-machine/klib/include/ 
@@ -193,7 +193,7 @@ READELF   = $(CROSS_COMPILE)readelf
 # # INC_PATH /home/xingjian/ics2025/abstract-machine/klib/include 
 # /home/xingjian/ics2025/abstract-machine/am/include/ 
 # /home/xingjian/ics2025/abstract-machine/klib/include/ 
-INC_PATH := $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
+INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
 $(info # INC_PATH $(INC_PATH) )
 INCFLAGS += $(addprefix -I, $(INC_PATH))
 # $(info $(GREEN)$(PREFIX_AM)$(NONE)INC_PATH = $(INC_PATH) )
@@ -216,8 +216,8 @@ CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -D__ISA__=\"$(ISA)\" -D__ISA_$(shell echo $(ISA) | tr a-z A-Z)__ \
             -D__ARCH__=$(ARCH) -D__ARCH_$(shell echo $(ARCH) | tr a-z A-Z | tr - _) \
             -D__PLATFORM__=$(PLATFORM) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z | tr - _) \
-            -DARCH_H=\"$(ARCH_H)\" \
-            -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
+            -DARCH_H=\"$(ARCH_H)\"
+CFALG 	+=  -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
