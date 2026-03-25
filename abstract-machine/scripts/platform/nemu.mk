@@ -39,23 +39,27 @@ CFLAGS += -DMAINARGS_MAX_LEN=$(MAINARGS_MAX_LEN) -DMAINARGS_PLACEHOLDER=$(MAINAR
 
 # ??mainargs???
 insert-arg: image
+	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command Insert-arg Calling"
 	@python $(AM_HOME)/tools/insert-arg.py $(IMAGE).bin $(MAINARGS_MAX_LEN) $(MAINARGS_PLACEHOLDER) "$(mainargs)"
 	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command Insert-arg Called"
 
 
 
 image: image-dep
+	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command image calling"
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
 	@echo + OBJCOPY "->" $(IMAGE_REL).bin
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
 	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command image called"
 
 run: insert-arg
+	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command run calling"
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
 	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command run called"
 
 
 gdb: insert-arg
+	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command GDB calling"
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) gdb ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
 	@echo "$(GREEN)$(PREFIX_am_nemu)$(NONE) Command GDB called"
 
