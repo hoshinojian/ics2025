@@ -303,6 +303,9 @@ $(DST_DIR)/%.o: %.S
 	@mkdir -p $(dir $@) && echo + AS $<
 	@$(AS) $(ASFLAGS) -c -o $@ $(realpath $<)
 
+
+
+
 ifeq ($(MAKECMDGOALS),archive)
 ### Rule (archive): objects (`*.o`) -> `ARCHIVE.a` (ar)
 # ar是打包的指令, 把多个 .o 文件 “打包压缩” 成的一个文件，也叫静态库，本质是 .o 文件的集合
@@ -310,6 +313,7 @@ $(ARCHIVE): $(OBJS)
 	@echo + AR "->" $(shell realpath $@ --relative-to .)
 	@$(AR) rcs $@ $^
 else
+
 # $(1): library name
 define LIB_TEMPLATE =
 $$(AM_HOME)/$(1)/build/$(1)-$$(ARCH).a: force
@@ -320,6 +324,9 @@ endef
 ### Rule (recursive make): build a dependent library (am, klib, ...)
 $(foreach lib, $(LIBS), $(eval $(call LIB_TEMPLATE,$(lib))))
 endif
+
+
+
 
 ### Rule (link): objects (`*.o`) and libraries (`*.a`) -> `IMAGE.elf`, the final ELF binary to be packed into image (ld)
 # LINKAGE = $(OBJS) + am-riscv32-nemu.a + klib-riscv32-nemu.a
