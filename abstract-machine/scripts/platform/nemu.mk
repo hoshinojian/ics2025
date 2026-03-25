@@ -41,6 +41,11 @@ CFLAGS += -DMAINARGS_MAX_LEN=$(MAINARGS_MAX_LEN) -DMAINARGS_PLACEHOLDER=$(MAINAR
 insert-arg: image
 	@python $(AM_HOME)/tools/insert-arg.py $(IMAGE).bin $(MAINARGS_MAX_LEN) $(MAINARGS_PLACEHOLDER) "$(mainargs)"
 	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
+	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
+	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
+	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
+	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
+	@echo -s "$(GREEN)$(PREFIX_am_nemu)$(NONE) insert-arg called"
 
 
 
