@@ -332,6 +332,7 @@ endif
 # LINKAGE = $(OBJS) + am-riscv32-nemu.a + klib-riscv32-nemu.a
 # $(LDSCRIPTS) = linker.ld
 $(IMAGE).elf: $(LINKAGE) $(LDSCRIPTS)
+	@echo "\n"
 	@echo "$(GREEN)$(PREFIX_AM)$(NONE)Command elf is calling"
 	@echo \# Creating image [$(ARCH)]
 	@echo + LD "->" $(IMAGE_REL).elf
@@ -341,6 +342,8 @@ else
 	@$(LD) $(LDFLAGS) -o $@ --start-group $(LINKAGE) --end-group
 endif
 	@echo "$(GREEN)$(PREFIX_AM)$(NONE)Command ELF is Called"
+	@echo "\n"
+
 # group¾ä, ·´¸´µü´ú
 
 
