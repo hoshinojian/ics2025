@@ -1,6 +1,7 @@
 #include <am.h>
 #include <nemu.h>
 
+//在link.ld里面定义  _heap_start = ALIGN(0x1000);
 extern char _heap_start;
 int main(const char *args);
 

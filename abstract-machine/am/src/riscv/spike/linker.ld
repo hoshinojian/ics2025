@@ -32,4 +32,5 @@ SECTIONS {
   end = .;
   _end = .;
   _heap_start = ALIGN(0x1000);
+  /* align, 当前地址向上堆砌到4kb的边界 */
 }
