@@ -285,7 +285,7 @@ LDFLAGS  += -z noexecstack $(addprefix -T, $(LDSCRIPTS))
 
 
 $(DST_DIR)/%.o: %.c
-	@mkdir -p $(dir $@) && echo + CC $<
+	@mkdir -p $(dir $@) && echo "$(GREEN)$(PREFIX_AM)$(NONE)"+ CC $<
 	@$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
 
 ### Rule (compile): a single `.cc` -> `.o` (g++)
