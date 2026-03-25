@@ -340,6 +340,7 @@ ifneq ($(filter $(ARCH),native),)
 else
 	@$(LD) $(LDFLAGS) -o $@ --start-group $(LINKAGE) --end-group
 endif
+	@echo "$(GREEN)$(PREFIX_AM)$(NONE)Command ELF is Called"
 # group¾ä, ·´¸´µü´ú
 
 
