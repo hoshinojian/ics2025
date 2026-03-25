@@ -201,26 +201,54 @@ INCFLAGS += $(addprefix -I, $(INC_PATH))
 
 ARCH_H := arch/$(ARCH).h
 
-# -mmd生成依赖文件, 在.c编译成为.o的时候, 生成一个.d, 记录dummy.c到底include了哪些.h文件, 从而实现"修改了头文件也会导致重新编译"
-# -D相当于在每个 C 文件的第一行强行插入 #define。这使得 Makefile 可以把外界的变量直接注入到 C 代码内部
-# -fno-builtin -fno-stack-protector → 裸机专用（禁止 libc 替换和栈保护）
-# -fno-buildin 禁止做替换, 比如printf不换乘puts. 			# stack那个防止做栈溢出保护, 这玩意正经linux才有
-
-# -wno来不检查main的参数格式, 避免因为带上了argc argv报错, -U_~U_FORTIFY_SOURCE也是防止做栈溢出. 
-#tables和hidden减小生成的二进制体积
-
-# freestanding告诉编译器不假设标准库存在, -fno-rtti依旧减小体积, 并且exce~ 关闭对抛出异常的处理
-# asflag控制汇编文件的处理. -mmd和cflags的作用一样
-# -z noe,,, 强制要求链接器在生成的 ELF 文件头部打上一个物理标
 CFLAGS   += -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -D__ISA__=\"$(ISA)\" -D__ISA_$(shell echo $(ISA) | tr a-z A-Z)__ \
             -D__ARCH__=$(ARCH) -D__ARCH_$(shell echo $(ARCH) | tr a-z A-Z | tr - _) \
             -D__PLATFORM__=$(PLATFORM) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z | tr - _) \
             -DARCH_H=\"$(ARCH_H)\"
-CFALG 	+=  -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
-            -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
+# -fno-builtin -fno-stack-protector → 裸机专用（禁止 libc 替换和栈保护）
+
+# 禁止生成用来站展开 stack unwinding 和 CFI Call frame information指令
+# 默认情况, GCC生成`.eh_frame` 段，主要用于 C++ 异常处理（`try/catch`）或 C 语言中的堆栈回溯
+# （如 `backtrace` 函数）以及调试器调试。使用此选项可以 == 精简生成的二进制文件体积。 == 
+# 具体地, 核心功能是描述程序在运行到任何一条汇编指令时，如何准确地恢复上一层函数的寄存器状态和栈帧。
+# 当程序出现异常的时候, 需要跨越多个stack找到匹配的catch块. 这个过程是站展开
+# 这个时候, 程序就要准确知道每个调用层级的返回地址、以及如何恢复当时的寄存器
+# eh_frame提供了静态数据表
+# 不要保护
+CFLAGS 	+=  -fno-asynchronous-unwind-tables 
+
+# 阻止编译器将某些标准 C 库函数（如 `printf`、`strlen`、`memcpy` 等）识别为“内置函数”并进行自动优化或替换
+# 如果没有这个选项, 编译器做分析的时候, 发现printf打印一个常量字符串, 那么就会换成puts
+# 加上之后, 不做替换, 在写内核的时候是必须的, 因为内核要用自己实现的printf, 不能让编译器使用内核中可能没有的puts
+CFLAGS	+=  -fno-builtin
+# 我就是标准, 不要替换
+
+# 禁用stack的溢出保护. 不加这个选项, 如果发生stack溢出覆盖, 程序触发__stack_chk_fial并且退出,
+# 但是这玩意不一定存在, 所以加上, 开启保护可能导致链接失败. 
+CFLAGS	+=  -fno-stack-protector
+# 不要替换
+
+# wno-main取消对main的签名的检查, 允许void main
+CFLAGS  +=  -Wno-main 
+
+# u == undefine, 取消这个定义. 这个宏把一些linux发型版本的标准头文件隐式开启, 把一些可能有
+# 安全风险的 比如strcpy 替换成为带着边界检查的版本. 但是有边界检查功能的函数不一定实现.
+CFLAGS	+=  -U_FORTIFY_SOURCE 
+# 我就是标准
+
+# 生成的ELF文件里面, 所有全局符号设置成为hidden, 减小动态符号表大小
+CFLAGS  +=  -fvisibility=hidden
+# 不要冗余
+
+# freestanding告诉编译器不假设标准库存在, -fno-rtti依旧减小体积, 并且exce~ 关闭对抛出异常的处理
 CXXFLAGS +=  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
+# asflag控制汇编文件的处理. -mmd和cflags的作用一样
+
+#######################################################################################
+# 总之, "我就是标准!" "每一个字节都很宝贵, 不要冗余" "不要乱七八糟的保护"
+#######################################################################################
 
 
 # 指示操作系统或运行环境：“该程序运行时的栈内存（Stack）区域没有执行权限”。这可以防止某些将机器指令恶意写入栈内存并执行的安全漏洞。

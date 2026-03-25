@@ -7,7 +7,6 @@ PREFIX_riscv32_nemu := [=== AM / riscv32-nemu.mk ===]
 
 $(info $(YELLOW)$(PREFIX_riscv32_nemu)$(NONE))
 
-
 include $(AM_HOME)/scripts/isa/riscv.mk
 include $(AM_HOME)/scripts/platform/nemu.mk
 #define ISA_H "riscv/riscv.h"¡£

@@ -10,8 +10,7 @@ CROSS_COMPILE := riscv64-linux-gnu-
 # -fno-pic (禁用位置无关代码)：普通的 Linux 程序加载到内存的位置是随机的（为了安全）。
 # 但在裸机里，代码必须放在绝对固定的物理地址（如 0x80000000）。这个参数强制编译器生成使用绝对地址或固定相对地址的机器指令。
 
-# -mcmodel=medany (中等代码模型)：这是一个专门针对裸机环境的内存寻址参数。
-# 它允许程序被链接到任意的物理地址范围内（通常是极高的地址如 0x80000000），并强制编译器使用 auipc 等基于 PC 相对寻址的指令来进行跳转和数据访问。
+# -mcmodel=medany (中等代码模型)：mcmodel, memory code model. 规定了程序如何通过指令访问符号. medany允许程序在2G的地址范围里面寻址. 无论内核被加载到什么地方, 只要代码和数据之间不差超过2G, 就能够找到目标
 COMMON_CFLAGS := -fno-pic -march=rv64g -mcmodel=medany -mstrict-align
 CFLAGS        += $(COMMON_CFLAGS) -static# 彻底静态链接
 ASFLAGS       += $(COMMON_CFLAGS) -O0# 关闭所有优化
