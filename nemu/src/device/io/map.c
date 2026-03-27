@@ -46,7 +46,7 @@ uint8_t* new_space(int size) {
   return p;
 }
 
-//接受一个具体的映射结构map和一个想要访问的地址addr，验证是不是在low到high中间
+//接受一个具体的映射结构map和一个想要访问的地址addr，验证是不是在这个map的low到high中间
 static void check_bound(IOMap *map, paddr_t addr) {
   if (map == NULL) {
     Assert(map != NULL, "address (" FMT_PADDR ") is out of bound at pc = " FMT_WORD, addr, cpu.pc);
@@ -91,7 +91,7 @@ static void device_log_write(paddr_t addr, int len, word_t data, bool is_write, 
 }
 #endif
 
-
+//先看offset, 设置成为addr和map_low的差
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);

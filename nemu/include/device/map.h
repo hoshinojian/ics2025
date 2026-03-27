@@ -31,10 +31,12 @@ typedef struct {
   io_callback_t callback;
 } IOMap;
 
+//检查一个addr是不是在一个map对象中
 static inline bool map_inside(IOMap *map, paddr_t addr) {
   return (addr >= map->low && addr <= map->high);
 }
 
+//检查addr属于哪一个map, 找到返回nr_token, 找不到返回-1
 static inline int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr) {
   int i;
   for (i = 0; i < size; i ++) {
@@ -48,6 +50,7 @@ static inline int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr) {
 
 void add_pio_map(const char *name, ioaddr_t addr,
         void *space, uint32_t len, io_callback_t callback);
+
 void add_mmio_map(const char *name, paddr_t addr,
         void *space, uint32_t len, io_callback_t callback);
 

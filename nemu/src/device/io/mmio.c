@@ -21,6 +21,7 @@
 static IOMap maps[NR_MAP] = {};
 static int nr_map = 0;
 
+//输入一个addr, 调用find_mapid_by addr. 返回iomap
 static IOMap* fetch_mmio_map(paddr_t addr) {
   int mapid = find_mapid_by_addr(maps, nr_map, addr);
   return (mapid == -1 ? NULL : &maps[mapid]);

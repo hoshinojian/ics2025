@@ -9,7 +9,7 @@
 // AM_DEVREG( 6, TIMER_UPTIME, RD, uint64_t us);
 // enum { AM_TIMER_UPTIME = 6 };              // 生成了一个值为 6 的常量 ID
 // typedef struct { uint64_t us; } AM_TIMER_UPTIME_T; // 生成了一个包含 uint64_t 的结构体
-
+// 一个AM_REG = int, 一个AM_REG_T结构体
 AM_DEVREG( 1, UART_CONFIG,  RD, bool present);
 AM_DEVREG( 2, UART_TX,      WR, char data);
 AM_DEVREG( 3, UART_RX,      RD, char data);
