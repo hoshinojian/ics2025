@@ -115,6 +115,7 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   paddr_t offset = addr - map->low;
 
   host_write(map->space + offset, len, data);
+  printf("\nmap_write called\n");
   invoke_callback(map->callback, offset, len, true);
 
   // 2. 插入日志调用：记录写入的值
