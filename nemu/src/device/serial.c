@@ -23,9 +23,14 @@
 
 static uint8_t *serial_base = NULL;
 
+static void serial_called(){
+  char* fmt = "\nSerial_Putc is called.\n";
+  for(int i = 0; i < strlen(fmt); i++)putc(fmt[i], stderr);
+}
 
 static void serial_putc(char ch) {
   //MUXDEF(CONFIG_TARGET_AM, {printf("CONFIG_TARGET_AM\n");}, {printf("NO_CONFIG_TARGET_AM\n");});
+  serial_called();
   MUXDEF(CONFIG_TARGET_AM, putch(ch), putc(ch, stderr));
 }
 
