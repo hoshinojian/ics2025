@@ -114,9 +114,9 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   check_bound(map, addr);
   paddr_t offset = addr - map->low;
 
-  host_write(map->space + offset, len, data);
-  printf("\nmap_write called\n");
-  invoke_callback(map->callback, offset, len, true);
+  host_write(map->space + offset, len, data);//准备数据
+  // printf("\nmap_write called\n");
+  invoke_callback(map->callback, offset, len, true);//写入到stderr
 
   // 2. 插入日志调用：记录写入的值
 #ifdef CONFIG_DEVICE_TRACE
