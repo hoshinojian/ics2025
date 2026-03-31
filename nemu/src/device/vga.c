@@ -39,30 +39,41 @@ static uint32_t *vgactl_port_base = NULL;
 #include <SDL2/SDL.h>
 
 static SDL_Renderer *renderer = NULL;
-static SDL_Texture *texture = NULL;
+static SDL_Texture *texture = NULL; //texture是一个像素缓冲区, 可以往里面写像素
 
 //创建 SDL 窗口（标题带模拟器的 ISA 架构，比如 x86/NEMU），初始化渲染相关的资源
 static void init_screen() {
-  SDL_Window *window = NULL;
+  // typedef struct SDL_Window SDL_Window;
+  SDL_Window *window = NULL; //在这里, 只是相当于一个指向sdl窗口对象的指针
+
   char title[128];
   sprintf(title, "%s-HOSHI", str(__GUEST_ISA__));
+
   SDL_Init(SDL_INIT_VIDEO);
+// #define SDL_INIT_VIDEO          0x00000020u  /**< SDL_INIT_VIDEO implies SDL_INIT_EVENTS */ 位标志
+
   SDL_CreateWindowAndRenderer(
       SCREEN_W * (MUXDEF(CONFIG_VGA_SIZE_400x300, 2, 1)),
       SCREEN_H * (MUXDEF(CONFIG_VGA_SIZE_400x300, 2, 1)),
-      0, &window, &renderer);
+      0, &window, &renderer);//创建窗口的渲染器. 第三个0本来可以是一些flag, 比如说开全屏,这里什么都没开.
+      //后面两个地址, 分别是窗口和渲染器. window指向了一个真实存在的窗口对象, renderer指向一个绘图上下文, 一个新创建的渲染器
+
   SDL_SetWindowTitle(window, title);
+
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-      SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
-  SDL_RenderPresent(renderer);
+      SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);//这个缓冲区属于renderer渲染器, SDL_PIXELFORMAT_ARGB8888代表每一个像素32位, ARGB 8888. 
+      //SDL_TEXTUREACCESS_STATIC代表要手动更新这一块内存. 后面的w和h是逻辑屏幕大小, 不是真实窗口大小.
+    //创建窗口缓冲区
+
+  SDL_RenderPresent(renderer);//把renderer现在的内容显示到窗口啥功能, 但是这个时候没有像素, 只是做了一次空刷新.
 }
 
 //vmem里面的像素数据更新到sdl，再渲染到窗口
 static inline void update_screen() {
-  SDL_UpdateTexture(texture, NULL, vmem, SCREEN_W * sizeof(uint32_t));
-  SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, texture, NULL, NULL);
-  SDL_RenderPresent(renderer);
+  SDL_UpdateTexture(texture, NULL, vmem, SCREEN_W * sizeof(uint32_t));//vmem替换texture的内容
+  SDL_RenderClear(renderer);//清空当前渲染的内容, 避免上一帧干扰这一帧
+  SDL_RenderCopy(renderer, texture, NULL, NULL);//t拷贝到r, 
+  SDL_RenderPresent(renderer);//呈现出来, 提交这一帧
 }
 #else
 static void init_screen() {}//AM 平台不需要 SDL（AM 框架自己处理显示），所以init_screen()为空
@@ -91,7 +102,7 @@ void vga_update_screen() {
 }
 
 void init_vga() {
-  vgactl_port_base = (uint32_t *)new_space(8);
+  vgactl_port_base = (uint32_t *)new_space(8);//定义第一个控制寄存器
   vgactl_port_base[0] = (screen_width() << 16) | screen_height();//分辨率寄存器
 #ifdef CONFIG_HAS_PORT_IO
   add_pio_map ("vgactl", CONFIG_VGA_CTL_PORT, vgactl_port_base, 8, NULL);
