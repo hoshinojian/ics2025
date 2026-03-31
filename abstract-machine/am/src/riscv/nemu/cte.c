@@ -20,13 +20,17 @@ Context* __am_irq_handle(Context *c) {
   return c;
 }
 
+//保存寄存器, 构造上下文; 调用C函数, 回复寄存器并且返回
 extern void __am_asm_trap(void);
 
+//接收来自os的一个回调函数的指针. 事件发生的时候, CTE把事件和上下文作为参数, 调用这个回调函数
 bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
+  //把asm_trap写到mtvec寄存器里面
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
 
   // register event handler
+  //保存os传进来的handler
   user_handler = handler;
 
   return true;
@@ -39,7 +43,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 void yield() {
 #ifdef __riscv_e
   asm volatile("li a5, -1; ecall");
-#else
+#else//-1丢到寄存器a7里面去. 是一个伪指令
   asm volatile("li a7, -1; ecall");
 #endif
 }

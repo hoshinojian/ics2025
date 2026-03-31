@@ -157,10 +157,11 @@ void __am_init_timer_irq() {
   assert(ret == 0);
 }
 
+//接受一个来自操作系统的事件处理回调函数的指针
 bool cte_init(Context*(*handler)(Event, Context*)) {
-  user_handler = handler;
+  user_handler = handler;//保存os提供的handler
 
-  install_signal_handler();
+  install_signal_handler();//注册中断入口
   __am_init_timer_irq();
   return true;
 }

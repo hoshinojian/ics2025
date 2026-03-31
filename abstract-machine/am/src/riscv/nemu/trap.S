@@ -34,6 +34,7 @@ f(30) f(31)
 #define PUSH(n) STORE concat(x, n), (n * XLEN)(sp);
 #define POP(n)  LOAD  concat(x, n), (n * XLEN)(sp);
 
+# 多出来三个寄存器
 #define CONTEXT_SIZE  ((NR_REGS + 3) * XLEN)
 #define OFFSET_SP     ( 2 * XLEN)
 #define OFFSET_CAUSE  ((NR_REGS + 0) * XLEN)
@@ -43,14 +44,17 @@ f(30) f(31)
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:
-  addi sp, sp, -CONTEXT_SIZE
+  addi sp, sp, -CONTEXT_SIZE  
 
+# 所有的寄存器全部写入. 硬件只写了pc和出错原因, 通用寄存器腰子细节
   MAP(REGS, PUSH)
 
+# 保存CSR
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
 
+# sw. sw t0, OFFSET_CAUSE(sp)
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
@@ -62,7 +66,9 @@ __am_asm_trap:
 
   mv a0, sp
   call __am_irq_handle
+  # __am_irq_handle((Context *)sp);
 
+# 可能这个时候的mepc和mstatus都已经被修改过了, 回复的是处理之后的上下文
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
