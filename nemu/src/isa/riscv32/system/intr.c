@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include "csrnums.h"
+#include "cpu/cpu.h"
 
 void set_nemu_state(int state, vaddr_t pc, int halt_ret);
 
@@ -31,7 +32,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   mcause = NO;
   if (NO==3)
   {
-    
+    //这里要完成nemu_trap
+     NEMUTRAP(epc, cpu.gpr[10]);
   }
   
   return mtvec;
