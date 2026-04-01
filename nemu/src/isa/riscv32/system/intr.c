@@ -30,11 +30,11 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // 3. 跳转到mtvec
   mepc = epc;
   mcause = NO;
-  if (NO==3)
-  {
-    //这里要完成nemu_trap
-    // NEMUTRAP(epc, cpu.gpr[10]);
-  }
+  // if (NO==3)
+  // {
+  //   //这里要完成nemu_trap
+  //   // NEMUTRAP(epc, cpu.gpr[10]);
+  // }
   
   return mtvec;
   //如果是ebreak
