@@ -17,9 +17,11 @@ Context* __am_irq_handle(Context *c) {
     Event ev = {0};
     switch (c->mcause) {
       case 11: //ecall
-        if(c->gpr[17] == -1){ev.event = EVENT_YIELD; break;}
+        if(c->gpr[17] == -1){
+          ev.event = EVENT_YIELD; break;
+        }
       case 3: 
-      default: ev.event = EVENT_ERROR; break;
+      default: ev.event = EVENT_YIELD; break;
     }
 
     c = user_handler(ev, c);
