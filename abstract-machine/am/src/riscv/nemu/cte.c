@@ -19,8 +19,10 @@ Context* __am_irq_handle(Context *c) {
       case 11: //ecall
         if(c->gpr[17] == -1){
           ev.event = EVENT_YIELD; break;
+        }else{
+          ev.event = EVENT_SYSCALL; break;
         }
-      case 3: 
+      case 3: //这个时候对应ebreak
       default: ev.event = EVENT_ERROR; break;
     }
 
@@ -39,6 +41,10 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
   //把asm_trap写到mtvec寄存器里面
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
+
+  // mtvec:__am_asm_trap: 完成软件的所有工作, 保存上下文, 调用handler, 切换上下文
+
+
 
   // register event handler
   //保存os传进来的handler
