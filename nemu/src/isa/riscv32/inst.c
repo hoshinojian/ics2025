@@ -332,7 +332,6 @@ static int decode_exec(Decode *s)
   });
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, {
     s->dnpc = isa_raise_intr(3, s->pc);
-         NEMUTRAP(s->pc, R(10));
 
 
   }); // R(10) is $a0
