@@ -58,7 +58,7 @@ enum
  #define csrI()                       \
   do                                  \
   {                                   \
-    *imm = (BITS(i, 31, 20), 12);     \
+    *csr = BITS(i, 31, 20);     \
   } while (0)
 
 #define immI()                        \
@@ -105,12 +105,13 @@ enum
   } while (0);
   
 
-static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type)
+static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, word_t *csr, int type)
 {
   uint32_t i = s->isa.inst;
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
   *rd = BITS(i, 11, 7);   //rd是一个地址 src1 src2都是地址
+  *csr = BITS(i, 31, 20);
   switch (type)
   {
   case TYPE_R:
@@ -120,6 +121,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   case TYPE_I:
     src1R();
     immI();
+    csrI();
     break;
   case TYPE_S:
     src1R();
@@ -157,8 +159,8 @@ static int decode_exec(Decode *s)
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */)         \
   {                                                                  \
     int rd = 0;                                                      \
-    word_t src1 = 0, src2 = 0, imm = 0;                              \
-    decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
+    word_t src1 = 0, src2 = 0, imm = 0, csr = 0;                     \
+    decode_operand(s, &rd, &src1, &src2, &imm, &csr, concat(TYPE_, type)); \
     __VA_ARGS__;                                                     \
   }
   // s: 解码结构体指针
@@ -283,7 +285,11 @@ static int decode_exec(Decode *s)
         R(rd) = src1 % src2;// 正常计算
     }
 });
-
+  INSTPAT("??????? ????? ????? 001 ????? 1110011", csrrw, I, {
+    R(rd) = cpu.csr[csr];
+    cpu.csr[csr] = src1;
+});// rs1写入csr, csr原先的值写入rd
+//CSR的地址是不经过符号拓展的
 
 
 
