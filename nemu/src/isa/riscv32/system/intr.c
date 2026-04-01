@@ -16,6 +16,8 @@
 #include <isa.h>
 #include "csrnums.h"
 
+void set_nemu_state(int state, vaddr_t pc, int halt_ret);
+
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
@@ -27,9 +29,13 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // 3. 跳转到mtvec
   mepc = epc;
   mcause = NO;
+  if (NO==3)
+  {
+    
+  }
+  
   return mtvec;
   //如果是ebreak
-  return 0;
 }
 
 word_t isa_query_intr() {
