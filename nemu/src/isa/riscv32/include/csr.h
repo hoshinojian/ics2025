@@ -1,4 +1,4 @@
-#define mtvec cpu.csr[0]
-#define mepc cpu.csr[1]
-#define mcause cpu.csr[2]
-#define mstatus cpu.csr[3]
+#define mtvec cpu.csr[0x305]
+#define mepc cpu.csr[0x341]
+#define mcause cpu.csr[0x342]
+#define mstatus cpu.csr[0x300]

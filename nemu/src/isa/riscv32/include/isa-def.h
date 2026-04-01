@@ -25,7 +25,7 @@ typedef struct {
   vaddr_t pc;
   //vaddr的意思是虚拟地址类型
 
-  word_t csr[4];
+  word_t csr[4096];
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode
