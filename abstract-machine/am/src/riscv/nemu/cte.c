@@ -45,6 +45,7 @@ void yield() {
   asm volatile("li a5, -1; ecall");
 #else//-1丢到寄存器a7里面去. 是一个伪指令
   asm volatile("li a7, -1; ecall");
+  //pc放到mepc, cause写入, pc跳转到mtvec
 #endif
 }
 
