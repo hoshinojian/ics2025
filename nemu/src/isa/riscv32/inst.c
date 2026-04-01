@@ -18,6 +18,7 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 #include "log.h"
+#include "csrnums.h"
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -325,7 +326,14 @@ static int decode_exec(Decode *s)
     }
     R(rd) = t;
   });
-
+  INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, I, {
+    //保存pc
+    mepc = s->pc;
+    //保存mcause
+    mcause = M_mode_ecall;
+    //pc跳转到mtvec
+    s->dnpc = mtvec;
+  });
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
 

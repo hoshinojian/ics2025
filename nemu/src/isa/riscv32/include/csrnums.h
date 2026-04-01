@@ -1,0 +1,1 @@
+#define M_mode_ecall 11
