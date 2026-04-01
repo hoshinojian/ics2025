@@ -16,6 +16,7 @@
 #include <isa.h>
 #include "csrnums.h"
 
+
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
@@ -24,8 +25,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // 1. 保存pc
   // 2. 保存mcause
   // 3. 跳转到mtvec
-  mepc = 0;
-
+  mepc = epc;
+  mcause = NO;
+  return mtvec;
   //如果是ebreak
   return 0;
 }
