@@ -327,9 +327,9 @@ static int decode_exec(Decode *s)
     R(rd) = t;
   });
 
-
+  
   INSTPAT("0000000 00302 00000 000 00000 1110011", mret, N, {
-    s->dnpc = mepc ;
+    s->dnpc = mepc + 4;
   });
 
   INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, N, {
@@ -337,8 +337,8 @@ static int decode_exec(Decode *s)
     s->dnpc = isa_raise_intr(11, s->pc);
   });
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, {
-    s->dnpc = isa_raise_intr(3, s->pc);
-    // NEMUTRAP(s->pc, R(10));
+    // s->dnpc = isa_raise_intr(3, s->pc);
+    NEMUTRAP(s->pc, R(10));
   }); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
 
