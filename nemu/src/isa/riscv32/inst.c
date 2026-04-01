@@ -55,7 +55,10 @@ enum
     *src2 = R(rs2); \
   } while (0)
 
+// #define csrI()      
+//   do{
 
+//   }while(0)
 
 #define immI()                        \
   do                                  \
@@ -279,6 +282,7 @@ static int decode_exec(Decode *s)
         R(rd) = src1 % src2;// 正常计算
     }
 });
+  INSTPAT("??????? ????? ????? 001 ????? 1110011", csrrw, I, {R(rd) = 0;});// rs1写入csr, csr原先的值写入rd
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
   

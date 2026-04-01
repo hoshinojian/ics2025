@@ -17,13 +17,15 @@
 #define __ISA_RISCV_H__
 
 #include <common.h>
-
+#include "csr.h"
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   //32位的数组, muxdef类似于一个三元计算, 如果config_rve那么就16,否则32
   //config_rve意味着e拓展,16个寄存器.
   vaddr_t pc;
   //vaddr的意思是虚拟地址类型
+
+  word_t csr[4];
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode
