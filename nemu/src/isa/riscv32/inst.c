@@ -326,8 +326,10 @@ static int decode_exec(Decode *s)
     }
     R(rd) = t;
   });
+
+
   INSTPAT("0000000 00302 00000 000 00000 1110011", mret, N, {
-    s->dnpc = mepc + 4;
+    s->dnpc = mepc ;
   });
 
   INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, N, {
