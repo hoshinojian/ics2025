@@ -22,6 +22,7 @@ typedef struct Context Context;
 
 // An event of type @event, caused by @cause of pointer @ref
 typedef struct {
+  //说是只有event会被用
   enum {
     EVENT_NULL = 0,
     EVENT_YIELD, EVENT_SYSCALL, EVENT_PAGEFAULT, EVENT_ERROR,
