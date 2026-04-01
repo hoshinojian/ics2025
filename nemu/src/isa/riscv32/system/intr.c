@@ -33,7 +33,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   if (NO==3)
   {
     //这里要完成nemu_trap
-    //  NEMUTRAP(epc, cpu.gpr[10]);
+     NEMUTRAP(epc, cpu.gpr[10]);
   }
   
   return mtvec;
