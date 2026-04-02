@@ -30,7 +30,7 @@ Context *__am_irq_handle(Context *c)
       }
       c->mepc += 4; // 跳过 ecall
       break;
-    case 3: // 这个时候对应ebreak
+    // case 3: // 这个时候对应ebreak
     default:
       ev.event = EVENT_ERROR;
       break;
