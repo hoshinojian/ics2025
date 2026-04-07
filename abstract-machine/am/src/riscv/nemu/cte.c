@@ -54,7 +54,8 @@ bool cte_init(Context *(*handler)(Event, Context *))
   // 把asm_trap写到mtvec寄存器里面
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
   // asm volatile("csrw mstatus. %0" : : "r"0xa00001800);
-  // asm volatile("csrw mstatus, %0" : : "r" ((uint32_t)0xA00001800));//
+  
+  //asm volatile("csrw mstatus, %0" : : "r" ((uint32_t)0xA00001800));//开差分测试的时候打开
 
   // mtvec:__am_asm_trap: 完成软件的所有工作, 保存上下文, 调用handler, 切换上下文
 
