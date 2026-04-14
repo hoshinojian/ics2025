@@ -37,7 +37,7 @@ Context *__am_irq_handle(Context *c)
       break;
     }
 
-    c = user_handler(ev, c);
+    c = user_handler(ev, c);//事件和上下文作为参数
     assert(c != NULL);
   }
 
@@ -71,7 +71,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
   return NULL;
 }
 
-void yield()
+void yield()//进行自陷操作, 会触发一个编号为EVENT_YIELD事件
 {
 #ifdef __riscv_e
   asm volatile("li a5, -1; ecall");

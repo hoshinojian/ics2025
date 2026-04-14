@@ -28,8 +28,6 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // 1. 保存pc
   // 2. 保存mcause
   // 3. 跳转到mtvec
-
-
   //mepc的指责是保存异常返回之后要执行的位置
   mepc = epc;
   mcause = NO;
