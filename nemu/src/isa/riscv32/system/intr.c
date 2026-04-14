@@ -45,13 +45,3 @@ word_t isa_query_intr() {
   return INTR_EMPTY;
 }
 
-
-#ifdef CONFIG_EXCEPTION_TRACE
-extern FILE* exception_log_fp;
-
-void exception_trace(){
-  if(!exception_log_fp)return;
-  
-}
-
-#endif
