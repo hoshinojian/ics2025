@@ -34,6 +34,11 @@ enum
 };
 #endif
 
+#ifdef CONFIG_EXCEPTION_TRACE
+void exception_trace_mret();
+void exception_trace_ecall();
+#endif
+
 enum
 {
   TYPE_R,
@@ -328,16 +333,18 @@ static int decode_exec(Decode *s)
   });
 
   // mret的指责是跳到mepc
-INSTPAT("0011000 00010 00000 000 00000 1110011", mret, N, {
-  s->dnpc = mepc;
-});
+  INSTPAT("0011000 00010 00000 000 00000 1110011", mret, N, {
+    exception_trace_mret();
+    s->dnpc = mepc;
+  });
 
   INSTPAT("0000000 00000 00000 000 00000 1110011", ecall, N, {
-    //保存pc
+    // 保存pc
+    exception_trace_ecall();
     s->dnpc = isa_raise_intr(11, s->pc);
   });
   INSTPAT("0000000 00001 00000 000 00000 1110011", ebreak, N, {
-    //s->dnpc = isa_raise_intr(3, s->pc);
+    // s->dnpc = isa_raise_intr(3, s->pc);
     NEMUTRAP(s->pc, R(10));
   }); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ???????", inv, N, INV(s->pc));
@@ -422,42 +429,47 @@ void log_ftrace(int type, uint32_t pc, uint32_t target)
 }
 #endif
 
-
-
 #ifdef CONFIG_EXCEPTION_TRACE
-extern FILE* exception_log_fp;
+extern FILE *exception_log_fp;
 
-static const char* mcause_cause(word_t Mcause){
-  switch(Mcause){
-    case 11: return "ecall from M-Mode";
-    default: return "unknowd";
+static const char *mcause_cause(word_t Mcause)
+{
+  switch (Mcause)
+  {
+  case 11:
+    return "ecall from M-Mode";
+  default:
+    return "unknowd";
   }
 }
 
-void exception_trace_ecall(){
-  if(!exception_log_fp)return;
+void exception_trace_ecall()
+{
+  if (!exception_log_fp)
+    return;
   fprintf(exception_log_fp,
-      "trap: mepc = " FMT_WORD
-      ", mcause = " FMT_WORD " (%s)"
-      ", mtvec = " FMT_WORD "\n",
-      mepc,
-      mcause,
-      mcause_cause(mcause),
-      mtvec);
+          "trap: mepc = " FMT_WORD
+          ", mcause = " FMT_WORD " (%s)"
+          ", mtvec = " FMT_WORD "\n",
+          mepc,
+          mcause,
+          mcause_cause(mcause),
+          mtvec);
 }
 
-void exception_trace_mret(){
-  if(!exception_log_fp)return;
+void exception_trace_mret()
+{
+  if (!exception_log_fp)
+    return;
 
+  fprintf(exception_log_fp,
+          "mret: mepc = " FMT_WORD
+          ", resume pc = " FMT_WORD "\n",
+          mepc,
+          mepc + 4);
 
+  fflush(exception_log_fp);
 }
-
-void exception_trace_ebreak(){
-  if(!exception_log_fp)return;
-
-}
-
-
 
 // void exception_trace(){
 //   //在ecall, mret和break的时候都要写
@@ -465,4 +477,3 @@ void exception_trace_ebreak(){
 // }
 
 #endif
-
