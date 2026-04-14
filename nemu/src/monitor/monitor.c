@@ -118,6 +118,9 @@ static int parse_args(int argc, char *argv[]) {
 #ifdef CONFIG_DEVICE_TRACE
     {"device"   , required_argument, NULL, 't'},
 #endif
+#ifdef CONFIG_EXCEPTION_TRACE
+    {"exception", required_argument, NULL, 'x'},
+#endif
     {0          , 0                , NULL,  0 },
   };
   int o;
