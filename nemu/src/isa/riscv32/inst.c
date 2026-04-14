@@ -421,3 +421,19 @@ void log_ftrace(int type, uint32_t pc, uint32_t target)
   fflush(func_log_fp);
 }
 #endif
+
+
+
+#ifdef CONFIG_EXCEPTION_TRACE
+extern FILE* exception_log_fp;
+
+
+
+// void exception_trace(){
+//   //在ecall, mret和break的时候都要写
+//   if(!exception_log_fp)return;
+//   fprintf(exception_log_fp, "");
+// }
+
+#endif
+
