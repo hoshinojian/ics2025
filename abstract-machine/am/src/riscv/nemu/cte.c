@@ -16,7 +16,7 @@ Context *__am_irq_handle(Context *c)
 {
   if (user_handler)
   {
-    printf("\nam_irq_handler is calling \n\n\n");
+    // printf("\nam_irq_handler is calling \n\n\n");
     Event ev = {0};
     switch (c->mcause)
     {
