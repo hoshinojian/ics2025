@@ -427,11 +427,40 @@ void log_ftrace(int type, uint32_t pc, uint32_t target)
 #ifdef CONFIG_EXCEPTION_TRACE
 extern FILE* exception_log_fp;
 
+static const char* mcause_cause(word_t Mcause){
+  switch(Mcause){
+    case 11: return "ecall from M-Mode";
+    default: return "unknowd";
+  }
+}
+
+void exception_trace_ecall(){
+  if(!exception_log_fp)return;
+  fprintf(exception_log_fp,
+      "trap: mepc = " FMT_WORD
+      ", mcause = " FMT_WORD " (%s)"
+      ", mtvec = " FMT_WORD "\n",
+      mepc,
+      mcause,
+      mcause_cause(mcause),
+      mtvec);
+}
+
+void exception_trace_mret(){
+  if(!exception_log_fp)return;
+
+
+}
+
+void exception_trace_ebreak(){
+  if(!exception_log_fp)return;
+
+}
+
 
 
 // void exception_trace(){
 //   //在ecall, mret和break的时候都要写
-//   if(!exception_log_fp)return;
 //   fprintf(exception_log_fp, "");
 // }
 
