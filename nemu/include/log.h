@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #ifdef CONFIG_EXCEPTION_TRACE
-
+ void init_exception_log(const char* exception_log_file);
 #endif
 
 
