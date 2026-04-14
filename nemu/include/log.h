@@ -8,6 +8,11 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#ifdef CONFIG_EXCEPTION_TRACE
+
+#endif
+
+
 #ifdef CONFIG_FUNC_TRACE
 // 定义函数信息结构体
 typedef struct {

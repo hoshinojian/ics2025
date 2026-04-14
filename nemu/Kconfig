@@ -125,6 +125,10 @@ config CC_ASAN
 endmenu
 
 menu "Testing and Debugging"
+config EXCEPTION_TRACE
+  bool "Enable Exception Trace(eTrace)"
+  default n
+
 config MM_TRACE
   bool "Enable Memory Trace(mtrace)"
   default n

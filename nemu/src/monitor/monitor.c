@@ -69,6 +69,10 @@ static char *elf_file = NULL;
 static char* device_trace_file = NULL;
 #endif
 
+#ifdef CONFIG_EXCEPTION_TRACE
+static char* exception_trace_file = NULL;
+#endif
+
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
@@ -133,6 +137,9 @@ static int parse_args(int argc, char *argv[]) {
 #ifdef CONFIG_DEVICE_TRACE
       case 't': device_trace_file = optarg; break;
 #endif
+#ifdef CONFIG_EXCEPTION_TRACE
+      case 'x' : exception_trace_file = optarg; break;
+#endif
 
       case 1: img_file = optarg; return 0;
       default:
@@ -151,6 +158,10 @@ static int parse_args(int argc, char *argv[]) {
 
 #ifdef CONFIG_DEVICE_TRACE
         printf("\t-d,--device=FILE        output device log to FILE\n");
+#endif
+
+#ifdef CONFIG_EXCEPTION_TRACE
+        printf("\t-x, --exception=FILE    output device log to FILE\n");
 #endif
 
         printf("\n");
@@ -182,6 +193,8 @@ void init_monitor(int argc, char *argv[]) {
   IFDEF(CONFIG_FUNC_TRACE, init_func_log(func_log_file, elf_file));
 
   IFDEF(CONFIG_DEVICE_TRACE, init_device_log(device_trace_file));
+
+  IFDEF(CONFIG_EXCEPTION_TRACE, init_exception_log(exception_trace_file));
 
   /* Initialize memory. */
   init_mem();

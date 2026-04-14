@@ -37,7 +37,7 @@ Context *__am_irq_handle(Context *c)
       break;
     }
 
-    c = user_handler(ev, c);//事件和上下文作为参数
+    // c = user_handler(ev, c);//事件和上下文作为参数
     assert(c != NULL);
   }
 

@@ -163,3 +163,17 @@ void init_device_log(const char *device_log_file){
 }
 
 #endif
+
+#ifdef CONFIG_EXCEPTION_TRACE
+FILE* exception_log_fp = NULL;
+void init_exception_log(const char* exception_log_file){
+  if(exception_log_file){
+    FILE *fp = fopen(exception_log_file, "w");
+    Assert(fp, "Can not open '%s'", exception_log_file);
+    exception_log_fp = fp;
+    Log("Device LOG is written to %s", exception_log_file);
+  }
+}
+
+
+#endif
